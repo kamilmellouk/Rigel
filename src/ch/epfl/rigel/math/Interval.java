@@ -45,6 +45,13 @@ public abstract class Interval {
         return highBound - lowBound;
     }
 
+    /**
+     *
+     * @param v     the value to check
+     * @return {@code true} if and only if the value belongs to the interval
+     */
     public abstract boolean contains(double v);
+
+
 
 }
