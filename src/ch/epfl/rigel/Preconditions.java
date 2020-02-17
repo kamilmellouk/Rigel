@@ -1,11 +1,16 @@
 package ch.epfl.rigel;
 
-public class Preconditions {
+public final class Preconditions {
 
-    public static void main(String[] args) {
+    private Preconditions() {}
 
-        System.out.println("salut");
-
+    /**
+     * Trowing an IllegalArgumentException if a condition is not satisfied
+     * @param isTrue condition to check
+     */
+    public static void checkArgument(boolean isTrue) {
+        if(!isTrue)
+            throw new IllegalArgumentException();
     }
 
 }
