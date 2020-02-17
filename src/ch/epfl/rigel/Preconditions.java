@@ -15,7 +15,16 @@ public final class Preconditions {
             throw new IllegalArgumentException();
     }
 
+    /**
+     * Checking if a certain value is contained in an interval
+     * @param interval used
+     * @param value to check
+     * @return value if it is contained in interval, and throws an IllegalArgumentException if not
+     */
     public static double checkInInterval(Interval interval, double value) {
-        return value;
+        if(interval.contains(value))
+            return value;
+        else
+            throw new IllegalArgumentException();
     }
 }
