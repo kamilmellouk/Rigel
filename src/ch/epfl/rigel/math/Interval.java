@@ -45,6 +45,31 @@ public abstract class Interval {
         return highBound - lowBound;
     }
 
+    /**
+     *
+     * @param v     the value to check
+     * @return {@code true} if and only if the value belongs to the interval
+     */
     public abstract boolean contains(double v);
 
+    /**
+     *
+     * @param obj   the object
+     * @return nothing
+     * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
+     */
+    @Override
+    public final boolean equals(Object obj) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     *
+     * @return nothing
+     * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
+     */
+    @Override
+    public final int hashCode() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
 }
