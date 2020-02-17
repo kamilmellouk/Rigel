@@ -7,18 +7,18 @@ package ch.epfl.rigel.math;
 public abstract class Interval {
 
     // bounds of the interval
-    private final double low_bound;
-    private final double high_bound;
+    private final double lowBound;
+    private final double highBound;
 
     /**
      * constructor of the interval
      *
-     * @param low_bound     the low bound
-     * @param high_bound    the high bound
+     * @param lowBound     the low bound
+     * @param highBound    the high bound
      */
-    protected Interval(double low_bound, double high_bound) {
-        this.low_bound = low_bound;
-        this.high_bound = high_bound;
+    protected Interval(double lowBound, double highBound) {
+        this.lowBound = lowBound;
+        this.highBound = highBound;
     }
 
     /**
@@ -26,7 +26,7 @@ public abstract class Interval {
      * @return the low bound
      */
     public double low() {
-        return low_bound;
+        return lowBound;
     }
 
     /**
@@ -34,7 +34,7 @@ public abstract class Interval {
      * @return the high bound
      */
     public double high() {
-        return high_bound;
+        return highBound;
     }
 
     /**
@@ -42,7 +42,9 @@ public abstract class Interval {
      * @return the size of the interval
      */
     public double size() {
-        return high_bound - low_bound;
+        return highBound - lowBound;
     }
+
+    public abstract boolean contains(double v);
 
 }
