@@ -1,5 +1,7 @@
 package ch.epfl.rigel;
 
+import ch.epfl.rigel.math.Interval;
+
 public final class Preconditions {
 
     private Preconditions() {}
@@ -13,4 +15,7 @@ public final class Preconditions {
             throw new IllegalArgumentException();
     }
 
+    public static double checkInInterval(Interval interval, double value) {
+        return value;
+    }
 }
