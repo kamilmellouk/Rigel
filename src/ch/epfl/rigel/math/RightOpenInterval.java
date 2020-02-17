@@ -9,63 +9,80 @@ import java.util.Locale;
 public final class RightOpenInterval extends Interval {
 
     /**
-     * RightOpenInterval constructor, only calls superconstructor
+     * RightOpenInterval constructor, only calls super constructor
      *
-     * @param LOW_BOUND
-     * @param HIGH_BOUND
+     * @param lowBound      the low bound
+     * @param highBound     the high bound
      */
-    private RightOpenInterval(double LOW_BOUND, double HIGH_BOUND) {
-        super(LOW_BOUND, HIGH_BOUND);
+    private RightOpenInterval(double lowBound, double highBound) {
+        super(lowBound, highBound);
     }
 
     /**
-     * Returning a closed interval given its bounds
+     * Returning a right open interval given its bounds
      *
-     * @param low  bound
-     * @param high bound
-     * @return Right Open Interval, and throws an exception if low >= high
+     * @param lowBound      the low bound
+     * @param highBound     the high bound
+     * @return a right open interval, or throws an exception if lowBound >= highBound
      */
-    public static RightOpenInterval of(double low, double high) {
-        if (low < high) {
-            return new RightOpenInterval(low, high);
+    public static RightOpenInterval of(double lowBound, double highBound) {
+        if (lowBound < highBound) {
+            return new RightOpenInterval(lowBound, highBound);
         } else {
             throw new IllegalArgumentException();
         }
+        // TODO: 17/02/2020 see why the exception is false
+        //return lowBound < highBound ? new RightOpenInterval(lowBound, highBound) : throw new IllegalArgumentException();
     }
 
     /**
-     * Returning an interval of a given size, centered around 0
+     * Returning a right open interval of a given size, centered around 0
      *
      * @param size of the interval
-     * @return Right Open Interval of that size, centered around 0, and throws an exception if size <= 0
+     * @return a right open interval of the specified size, centered around 0, or throws an exception if size <= 0
      */
     public static RightOpenInterval symmetric(double size) {
         if (size > 0) {
-            return new RightOpenInterval(0 - size / 2, 0 + size / 2);
+            return new RightOpenInterval(- size / 2,size / 2);
         } else {
             throw new IllegalArgumentException();
         }
+        // TODO: 17/02/2020 see why the exception is false
+        //return size > 0 ? new RightOpenInterval(- size/2, size/2) : throw new IllegalArgumentException();
     }
 
+    /**
+     *
+     * @param v     the value to check
+     * @return {@code true} if and only if the value belongs to the closed interval
+     */
     @Override
     public boolean contains(double v) {
-        return (v >= this.low() && v < this.high());
+        // TODO: 17/02/2020 check the sign for right bound to be sure
+        return (v >= low() && v < high());
     }
 
     /**
      * Reducing a given value to a given interval
-     * @param v value to reduce
-     * @return reducedValue, which is v mod the interval
+     *
+     * @param v     the value to reduce
+     * @return the reduced value, which is v mod the interval
      */
     public double reduce(double v) {
-        double reducedV = v;
-        while (!contains(reducedV)) {
-            if(reducedV < low()) reducedV += size();
-            else if(reducedV > high()) reducedV -= size();
+        /*double reduceValue = v;
+        while (!contains(reduceValue)) {
+            if(reduceValue < low()) reduceValue += size();
+            else if(reduceValue > high()) reduceValue -= size();
         }
-        return reducedV;
+        return reduceValue;*/
+        // TODO: 17/02/2020 check with Kamil its code that I don't understand
+        return low() + (v - low()) - (high() - low())*Math.floor((v - low())/(high() - low()));
     }
 
+    /**
+     *
+     * @return the textual representation of of the interval
+     */
     @Override
     public String toString() {
         return String.format(Locale.ROOT,"[%s, %s[", low(), high());

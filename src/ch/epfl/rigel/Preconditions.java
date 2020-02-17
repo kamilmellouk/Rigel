@@ -7,24 +7,30 @@ public final class Preconditions {
     private Preconditions() {}
 
     /**
-     * Trowing an IllegalArgumentException if a condition is not satisfied
+     * Throwing an IllegalArgumentException if a condition is not satisfied
+     *
      * @param isTrue condition to check
      */
     public static void checkArgument(boolean isTrue) {
-        if(!isTrue)
+        if(!isTrue) {
             throw new IllegalArgumentException();
+        }
     }
 
     /**
      * Checking if a certain value is contained in an interval
-     * @param interval used
-     * @param value to check
-     * @return value if it is contained in interval, and throws an IllegalArgumentException if not
+     *
+     * @param interval  the interval used
+     * @param value     the value to check
+     * @return the value if it is contained in the interval, or throws an IllegalArgumentException if not
      */
     public static double checkInInterval(Interval interval, double value) {
-        if(interval.contains(value))
+        if(interval.contains(value)) {
             return value;
-        else
+        } else {
             throw new IllegalArgumentException();
+        }
+        // TODO: 17/02/2020 see why the exception is false
+        //return interval.contains(value) ? value : throw new IllegalArgumentException();
     }
 }
