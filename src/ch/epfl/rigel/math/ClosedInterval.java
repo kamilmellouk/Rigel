@@ -9,61 +9,72 @@ import java.util.Locale;
 public final class ClosedInterval extends Interval {
 
     /**
-     * ClosedInterval constructor, only calls superconstructor
-     * @param LOW_BOUND
-     * @param HIGH_BOUND
+     * ClosedInterval constructor, only calls super constructor
+     *
+     * @param lowBound
+     * @param highBound
      */
-    private ClosedInterval(double LOW_BOUND, double HIGH_BOUND) {
-        super(LOW_BOUND, HIGH_BOUND);
+    private ClosedInterval(double lowBound, double highBound) {
+        super(lowBound, highBound);
     }
 
     /**
      * Returning a closed interval given its bounds
-     * @param low bound
-     * @param high bound
-     * @return Closed Interval, and throws an exception if low >= high
+     *
+     * @param lowBound      the low bound
+     * @param highBound     the high bound
+     * @return a closed interval or throws an exception if lowBound >= highBound
      */
-    public static ClosedInterval of(double low, double high) {
-        if(low < high) {
-            return new ClosedInterval(low, high);
+    public static ClosedInterval of(double lowBound, double highBound) {
+        if(lowBound < highBound) {
+            return new ClosedInterval(lowBound, highBound);
         } else {
             throw new IllegalArgumentException();
         }
+        // TODO: 17/02/2020 see why the exception is false
+        //return lowBound < highBound ? new ClosedInterval(lowBound, highBound) : throw new IllegalArgumentException();
     }
 
     /**
      * Returning an interval of a given size, centered around 0
+     *
      * @param size of the interval
-     * @return Closed Interval of that size, centered around 0, and throws an exception if size <= 0
+     * @return a closed interval of the specified size, centered around 0, or throws an exception if size <= 0
      */
     public static ClosedInterval symmetric(double size) {
         if(size > 0) {
-            return new ClosedInterval(0 - size/2, 0 + size/2);
+            return new ClosedInterval(- size/2,size/2);
         } else {
             throw new IllegalArgumentException();
         }
-    }
-
-    @Override
-    public boolean contains(double v) {
-        return (v >= this.low() && v <= this.high());
+        // TODO: 17/02/2020 see why the exception is false
+        //return size > 0 ? new ClosedInterval(- size/2, size/2) : throw new IllegalArgumentException();
     }
 
     /**
-     * Clipping a given value to the interval, ie returning the value in the interval that is closest to it
-     * @param v value to clip
-     * @return clipped value, v if v is contained in the interval, and one of the two bounds if not
+     *
+     * @param v     the value to check
+     * @return {@code true} if and only if the value belongs to the closed interval
      */
-    public double clip(double v) {
-        if(v <= this.low()) {
-            return this.low();
-        } else if(v >= this.high()) {
-            return this.high();
-        } else {
-            return v;
-        }
+    @Override
+    public boolean contains(double v) {
+        return v >= low() && v <= high();
     }
 
+    /**
+     * Clipping the given value to the interval, ie returning the value in the interval that is closest to it
+     *
+     * @param v     the value to clip
+     * @return the clipped value, v if it is contained in the interval, and one of the two bounds if not
+     */
+    public double clip(double v) {
+        return v <= low() ? low() : Math.min(v, high());
+    }
+
+    /**
+     *
+     * @return the textual representation of of the interval
+     */
     @Override
     public String toString() {
         return String.format(Locale.ROOT,"[%s, %s]", low(), high());
