@@ -11,8 +11,8 @@ public final class ClosedInterval extends Interval {
     /**
      * ClosedInterval constructor, only calls super constructor
      *
-     * @param lowBound
-     * @param highBound
+     * @param lowBound      the low bound
+     * @param highBound     the high bound
      */
     private ClosedInterval(double lowBound, double highBound) {
         super(lowBound, highBound);
@@ -31,8 +31,6 @@ public final class ClosedInterval extends Interval {
         } else {
             throw new IllegalArgumentException();
         }
-        // TODO: 17/02/2020 see why the exception is false
-        //return lowBound < highBound ? new ClosedInterval(lowBound, highBound) : throw new IllegalArgumentException();
     }
 
     /**
@@ -47,8 +45,6 @@ public final class ClosedInterval extends Interval {
         } else {
             throw new IllegalArgumentException();
         }
-        // TODO: 17/02/2020 see why the exception is false
-        //return size > 0 ? new ClosedInterval(- size/2, size/2) : throw new IllegalArgumentException();
     }
 
     /**
@@ -68,7 +64,7 @@ public final class ClosedInterval extends Interval {
      * @return the clipped value, v if it is contained in the interval, and one of the two bounds if not
      */
     public double clip(double v) {
-        return v <= low() ? low() : Math.min(v, high());
+        return Math.max(low(), Math.min(v, high()));
     }
 
     /**

@@ -31,8 +31,6 @@ public final class RightOpenInterval extends Interval {
         } else {
             throw new IllegalArgumentException();
         }
-        // TODO: 17/02/2020 see why the exception is false
-        //return lowBound < highBound ? new RightOpenInterval(lowBound, highBound) : throw new IllegalArgumentException();
     }
 
     /**
@@ -47,8 +45,6 @@ public final class RightOpenInterval extends Interval {
         } else {
             throw new IllegalArgumentException();
         }
-        // TODO: 17/02/2020 see why the exception is false
-        //return size > 0 ? new RightOpenInterval(- size/2, size/2) : throw new IllegalArgumentException();
     }
 
     /**
