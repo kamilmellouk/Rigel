@@ -47,14 +47,8 @@ public final class RightOpenInterval extends Interval {
         }
     }
 
-    /**
-     *
-     * @param v     the value to check
-     * @return {@code true} if and only if the value belongs to the closed interval
-     */
     @Override
     public boolean contains(double v) {
-        // TODO: 17/02/2020 check the sign for right bound to be sure
         return (v >= low() && v < high());
     }
 
@@ -65,20 +59,9 @@ public final class RightOpenInterval extends Interval {
      * @return the reduced value, which is v mod the interval
      */
     public double reduce(double v) {
-        /*double reduceValue = v;
-        while (!contains(reduceValue)) {
-            if(reduceValue < low()) reduceValue += size();
-            else if(reduceValue > high()) reduceValue -= size();
-        }
-        return reduceValue;*/
-        // TODO: 17/02/2020 check with Kamil its code that I don't understand
         return low() + (v - low()) - (high() - low())*Math.floor((v - low())/(high() - low()));
     }
 
-    /**
-     *
-     * @return the textual representation of of the interval
-     */
     @Override
     public String toString() {
         return String.format(Locale.ROOT,"[%s, %s[", low(), high());
