@@ -7,7 +7,12 @@ package ch.epfl.rigel.math;
 public final class Angle {
 
     // the constant tau
-    public final static double TAU = 2 * Math.PI;
+    public static final double TAU = 2 * Math.PI;
+
+    // constants for conversion
+    private static final double HR_PER_RAD = 24.0 / TAU;
+    private static final double RAD_PER_HR = 1 / HR_PER_RAD;
+    private static final double RAD_PER_SEC = TAU / (60 * 60 * 360);
 
     /**
      * Reducing a given angle to the right open interval [0,TAU[
@@ -26,7 +31,7 @@ public final class Angle {
      * @return the same angle expressed in rad
      */
     public static double ofArcSec(double sec) {
-        return (sec/(360*60*60))*TAU;
+        return sec * RAD_PER_SEC;
     }
 
     /**
@@ -41,7 +46,7 @@ public final class Angle {
     public static double ofDMS(int deg, int min, double sec) {
         if((RightOpenInterval.of(0, 60).contains(min)) &&
                 (RightOpenInterval.of(0, 60).contains(sec))) {
-            return ofArcSec(deg*60*60 + min*60 + sec);
+            return ofArcSec(deg * 60 * 60 + min * 60 + sec);
         } else {
             throw new IllegalArgumentException();
         }
@@ -54,7 +59,7 @@ public final class Angle {
      * @return the same angle expressed in rad
      */
     public static double ofDeg(double deg) {
-        return (deg/360)*TAU;
+        return Math.toRadians(deg);
     }
 
     /**
@@ -64,7 +69,7 @@ public final class Angle {
      * @return the same angle expressed in deg
      */
     public static double toDeg(double rad) {
-        return (rad/TAU)*360;
+        return Math.toDegrees(rad);
     }
 
     /**
@@ -74,7 +79,7 @@ public final class Angle {
      * @return the same angle expressed in rad
      */
     public static double ofHr(double hr) {
-        return (hr/24)*TAU;
+        return hr * RAD_PER_HR;
     }
 
     /**
@@ -84,6 +89,6 @@ public final class Angle {
      * @return the same angle expressed in hours
      */
     public static double toHr(double rad) {
-        return (rad/TAU)*24;
+        return rad * HR_PER_RAD;
     }
 }
