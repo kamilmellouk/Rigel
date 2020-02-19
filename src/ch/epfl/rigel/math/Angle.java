@@ -30,7 +30,7 @@ public final class Angle {
      * @param sec the given angle (in arc sec)
      * @return the same angle expressed in rad
      */
-    public static double ofArcSec(double sec) {
+    public static double ofArcsec(double sec) {
         return sec * RAD_PER_SEC;
     }
 
@@ -46,7 +46,7 @@ public final class Angle {
     public static double ofDMS(int deg, int min, double sec) {
         if ((RightOpenInterval.of(0, 60).contains(min)) &&
                 (RightOpenInterval.of(0, 60).contains(sec))) {
-            return ofArcSec(deg * 60 * 60 + min * 60 + sec);
+            return ofArcsec(deg * 60 * 60 + min * 60 + sec);
         } else {
             throw new IllegalArgumentException();
         }
