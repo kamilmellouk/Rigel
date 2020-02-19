@@ -6,27 +6,41 @@ package ch.epfl.rigel.math;
  */
 public final class Polynomial {
 
-    private static double[] coefficients;
+    private double[] coefficients;
 
-    // PAS FINI
+    /**
+     * constructor of the polynomial
+     *
+     * @param coefficients  the array containing all coefficients
+     */
     private Polynomial(double[] coefficients) {
         this.coefficients = coefficients;
     }
 
-    public static Polynomial of(double coefficientN, double... coeffs) {
-        if(coefficientN == 0) throw new IllegalArgumentException();
-        else {
-            double[] coeffsTab = new double[coeffs.length+1];
-            coeffsTab[0] = coefficientN;
-            System.arraycopy(coeffs, 0, coeffsTab, 1, coeffs.length);
-            return new Polynomial(coeffsTab);
+    /**
+     * returning a polynomial given its coefficients
+     *
+     * @param coefficientN  the highest coefficient
+     * @param coefficients  the rest of coefficients
+     * @return a polynomial or throws an exception if the highest coefficient is 0
+     */
+    public static Polynomial of(double coefficientN, double... coefficients) {
+        if(coefficientN == 0) {
+            throw new IllegalArgumentException();
+        } else {
+            // create new array used to contain all coefficients
+            double[] coefficientsArray = new double[coefficients.length + 1];
+            // place the coefficients in the specific array
+            coefficientsArray[0] = coefficientN;
+            System.arraycopy(coefficients, 0, coefficientsArray, 1, coefficients.length);
+            // return the related polynomial
+            return new Polynomial(coefficientsArray);
         }
     }
 
     public double at(double x) {
         return 0;
     }
-    // PAS FINI
 
     /**
      *
@@ -48,4 +62,5 @@ public final class Polynomial {
     public final int hashCode() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
+
 }
