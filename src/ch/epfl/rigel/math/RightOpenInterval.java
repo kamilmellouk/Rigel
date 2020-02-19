@@ -11,8 +11,8 @@ public final class RightOpenInterval extends Interval {
     /**
      * RightOpenInterval constructor, only calls super constructor
      *
-     * @param lowBound      the low bound
-     * @param highBound     the high bound
+     * @param lowBound  the low bound
+     * @param highBound the high bound
      */
     private RightOpenInterval(double lowBound, double highBound) {
         super(lowBound, highBound);
@@ -21,8 +21,8 @@ public final class RightOpenInterval extends Interval {
     /**
      * Returning a right open interval given its bounds
      *
-     * @param lowBound      the low bound
-     * @param highBound     the high bound
+     * @param lowBound  the low bound
+     * @param highBound the high bound
      * @return a right open interval, or throws an exception if lowBound >= highBound
      */
     public static RightOpenInterval of(double lowBound, double highBound) {
@@ -41,7 +41,7 @@ public final class RightOpenInterval extends Interval {
      */
     public static RightOpenInterval symmetric(double size) {
         if (size > 0) {
-            return new RightOpenInterval(- size / 2,size / 2);
+            return new RightOpenInterval(-size / 2, size / 2);
         } else {
             throw new IllegalArgumentException();
         }
@@ -55,15 +55,15 @@ public final class RightOpenInterval extends Interval {
     /**
      * Reducing a given value to a given interval
      *
-     * @param v     the value to reduce
+     * @param v the value to reduce
      * @return the reduced value, which is v mod the interval
      */
     public double reduce(double v) {
-        return low() + (v - low()) - (high() - low())*Math.floor((v - low())/(high() - low()));
+        return low() + (v - low()) - (high() - low()) * Math.floor((v - low()) / (high() - low()));
     }
 
     @Override
     public String toString() {
-        return String.format(Locale.ROOT,"[%s, %s[", low(), high());
+        return String.format(Locale.ROOT, "[%s, %s[", low(), high());
     }
 }
