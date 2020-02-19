@@ -55,9 +55,12 @@ public final class Polynomial {
     public String toString() {
         // TODO: 19/02/2020 check if there is a simple way to do this
         StringBuilder textualRepresentation = new StringBuilder();
-        for (int i = coefficients.length - 1; i >=0 ; i--) {
+        for (int i = coefficients.length - 1 ; i >=0 ; i--) {
             if (coefficients[i] != 0) {
-                textualRepresentation.append(coefficients[i] + (i != 0 ? "x^" + i + " + " : ""));
+                if(i != 1)
+                    textualRepresentation.append(coefficients[i] + (i != 0 ? "x^" + i + "+" : ""));
+                else
+                    textualRepresentation.append(coefficients[i] + "x+");
             }
         }
         return textualRepresentation.toString();
