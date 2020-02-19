@@ -54,9 +54,9 @@ public final class Polynomial {
     @Override
     public String toString() {
         // TODO: 19/02/2020 check if there is a simple way to do this
-        if(coefficients.length == 1) return Double.toString(coefficients[0]);
+        if (coefficients.length == 1) return Double.toString(coefficients[0]);
         StringBuilder textualRepresentation = new StringBuilder();
-        for (int i = 0 ; i < coefficients.length ; i++) {
+        for (int i = 0; i < coefficients.length; i++) {
             if (i != coefficients.length - 1) {
                 if (coefficients[i] != 0) {
                     if (coefficients[i] == 1 || coefficients[i] == -1) {
@@ -69,7 +69,7 @@ public final class Polynomial {
                         textualRepresentation.append("^" + (coefficients.length - 1 - i));
                     }
                 }
-                textualRepresentation.append(coefficients[i+1] > 0 ? "+" : "");
+                textualRepresentation.append(coefficients[i + 1] > 0 ? "+" : "");
             } else {
                 textualRepresentation.append(coefficients[i]);
             }
