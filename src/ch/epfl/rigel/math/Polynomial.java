@@ -54,13 +54,17 @@ public final class Polynomial {
     @Override
     public String toString() {
         // TODO: 19/02/2020 check if there is a simple way to do this
+        if(coefficients.length == 1) return Double.toString(coefficients[0]);
         StringBuilder textualRepresentation = new StringBuilder();
-        for (int i = coefficients.length - 1 ; i >=0 ; i--) {
-            if (coefficients[i] != 0) {
-                if(i != 1)
-                    textualRepresentation.append(coefficients[i] + (i != 0 ? "x^" + i + "+" : ""));
+        for (int i = 0 ; i < coefficients.length ; i++) {
+            if(coefficients[i] != 0) {
+                if(i != coefficients.length-1)
+                    if(coefficients.length-1-i == 1)
+                        textualRepresentation.append(coefficients[i] + "x+");
+                    else
+                        textualRepresentation.append(coefficients[i] + (i != coefficients.length-1 ? "x^" + (coefficients.length-1-i) + "+" : ""));
                 else
-                    textualRepresentation.append(coefficients[i] + "x+");
+                    textualRepresentation.append(coefficients[i]);
             }
         }
         return textualRepresentation.toString();
