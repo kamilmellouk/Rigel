@@ -38,8 +38,29 @@ public final class Polynomial {
         }
     }
 
+    /**
+     * @param x the given argument
+     * @return the value of the polynomial for the given argument
+     */
     public double at(double x) {
-        return 0;
+        // TODO: 19/02/2020 check if the method is correct
+        double result = 0;
+        for (int i = coefficients.length - 1; i >= 0; i--) {
+            result = result * x + coefficients[i];
+        }
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        // TODO: 19/02/2020 check if there is a simple way to do this
+        StringBuilder textualRepresentation = new StringBuilder();
+        for (int i = coefficients.length - 1; i >=0 ; i--) {
+            if (coefficients[i] != 0) {
+                textualRepresentation.append(coefficients[i] + (i != 0 ? "x^" + i + " + " : ""));
+            }
+        }
+        return textualRepresentation.toString();
     }
 
     /**
