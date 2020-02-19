@@ -45,7 +45,7 @@ public final class Polynomial {
     public double at(double x) {
         // TODO: 19/02/2020 check if the method is correct
         double result = 0;
-        for (int i = coefficients.length - 1; i >= 0; i--) {
+        for (int i = 0; i < coefficients.length; i++) {
             result = result * x + coefficients[i];
         }
         return result;
@@ -57,14 +57,21 @@ public final class Polynomial {
         if(coefficients.length == 1) return Double.toString(coefficients[0]);
         StringBuilder textualRepresentation = new StringBuilder();
         for (int i = 0 ; i < coefficients.length ; i++) {
-            if(coefficients[i] != 0) {
-                if(i != coefficients.length-1)
-                    if(coefficients.length-1-i == 1)
-                        textualRepresentation.append(coefficients[i] + "x+");
-                    else
-                        textualRepresentation.append(coefficients[i] + (i != coefficients.length-1 ? "x^" + (coefficients.length-1-i) + "+" : ""));
-                else
-                    textualRepresentation.append(coefficients[i]);
+            if (i != coefficients.length - 1) {
+                if (coefficients[i] != 0) {
+                    if (coefficients[i] == 1 || coefficients[i] == -1) {
+                        textualRepresentation.append(coefficients[i] < 0 ? "-" : "");
+                    } else {
+                        textualRepresentation.append(coefficients[i]);
+                    }
+                    textualRepresentation.append("x");
+                    if (i != coefficients.length - 2) {
+                        textualRepresentation.append("^" + (coefficients.length - 1 - i));
+                    }
+                }
+                textualRepresentation.append(coefficients[i+1] > 0 ? "+" : "");
+            } else {
+                textualRepresentation.append(coefficients[i]);
             }
         }
         return textualRepresentation.toString();
