@@ -43,7 +43,6 @@ public final class Polynomial {
      * @return the value of the polynomial for the given argument
      */
     public double at(double x) {
-        // TODO: 19/02/2020 check if the method is correct
         double result = 0;
         for (int i = 0; i < coefficients.length; i++) {
             result = result * x + coefficients[i];
@@ -53,24 +52,33 @@ public final class Polynomial {
 
     @Override
     public String toString() {
-        // TODO: 19/02/2020 check if there is a simple way to do this
-        if (coefficients.length == 1) return Double.toString(coefficients[0]);
         StringBuilder textualRepresentation = new StringBuilder();
         for (int i = 0; i < coefficients.length; i++) {
+            // check if it is the last coefficient
             if (i != coefficients.length - 1) {
+                // check if the coefficient is not null
                 if (coefficients[i] != 0) {
-                    if (coefficients[i] == 1 || coefficients[i] == -1) {
+                    // check if the coefficient is 1 or -1
+                    if (Math.abs(coefficients[i]) == 1) {
+                        // if it is the case, it just adds the sign
+                        // (if the coefficient is 1, the sign + was already added) see line 77
                         textualRepresentation.append(coefficients[i] < 0 ? "-" : "");
                     } else {
+                        // it adds the coefficient value
                         textualRepresentation.append(coefficients[i]);
                     }
+                    // add the variable 'x'
                     textualRepresentation.append("x");
+                    // add the power if it is not 1
                     if (i != coefficients.length - 2) {
                         textualRepresentation.append("^" + (coefficients.length - 1 - i));
                     }
                 }
+                // add the sign + if the next coefficient is positive
+                // the sign - will be automatically written with the negative coefficient
                 textualRepresentation.append(coefficients[i + 1] > 0 ? "+" : "");
             } else {
+                // add the last coefficient
                 textualRepresentation.append(coefficients[i]);
             }
         }
