@@ -40,7 +40,7 @@ public final class Polynomial {
 
     /**
      * @param x the given argument
-     * @return the value of the polynomial for the given argument
+     * @return the value of the polynomial for the given argument using Horner's formula
      */
     public double at(double x) {
         double result = 0;
