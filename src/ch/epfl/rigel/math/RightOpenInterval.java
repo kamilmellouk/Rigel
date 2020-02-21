@@ -12,8 +12,10 @@ public final class RightOpenInterval extends Interval {
     /**
      * RightOpenInterval constructor, only calls super constructor
      *
-     * @param lowBound  the low bound
-     * @param highBound the high bound
+     * @param lowBound
+     *      the low bound
+     * @param highBound
+     *      the high bound
      */
     private RightOpenInterval(double lowBound, double highBound) {
         super(lowBound, highBound);
@@ -22,8 +24,10 @@ public final class RightOpenInterval extends Interval {
     /**
      * Returning a right open interval given its bounds
      *
-     * @param lowBound  the low bound
-     * @param highBound the high bound
+     * @param lowBound
+     *      the low bound
+     * @param highBound
+     *      the high bound
      * @return a right open interval, or throws an exception if lowBound >= highBound
      */
     public static RightOpenInterval of(double lowBound, double highBound) {
@@ -37,7 +41,8 @@ public final class RightOpenInterval extends Interval {
     /**
      * Returning a right open interval of a given size, centered around 0
      *
-     * @param size of the interval
+     * @param size
+     *      the size of the interval
      * @return a right open interval of the specified size, centered around 0, or throws an exception if size <= 0
      */
     public static RightOpenInterval symmetric(double size) {
@@ -56,7 +61,8 @@ public final class RightOpenInterval extends Interval {
     /**
      * Reducing a given value to a given interval
      *
-     * @param v the value to reduce
+     * @param v
+     *      the value to reduce
      * @return the reduced value, which is v mod the interval
      */
     public double reduce(double v) {
