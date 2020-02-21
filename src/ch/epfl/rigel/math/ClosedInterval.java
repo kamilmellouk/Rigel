@@ -2,6 +2,11 @@ package ch.epfl.rigel.math;
 
 import java.util.Locale;
 
+/**
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk ()
+ */
+
 public final class ClosedInterval extends Interval {
 
     /**

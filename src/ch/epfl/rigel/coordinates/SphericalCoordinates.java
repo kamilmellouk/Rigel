@@ -3,9 +3,10 @@ package ch.epfl.rigel.coordinates;
 import ch.epfl.rigel.math.Angle;
 
 /**
- * @author Mohamed Kamil MELLOUK
- * 19.02.20
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk ()
  */
+
 abstract class SphericalCoordinates {
 
     /// Longitude and latitude, used to represent any position on a sphere

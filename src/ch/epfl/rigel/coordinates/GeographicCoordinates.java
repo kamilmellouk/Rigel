@@ -7,9 +7,10 @@ import ch.epfl.rigel.math.RightOpenInterval;
 import java.util.Locale;
 
 /**
- * @author Mohamed Kamil MELLOUK
- * 19.02.20
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk ()
  */
+
 public final class GeographicCoordinates extends SphericalCoordinates {
 
     private GeographicCoordinates(double longitude, double latitude) {

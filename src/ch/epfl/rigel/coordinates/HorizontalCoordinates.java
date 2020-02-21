@@ -5,9 +5,10 @@ import ch.epfl.rigel.math.ClosedInterval;
 import ch.epfl.rigel.math.RightOpenInterval;
 
 /**
- * @author Mohamed Kamil MELLOUK
- * 20.02.20
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk ()
  */
+
 public final class HorizontalCoordinates extends SphericalCoordinates {
 
     private HorizontalCoordinates(double longitude, double latitude) {

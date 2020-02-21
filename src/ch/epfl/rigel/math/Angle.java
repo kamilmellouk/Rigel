@@ -1,5 +1,10 @@
 package ch.epfl.rigel.math;
 
+/**
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk ()
+ */
+
 public final class Angle {
 
     // the constant tau
