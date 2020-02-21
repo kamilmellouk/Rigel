@@ -31,7 +31,5 @@ public final class Preconditions {
         } else {
             throw new IllegalArgumentException();
         }
-        // TODO: 17/02/2020 see why the exception is false
-        //return interval.contains(value) ? value : throw new IllegalArgumentException();
     }
 }

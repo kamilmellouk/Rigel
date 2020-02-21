@@ -1,9 +1,5 @@
 package ch.epfl.rigel.math;
 
-/**
- * @author Bastien Faivre
- * 17/02/2020
- */
 public abstract class Interval {
 
     // bounds of the interval

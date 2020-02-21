@@ -1,9 +1,5 @@
 package ch.epfl.rigel.math;
 
-/**
- * @author Mohamed Kamil MELLOUK
- * 18.02.20
- */
 public final class Polynomial {
 
     private double[] coefficients;
@@ -44,8 +40,8 @@ public final class Polynomial {
      */
     public double at(double x) {
         double result = 0;
-        for (int i = 0; i < coefficients.length; i++) {
-            result = result * x + coefficients[i];
+        for (double coefficient : coefficients) {
+            result = result * x + coefficient;
         }
         return result;
     }
@@ -71,7 +67,7 @@ public final class Polynomial {
                     textualRepresentation.append("x");
                     // add the power if it is not 1
                     if (i != coefficients.length - 2) {
-                        textualRepresentation.append("^" + (coefficients.length - 1 - i));
+                        textualRepresentation.append("^").append(coefficients.length - 1 - i);
                     }
                 }
                 // add the sign + if the next coefficient is positive
