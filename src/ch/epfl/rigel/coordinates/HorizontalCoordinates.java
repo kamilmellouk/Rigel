@@ -31,6 +31,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      * @return the horizontal coordinates of given azimuth and altitude in rad
      * or throws an exception if at least one of the two value is invalid
      */
+    // TODO: 22/02/2020 do we must use valid method ? 
     public static HorizontalCoordinates of(double az, double alt) {
         if (RightOpenInterval.of(0, Angle.TAU).contains(az) && ClosedInterval.of(-Math.PI / 2, Math.PI / 2).contains(alt)) {
             return new HorizontalCoordinates(az, alt);
