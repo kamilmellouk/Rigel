@@ -1,5 +1,6 @@
 package ch.epfl.rigel.coordinates;
 
+import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 import ch.epfl.rigel.math.RightOpenInterval;
 
@@ -28,11 +29,12 @@ public final class GeographicCoordinates extends SphericalCoordinates {
      * @param lonDeg the longitude in deg
      * @param latDeg the latitude in deg
      * @return the geographic coordinates of given longitude and latitude in deg
+     * or throws an exception if lonDeg or latDeg is invalid
      */
     GeographicCoordinates ofDeg(double lonDeg, double latDeg) {
         // TODO: 22/02/2020 the constructor of spherical coordinates takes deg or rad ?
         if (isValidLongDeg(lonDeg) && isValidLatDeg(latDeg)) {
-            return new GeographicCoordinates(lonDeg, latDeg);
+            return new GeographicCoordinates(Angle.ofDeg(lonDeg), Angle.ofDeg(latDeg));
         } else {
             throw new IllegalArgumentException();
         }
@@ -58,6 +60,7 @@ public final class GeographicCoordinates extends SphericalCoordinates {
         return ClosedInterval.of(-90, 90).contains(latDeg);
     }
 
+    // TODO: 22/02/2020 right form ? 
     @Override
     public double lon() {
         return super.lon();
