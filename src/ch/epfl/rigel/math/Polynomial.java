@@ -12,8 +12,7 @@ public final class Polynomial {
     /**
      * constructor of the polynomial
      *
-     * @param coefficients
-     *      the array containing all coefficients
+     * @param coefficients the array containing all coefficients
      */
     private Polynomial(double[] coefficients) {
         this.coefficients = coefficients;
@@ -22,10 +21,8 @@ public final class Polynomial {
     /**
      * returning a polynomial given its coefficients
      *
-     * @param coefficientN
-     *      the highest coefficient
-     * @param coefficients
-     *      the rest of coefficients
+     * @param coefficientN the highest coefficient
+     * @param coefficients the rest of coefficients
      * @return a polynomial or throws an exception if the highest coefficient is 0
      */
     public static Polynomial of(double coefficientN, double... coefficients) {
@@ -43,8 +40,7 @@ public final class Polynomial {
     }
 
     /**
-     * @param x
-     *      the given argument
+     * @param x the given argument
      * @return the value of the polynomial for the given argument using Horner's formula
      */
     public double at(double x) {
@@ -91,8 +87,7 @@ public final class Polynomial {
     }
 
     /**
-     * @param obj
-     *      the object
+     * @param obj the object
      * @return nothing
      * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
      */

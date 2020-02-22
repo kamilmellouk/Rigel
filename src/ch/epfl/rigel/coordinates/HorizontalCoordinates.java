@@ -16,7 +16,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     }
 
     public static HorizontalCoordinates of(double az, double alt) {
-        if(RightOpenInterval.of(0, Angle.TAU).contains(az) && ClosedInterval.of(-Math.PI/2, Math.PI/2).contains(alt)){
+        if (RightOpenInterval.of(0, Angle.TAU).contains(az) && ClosedInterval.of(-Math.PI / 2, Math.PI / 2).contains(alt)) {
             return new HorizontalCoordinates(az, alt);
         } else {
             throw new IllegalArgumentException();
@@ -24,7 +24,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     }
 
     public static HorizontalCoordinates ofDeg(double azDeg, double altDeg) {
-        if(RightOpenInterval.of(0, 360).contains(azDeg) && ClosedInterval.of(-90,90).contains(altDeg)) {
+        if (RightOpenInterval.of(0, 360).contains(azDeg) && ClosedInterval.of(-90, 90).contains(altDeg)) {
             return new HorizontalCoordinates(azDeg, altDeg);
         } else {
             throw new IllegalArgumentException();

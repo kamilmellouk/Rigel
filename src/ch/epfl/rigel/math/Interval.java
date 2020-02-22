@@ -14,10 +14,8 @@ public abstract class Interval {
     /**
      * constructor of the interval
      *
-     * @param lowBound
-     *      the low bound
-     * @param highBound
-     *      the high bound
+     * @param lowBound  the low bound
+     * @param highBound the high bound
      */
     protected Interval(double lowBound, double highBound) {
         this.lowBound = lowBound;
@@ -46,15 +44,13 @@ public abstract class Interval {
     }
 
     /**
-     * @param v
-     *      the value to check
+     * @param v the value to check
      * @return {@code true} if and only if the value belongs to the interval
      */
     public abstract boolean contains(double v);
 
     /**
-     * @param obj
-     *      the object
+     * @param obj the object
      * @return nothing
      * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
      */

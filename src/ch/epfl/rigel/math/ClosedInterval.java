@@ -12,10 +12,8 @@ public final class ClosedInterval extends Interval {
     /**
      * ClosedInterval constructor, only calls super constructor
      *
-     * @param lowBound
-     *      the low bound
-     * @param highBound
-     *      the high bound
+     * @param lowBound  the low bound
+     * @param highBound the high bound
      */
     private ClosedInterval(double lowBound, double highBound) {
         super(lowBound, highBound);
@@ -24,10 +22,8 @@ public final class ClosedInterval extends Interval {
     /**
      * Returning a closed interval given its bounds
      *
-     * @param lowBound
-     *      the low bound
-     * @param highBound
-     *      the high bound
+     * @param lowBound  the low bound
+     * @param highBound the high bound
      * @return a closed interval or throws an exception if lowBound >= highBound
      */
     public static ClosedInterval of(double lowBound, double highBound) {
@@ -41,8 +37,7 @@ public final class ClosedInterval extends Interval {
     /**
      * Returning an interval of a given size, centered around 0
      *
-     * @param size
-     *      the size of the interval
+     * @param size the size of the interval
      * @return a closed interval of the specified size, centered around 0, or throws an exception if size <= 0
      */
     public static ClosedInterval symmetric(double size) {
@@ -54,8 +49,7 @@ public final class ClosedInterval extends Interval {
     }
 
     /**
-     * @param v
-     *      the value to check
+     * @param v the value to check
      * @return {@code true} if and only if the value belongs to the closed interval
      */
     @Override
@@ -66,8 +60,7 @@ public final class ClosedInterval extends Interval {
     /**
      * Clipping the given value to the interval, ie returning the value in the interval that is closest to it
      *
-     * @param v
-     *      the value to clip
+     * @param v the value to clip
      * @return the clipped value, v if it is contained in the interval, and one of the two bounds if not
      */
     public double clip(double v) {
