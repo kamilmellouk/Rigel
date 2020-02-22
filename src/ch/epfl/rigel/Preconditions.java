@@ -4,7 +4,7 @@ import ch.epfl.rigel.math.Interval;
 
 /**
  * @author Bastien Faivre (310929)
- * @author Kamil Mellouk ()
+ * @author Kamil Mellouk (312327)
  */
 
 public final class Preconditions {

@@ -2,7 +2,7 @@ package ch.epfl.rigel.math;
 
 /**
  * @author Bastien Faivre (310929)
- * @author Kamil Mellouk ()
+ * @author Kamil Mellouk (312327)
  */
 
 public abstract class Interval {
