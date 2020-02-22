@@ -31,9 +31,9 @@ public final class GeographicCoordinates extends SphericalCoordinates {
      * @return the geographic coordinates of given longitude and latitude in deg
      * or throws an exception if lonDeg or latDeg is invalid
      */
-    GeographicCoordinates ofDeg(double lonDeg, double latDeg) {
+    public static GeographicCoordinates ofDeg(double lonDeg, double latDeg) {
         // TODO: 22/02/2020 the constructor of spherical coordinates takes deg or rad ?
-        if (isValidLongDeg(lonDeg) && isValidLatDeg(latDeg)) {
+        if (isValidLonDeg(lonDeg) && isValidLatDeg(latDeg)) {
             return new GeographicCoordinates(Angle.ofDeg(lonDeg), Angle.ofDeg(latDeg));
         } else {
             throw new IllegalArgumentException();
@@ -46,7 +46,7 @@ public final class GeographicCoordinates extends SphericalCoordinates {
      * @param lonDeg longitude in deg to check
      * @return {@code true} if and only if the longitude is contained in [-180, 180[
      */
-    public static boolean isValidLongDeg(double lonDeg) {
+    public static boolean isValidLonDeg(double lonDeg) {
         return RightOpenInterval.of(-180, 180).contains(lonDeg);
     }
 
