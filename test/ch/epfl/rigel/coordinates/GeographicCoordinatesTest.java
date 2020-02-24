@@ -16,25 +16,27 @@ public class GeographicCoordinatesTest {
 
     @Test
     void returnLonTest() {
-        assertEquals(1, new GeographicCoordinates(1,1).lon());
-        assertEquals(2, new GeographicCoordinates(2,2).lon());
+        assertEquals(1, new GeographicCoordinates(1,0).lon());
+        assertEquals(2, new GeographicCoordinates(2,0).lon());
     }
 
     @Test
     void returnLonDegTest() {
         assertEquals(0, new GeographicCoordinates(0,0).lonDeg());
+        assertEquals(45, new GeographicCoordinates(Math.PI/4,0).lonDeg());
         assertEquals(90, new GeographicCoordinates(Math.PI/2,0).lonDeg());
     }
 
     @Test
     void returnLatTest() {
-        assertEquals(1, new GeographicCoordinates(1,1).lat());
-        assertEquals(2, new GeographicCoordinates(2,2).lat());
+        assertEquals(1, new GeographicCoordinates(0,1).lat());
+        assertEquals(2, new GeographicCoordinates(0,2).lat());
     }
 
     @Test
     void returnLatDegTest() {
-        assertEquals(0, new GeographicCoordinates(0,0).latDeg());
+        assertEquals(0, new GeographicCoordinates(1,0).latDeg());
+        assertEquals(45, new GeographicCoordinates(0,Math.PI/4).latDeg());
         assertEquals(90, new GeographicCoordinates(0,Math.PI/2).latDeg());
     }
 
@@ -87,32 +89,6 @@ public class GeographicCoordinatesTest {
         assertThrows(IllegalArgumentException.class, () -> {
             GeographicCoordinates.ofDeg(0,91);
         });
-    }
-
-    @Test
-    void returnLonTest2() {
-        assertEquals(1, new GeographicCoordinates(1,0).lon());
-        assertEquals(2, new GeographicCoordinates(2,0).lon());
-    }
-
-    @Test
-    void returnLonDegTest2() {
-        assertEquals(0, new GeographicCoordinates(0,1).lonDeg());
-        assertEquals(45, new GeographicCoordinates(Math.PI/4,0).lonDeg());
-        assertEquals(90, new GeographicCoordinates(Math.PI/2,0).lonDeg());
-    }
-
-    @Test
-    void returnLatTest2() {
-        assertEquals(1, new GeographicCoordinates(0,1).lat());
-        assertEquals(2, new GeographicCoordinates(0,2).lat());
-    }
-
-    @Test
-    void returnLatDegTest2() {
-        assertEquals(0, new GeographicCoordinates(1,0).latDeg());
-        assertEquals(45, new GeographicCoordinates(0,Math.PI/4).latDeg());
-        assertEquals(90, new GeographicCoordinates(0,Math.PI/2).latDeg());
     }
 
     @Test

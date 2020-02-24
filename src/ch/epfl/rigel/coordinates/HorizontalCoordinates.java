@@ -81,7 +81,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     // TODO: 22/02/2020 limit angles?
     public String azOctantName(String n, String e, String s, String w) {
         int index = (int) (az() / (Math.PI / 4)) + ((int) ((az() % (Math.PI / 4)) / (Math.PI / 8)) == 0 ? 0 : 1);
-        return new String[]{n, n + e, e, s + e, s, s + w, w, w + n}[index == 8 ? 0 : index];
+        return new String[]{n, n + e, e, s + e, s, s + w, w, n + w}[index == 8 ? 0 : index];
     }
 
     /**
@@ -102,6 +102,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      * @param that the given point
      * @return the angular distance with the given point
      */
+    // TODO: 24/02/2020 is the returned value in rad or deg ?
     public double angularDistanceTo(HorizontalCoordinates that) {
         return Math.acos(Math.sin(alt()) * Math.sin(that.alt()) + Math.cos(alt()) * Math.cos(that.alt()) * Math.cos(az() - that.az()));
     }
