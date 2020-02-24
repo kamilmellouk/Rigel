@@ -23,6 +23,6 @@ public enum Epoch {
      * @return difference, in days (can be decimal)
      */
     public double daysUntil(ZonedDateTime when) {
-        return this.date.until(when, ChronoUnit.MILLIS)/(24*60*60*1000);
+        return this.date.until(when, ChronoUnit.MILLIS)/((double)24*60*60*1000);
     }
 }
