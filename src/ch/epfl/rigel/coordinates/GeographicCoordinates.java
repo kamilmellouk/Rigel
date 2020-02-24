@@ -32,7 +32,6 @@ public final class GeographicCoordinates extends SphericalCoordinates {
      * or throws an exception if lonDeg or latDeg is invalid
      */
     public static GeographicCoordinates ofDeg(double lonDeg, double latDeg) {
-        // TODO: 22/02/2020 the constructor of spherical coordinates takes deg or rad ?
         if (isValidLonDeg(lonDeg) && isValidLatDeg(latDeg)) {
             return new GeographicCoordinates(Angle.ofDeg(lonDeg), Angle.ofDeg(latDeg));
         } else {

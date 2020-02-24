@@ -1,5 +1,6 @@
 package ch.epfl.rigel.coordinates;
 
+import ch.epfl.rigel.Preconditions;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 import ch.epfl.rigel.math.RightOpenInterval;
@@ -29,16 +30,12 @@ public final class EclipticCoordinates extends SphericalCoordinates {
      * @param lon the ecliptic longitude in rad
      * @param lat the ecliptic latitude in rad
      * @return the ecliptic coordinates of given ecliptic longitude and ecliptic latitude in rad
-     * or throws an exception if at least one of the two value is invalid
      */
-    // TODO: 22/02/2020 do we must use valid method ?
-    // TODO: 22/02/2020 check validity interval
     public static EclipticCoordinates of(double lon, double lat) {
-        if (RightOpenInterval.of(0, Angle.TAU).contains(lon) && ClosedInterval.of(-Math.PI / 2, Math.PI / 2).contains(lat)) {
-            return new EclipticCoordinates(lon, lat);
-        } else {
-            throw new IllegalArgumentException();
-        }
+        return new EclipticCoordinates(
+                Preconditions.checkInInterval(RightOpenInterval.of(0, Angle.TAU), lon),
+                Preconditions.checkInInterval(ClosedInterval.of(-Math.PI / 2, Math.PI / 2), lat)
+        );
     }
 
     @Override
