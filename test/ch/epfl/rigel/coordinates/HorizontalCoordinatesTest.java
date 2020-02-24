@@ -104,7 +104,6 @@ public class HorizontalCoordinatesTest {
         assertEquals(Math.PI, HorizontalCoordinates.of(0,-Math.PI/2).angularDistanceTo(HorizontalCoordinates.of(0,Math.PI/2)));
         assertEquals(Math.PI, HorizontalCoordinates.of(0,Math.PI/2).angularDistanceTo(HorizontalCoordinates.of(0,-Math.PI/2)));
         // normal
-
     }
 
     @Test

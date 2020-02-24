@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SphericalCoordinatesTest {
 
-    @Test
+    /*@Test
     void returnLonTest() {
         assertEquals(1, new SphericalCoordinates(1,0).lon());
         assertEquals(2, new SphericalCoordinates(2,0).lon());
@@ -50,6 +50,6 @@ public class SphericalCoordinatesTest {
         assertThrows(UnsupportedOperationException.class, () -> {
             new SphericalCoordinates(0,0).hashCode();
         });
-    }
+    }*/
 
 }
