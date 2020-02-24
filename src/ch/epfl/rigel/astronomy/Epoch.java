@@ -4,8 +4,8 @@ import java.time.*;
 import java.time.temporal.ChronoUnit;
 
 /**
- * @author Mohamed Kamil MELLOUK (312327)
- * 24.02.20
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk (312327)
  */
 public enum Epoch {
     J2000(ZonedDateTime.of(LocalDate.of(2000, Month.JANUARY, 1), LocalTime.of(12, 0), ZoneOffset.UTC)),
@@ -17,6 +17,11 @@ public enum Epoch {
         this.date = date;
     }
 
+    /**
+     * Computing the difference between an Epoch and a given date-time couple
+     * @param when date-time couple to compare
+     * @return difference, in days (can be decimal)
+     */
     public double daysUntil(ZonedDateTime when) {
         return this.date.until(when, ChronoUnit.MILLIS)/(24*60*60*100);
     }
