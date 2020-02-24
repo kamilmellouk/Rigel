@@ -8,10 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Kamil Mellouk (312327)
  */
 
-/**
- * make the class not abstract
- */
-
 public class SphericalCoordinatesTest {
 
     /*@Test

@@ -62,10 +62,12 @@ public class HorizontalCoordinatesTest {
     }
 
     @Test
-    void asOctantNameTest() {
-        // bounds !!!
+    void asOctantNameBoundsTest() {
 
-        // normal
+    }
+
+    @Test
+    void asOctantNameNormalTest() {
         assertEquals("N", HorizontalCoordinates.ofDeg(350,0).azOctantName("N","E","S","W"));
         assertEquals("N", HorizontalCoordinates.ofDeg(0,0).azOctantName("N","E","S","W"));
         assertEquals("N", HorizontalCoordinates.ofDeg(10,0).azOctantName("N","E","S","W"));
@@ -93,8 +95,7 @@ public class HorizontalCoordinatesTest {
     }
 
     @Test
-    void angularDistanceTest() {
-        // edge cases
+    void angularDistanceBoundsTest() {
         assertEquals(0, HorizontalCoordinates.of(0,0).angularDistanceTo(HorizontalCoordinates.of(0,0)));
         assertEquals(0, HorizontalCoordinates.of(Math.PI,0).angularDistanceTo(HorizontalCoordinates.of(Math.PI,0)));
         assertEquals(0, HorizontalCoordinates.of(0,-Math.PI/2).angularDistanceTo(HorizontalCoordinates.of(0,-Math.PI/2)));
@@ -103,7 +104,13 @@ public class HorizontalCoordinatesTest {
         assertEquals(Math.PI, HorizontalCoordinates.of(Math.PI,0).angularDistanceTo(HorizontalCoordinates.of(0,0)));
         assertEquals(Math.PI, HorizontalCoordinates.of(0,-Math.PI/2).angularDistanceTo(HorizontalCoordinates.of(0,Math.PI/2)));
         assertEquals(Math.PI, HorizontalCoordinates.of(0,Math.PI/2).angularDistanceTo(HorizontalCoordinates.of(0,-Math.PI/2)));
-        // normal
+    }
+
+    @Test
+    void angularDistanceNormalTest() {
+        assertEquals(Angle.ofDeg(61.1056), HorizontalCoordinates.of(Angle.ofDeg(27.634), Angle.ofDeg(3.65432)).angularDistanceTo(HorizontalCoordinates.of(Angle.ofDeg(64.6243), Angle.ofDeg(-48.2532))), 1e-4);
+        assertEquals(Angle.ofDeg(94.8065), HorizontalCoordinates.of(Angle.ofDeg(174.2526), Angle.ofDeg(87.5235)).angularDistanceTo(HorizontalCoordinates.of(Angle.ofDeg(23.857), Angle.ofDeg(-2.6541))), 1e-4);
+        assertEquals(Angle.ofDeg(131.3288), HorizontalCoordinates.of(Angle.ofDeg(126.5262), Angle.ofDeg(-67.523)).angularDistanceTo(HorizontalCoordinates.of(Angle.ofDeg(12.5232), Angle.ofDeg(35.2564))), 1e-4);
     }
 
     @Test

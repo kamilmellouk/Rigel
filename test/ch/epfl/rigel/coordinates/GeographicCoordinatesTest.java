@@ -8,10 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Kamil Mellouk (312327)
  */
 
-/**
- * make the constructor public in the class
- */
-
 public class GeographicCoordinatesTest {
 
     @Test
@@ -41,11 +37,13 @@ public class GeographicCoordinatesTest {
     }
 
     @Test
-    void isValidLonDegTest() {
-        // bounds
+    void isValidLonDegBoundsTest() {
         assertTrue(GeographicCoordinates.isValidLonDeg(-180));
         assertFalse(GeographicCoordinates.isValidLonDeg(180));
-        // normal cases
+    }
+
+    @Test
+    void isValidLonDegNormalTest() {
         assertTrue(GeographicCoordinates.isValidLonDeg(-90));
         assertTrue(GeographicCoordinates.isValidLonDeg(0));
         assertTrue(GeographicCoordinates.isValidLonDeg(90));
@@ -54,11 +52,13 @@ public class GeographicCoordinatesTest {
     }
 
     @Test
-    void isValidLatDegTest() {
-        // bounds
+    void isValidLatDegBoundsTest() {
         assertTrue(GeographicCoordinates.isValidLatDeg(-90));
         assertTrue(GeographicCoordinates.isValidLatDeg(90));
-        // normal cases
+    }
+
+    @Test
+    void isValidLatDegNormalTest() {
         assertTrue(GeographicCoordinates.isValidLatDeg(-45));
         assertTrue(GeographicCoordinates.isValidLatDeg(0));
         assertTrue(GeographicCoordinates.isValidLatDeg(45));
@@ -67,7 +67,7 @@ public class GeographicCoordinatesTest {
     }
 
     @Test
-    void ofDegConstructorTest() {
+    void ofDegConstructorNormalTest() {
         assertEquals(0, GeographicCoordinates.ofDeg(0,0).lon());
         assertEquals(0, GeographicCoordinates.ofDeg(0,0).lonDeg());
         assertEquals(0, GeographicCoordinates.ofDeg(0,0).lat());
@@ -76,7 +76,10 @@ public class GeographicCoordinatesTest {
         assertEquals(90, GeographicCoordinates.ofDeg(90,0).lonDeg());
         assertEquals(Math.PI/2, GeographicCoordinates.ofDeg(0,90).lat());
         assertEquals(90, GeographicCoordinates.ofDeg(0,90).latDeg());
-        // exception test
+    }
+
+    @Test
+    void ofDegConstructorExceptionTest() {
         assertThrows(IllegalArgumentException.class, () -> {
             GeographicCoordinates.ofDeg(-181,0);
         });
