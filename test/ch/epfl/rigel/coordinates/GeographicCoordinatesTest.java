@@ -16,28 +16,28 @@ public class GeographicCoordinatesTest {
 
     @Test
     void returnLonTest() {
-        assertEquals(1, new GeographicCoordinates(1,0).lon());
-        assertEquals(2, new GeographicCoordinates(2,0).lon());
+        assertEquals(Math.PI/4, GeographicCoordinates.ofDeg(45,0).lon());
+        assertEquals(Math.PI/2, GeographicCoordinates.ofDeg(90,0).lon());
     }
 
     @Test
     void returnLonDegTest() {
-        assertEquals(0, new GeographicCoordinates(0,0).lonDeg());
-        assertEquals(45, new GeographicCoordinates(Math.PI/4,0).lonDeg());
-        assertEquals(90, new GeographicCoordinates(Math.PI/2,0).lonDeg());
+        assertEquals(0, GeographicCoordinates.ofDeg(0,0).lonDeg());
+        assertEquals(45, GeographicCoordinates.ofDeg(45,0).lonDeg());
+        assertEquals(90, GeographicCoordinates.ofDeg(90,0).lonDeg());
     }
 
     @Test
     void returnLatTest() {
-        assertEquals(1, new GeographicCoordinates(0,1).lat());
-        assertEquals(2, new GeographicCoordinates(0,2).lat());
+        assertEquals(Math.PI/4, GeographicCoordinates.ofDeg(0,45).lat());
+        assertEquals(Math.PI/2, GeographicCoordinates.ofDeg(0,90).lat());
     }
 
     @Test
     void returnLatDegTest() {
-        assertEquals(0, new GeographicCoordinates(1,0).latDeg());
-        assertEquals(45, new GeographicCoordinates(0,Math.PI/4).latDeg());
-        assertEquals(90, new GeographicCoordinates(0,Math.PI/2).latDeg());
+        assertEquals(0, GeographicCoordinates.ofDeg(1,0).latDeg());
+        assertEquals(45, GeographicCoordinates.ofDeg(0,45).latDeg());
+        assertEquals(90, GeographicCoordinates.ofDeg(0,90).latDeg());
     }
 
     @Test
@@ -93,10 +93,10 @@ public class GeographicCoordinatesTest {
 
     @Test
     void toStringTest() {
-        assertEquals("(lon=0.0000°, lat=0.0000°)", new GeographicCoordinates(0,0).toString());
-        assertEquals("(lon=90.0000°, lat=22.5000°)", new GeographicCoordinates(Math.PI/2,Math.PI/8).toString());
-        assertEquals("(lon=60.0000°, lat=36.0000°)", new GeographicCoordinates(Math.PI/3,Math.PI/5).toString());
-        assertEquals("(lon=70.7316°, lat=24.7575°)", new GeographicCoordinates(1.2345,0.4321).toString());
+        assertEquals("(lon=0.0000°, lat=0.0000°)", GeographicCoordinates.ofDeg(0,0).toString());
+        assertEquals("(lon=90.0000°, lat=22.5000°)", GeographicCoordinates.ofDeg(90,22.5).toString());
+        assertEquals("(lon=60.0000°, lat=36.0000°)", GeographicCoordinates.ofDeg(60,36).toString());
+        assertEquals("(lon=70.7316°, lat=24.7575°)", GeographicCoordinates.ofDeg(70.7316,24.7575).toString());
     }
 
 }

@@ -7,7 +7,7 @@ import ch.epfl.rigel.math.Angle;
  * @author Kamil Mellouk (312327)
  */
 
-abstract class SphericalCoordinates {
+class SphericalCoordinates {
 
     /// Longitude and latitude, the spherical coordinates used to represent any position on a sphere
     private double longitude;
