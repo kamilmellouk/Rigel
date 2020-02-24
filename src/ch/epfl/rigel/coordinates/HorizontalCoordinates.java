@@ -1,5 +1,6 @@
 package ch.epfl.rigel.coordinates;
 
+import ch.epfl.rigel.Preconditions;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 import ch.epfl.rigel.math.RightOpenInterval;
@@ -29,15 +30,12 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      * @param az  the azimuth in rad
      * @param alt the altitude in rad
      * @return the horizontal coordinates of given azimuth and altitude in rad
-     * or throws an exception if at least one of the two value is invalid
      */
-    // TODO: 22/02/2020 do we must use valid method ? 
     public static HorizontalCoordinates of(double az, double alt) {
-        if (RightOpenInterval.of(0, Angle.TAU).contains(az) && ClosedInterval.of(-Math.PI / 2, Math.PI / 2).contains(alt)) {
-            return new HorizontalCoordinates(az, alt);
-        } else {
-            throw new IllegalArgumentException();
-        }
+        return new HorizontalCoordinates(
+                Preconditions.checkInInterval(RightOpenInterval.of(0, Angle.TAU), az),
+                Preconditions.checkInInterval(ClosedInterval.of(-Math.PI / 2, Math.PI / 2), alt)
+        );
     }
 
     /**
@@ -46,15 +44,12 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      * @param azDeg  the azimuth in deg
      * @param altDeg the altitude in deg
      * @return the horizontal coordinates of given azimuth and altitude in deg
-     * or throws an exception if at least one of the two value is invalid
      */
-    // TODO: 22/02/2020 what is the unit of default longitude and latitude of the super class ?
     public static HorizontalCoordinates ofDeg(double azDeg, double altDeg) {
-        if (RightOpenInterval.of(0, 360).contains(azDeg) && ClosedInterval.of(-90, 90).contains(altDeg)) {
-            return new HorizontalCoordinates(Angle.ofDeg(azDeg), Angle.ofDeg(altDeg));
-        } else {
-            throw new IllegalArgumentException();
-        }
+        return new HorizontalCoordinates(
+                Angle.ofDeg(Preconditions.checkInInterval(RightOpenInterval.of(0, 360), azDeg)),
+                Angle.ofDeg(Preconditions.checkInInterval(ClosedInterval.of(-90, 90), altDeg))
+        );
     }
 
     /**
@@ -102,7 +97,6 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      * @param that the given point
      * @return the angular distance with the given point
      */
-    // TODO: 24/02/2020 is the returned value in rad or deg ?
     public double angularDistanceTo(HorizontalCoordinates that) {
         return Math.acos(Math.sin(alt()) * Math.sin(that.alt()) + Math.cos(alt()) * Math.cos(that.alt()) * Math.cos(az() - that.az()));
     }

@@ -1,5 +1,6 @@
 package ch.epfl.rigel.coordinates;
 
+import ch.epfl.rigel.Preconditions;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 import ch.epfl.rigel.math.RightOpenInterval;
@@ -29,15 +30,12 @@ public final class EquatorialCoordinates extends SphericalCoordinates {
      * @param ra  the right ascension in rad
      * @param dec the declination in rad
      * @return the equatorial coordinates of given right ascension and declination in rad
-     * or throws an exception if at least one of the two value is invalid
      */
-    // TODO: 22/02/2020 do we must use valid method ?
     public static EquatorialCoordinates of(double ra, double dec) {
-        if (RightOpenInterval.of(0, Angle.TAU).contains(ra) && ClosedInterval.of(-Math.PI / 2, Math.PI / 2).contains(dec)) {
-            return new EquatorialCoordinates(ra, dec);
-        } else {
-            throw new IllegalArgumentException();
-        }
+        return new EquatorialCoordinates(
+                Preconditions.checkInInterval(RightOpenInterval.of(0, Angle.TAU), ra),
+                Preconditions.checkInInterval(ClosedInterval.of(-Math.PI / 2, Math.PI / 2), dec)
+        );
     }
 
     /**
