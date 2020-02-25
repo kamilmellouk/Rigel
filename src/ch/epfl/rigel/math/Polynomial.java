@@ -57,7 +57,7 @@ public final class Polynomial {
         for (int i = 0; i < coefficients.length; i++) {
             // check if it is the last coefficient
             if (i != coefficients.length - 1) {
-                // check if the coefficient is not null
+                // check if the coefficient is not zero
                 if (coefficients[i] != 0) {
                     // check if the coefficient is 1 or -1
                     if (Math.abs(coefficients[i]) == 1) {
