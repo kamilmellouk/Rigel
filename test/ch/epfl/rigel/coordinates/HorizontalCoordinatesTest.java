@@ -64,7 +64,14 @@ public class HorizontalCoordinatesTest {
 
     @Test
     void asOctantNameBoundsTest() {
-
+        assertEquals("NE", HorizontalCoordinates.ofDeg(22.5, 0).azOctantName("N", "E", "S", "W"));
+        assertEquals("E", HorizontalCoordinates.ofDeg(67.5, 0).azOctantName("N", "E", "S", "W"));
+        assertEquals("SE", HorizontalCoordinates.ofDeg(112.5, 0).azOctantName("N", "E", "S", "W"));
+        assertEquals("S", HorizontalCoordinates.ofDeg(157.5, 0).azOctantName("N", "E", "S", "W"));
+        assertEquals("SW", HorizontalCoordinates.ofDeg(202.5, 0).azOctantName("N", "E", "S", "W"));
+        assertEquals("W", HorizontalCoordinates.ofDeg(247.5, 0).azOctantName("N", "E", "S", "W"));
+        assertEquals("NW", HorizontalCoordinates.ofDeg(292.5, 0).azOctantName("N", "E", "S", "W"));
+        assertEquals("N", HorizontalCoordinates.ofDeg(337.5, 0).azOctantName("N", "E", "S", "W"));
     }
 
     @Test

@@ -73,7 +73,6 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      * @param w the west
      * @return the octant where the azimuth is
      */
-    // TODO: 22/02/2020 limit angles?
     public String azOctantName(String n, String e, String s, String w) {
         int index = (int) (az() / (Math.PI / 4)) + ((int) ((az() % (Math.PI / 4)) / (Math.PI / 8)) == 0 ? 0 : 1);
         return new String[]{n, n + e, e, s + e, s, s + w, w, n + w}[index == 8 ? 0 : index];
