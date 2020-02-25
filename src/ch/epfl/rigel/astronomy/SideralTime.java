@@ -33,7 +33,7 @@ public final class SideralTime {
         double s0 = Polynomial.of(0.000025862, 2400.051336, 6.697374558).at(t0);
         double s1 = Polynomial.of(1.002737909, 0).at(t1);
 
-        // Reducing s0 + 1
+        // Reducing s0 + s1 to [0, 24[ and converting it to rad
         return Angle.ofHr(RightOpenInterval.of(0, 24).reduce(s0 + s1));
     }
 
