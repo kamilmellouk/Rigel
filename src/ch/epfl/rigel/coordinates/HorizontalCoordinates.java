@@ -46,10 +46,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      * @return the horizontal coordinates of given azimuth and altitude in deg
      */
     public static HorizontalCoordinates ofDeg(double azDeg, double altDeg) {
-        return new HorizontalCoordinates(
-                Angle.ofDeg(Preconditions.checkInInterval(RightOpenInterval.of(0, 360), azDeg)),
-                Angle.ofDeg(Preconditions.checkInInterval(ClosedInterval.of(-90, 90), altDeg))
-        );
+        return of(Angle.ofDeg(azDeg), Angle.ofDeg(altDeg));
     }
 
     /**
