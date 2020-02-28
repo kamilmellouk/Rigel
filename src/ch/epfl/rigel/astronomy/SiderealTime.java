@@ -8,13 +8,12 @@ import ch.epfl.rigel.math.RightOpenInterval;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 
 /**
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-public final class SideralTime {
+public final class SiderealTime {
 
     /**
      * Computing the sideral time with respect to greenwich and J2000
@@ -31,7 +30,9 @@ public final class SideralTime {
 
         // Plugging t0 and t1 in the given polynomial
         double s0 = Polynomial.of(0.000025862, 2400.051336, 6.697374558).at(t0);
+        System.out.println(s0);
         double s1 = Polynomial.of(1.002737909, 0).at(t1);
+        System.out.println(s1);
 
         // Reducing s0 + s1 to [0, 24[ and converting it to rad
         return Angle.ofHr(RightOpenInterval.of(0, 24).reduce(s0 + s1));
