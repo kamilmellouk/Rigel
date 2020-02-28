@@ -20,12 +20,12 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
     public EclipticToEquatorialConversion(ZonedDateTime when) {
         julCentSinceJ2000 = Epoch.J2000.julianCenturiesUntil(when);
         eclObliquity = eclObliquityFormula.at(julCentSinceJ2000);
-
     }
 
 
     @Override
     public EquatorialCoordinates apply(EclipticCoordinates ecl) {
+        // TODO find out the use of atan2
        /* return new EquatorialCoordinates.of(
                 //Math.atan2((Math.sin(ecl.lon())*Math.cos(eclObliquity) - Math.tan(ecl.lat())*Math.sin(eclObliquity))/Math.cos(ecl.lon())),
                 Math.asin(Math.sin(ecl.lat())*Math.cos(eclObliquity) + Math.cos(ecl.lat())*Math.sin(eclObliquity)*Math.sin(ecl.lon()))
