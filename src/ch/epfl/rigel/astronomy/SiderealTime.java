@@ -25,8 +25,8 @@ public final class SiderealTime {
         ZonedDateTime greenWhen = when.withZoneSameInstant(ZoneOffset.UTC);
 
         // Computing the time difference between J2000 and the given time
-        double t0 = Epoch.J2000.julianCenturiesUntil(greenWhen.truncatedTo(ChronoUnit.DAYS));
-        double t1 = when.getHour();
+        double t0 = Epoch.J2000.julianCenturiesUntil(greenWhen.withHour(0).withMinute(0).withSecond(0));
+        double t1 = greenWhen.getHour();
 
         // Plugging t0 and t1 in the given polynomial
         double s0 = Polynomial.of(0.000025862, 2400.051336, 6.697374558).at(t0);
