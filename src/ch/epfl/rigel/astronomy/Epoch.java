@@ -28,7 +28,7 @@ public enum Epoch {
     }
 
     /**
-     * Computing the difference between an Epoch and a given date-time couple with time zone
+     * Compute the difference between an Epoch and a given date-time couple with time zone
      *
      * @param when date-time couple (with time zone) to compare
      * @return difference in days (can be decimal)
@@ -38,7 +38,7 @@ public enum Epoch {
     }
 
     /**
-     * Computing the difference between an Epoch and a given date-time couple with time zone
+     * Compute the difference between an Epoch and a given date-time couple with time zone
      *
      * @param when date-time couple (with time zone) to compare
      * @return difference in julian centuries (can be decimal)
