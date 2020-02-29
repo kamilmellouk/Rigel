@@ -6,34 +6,44 @@ import java.time.ZonedDateTime;
 import java.util.function.Function;
 
 /**
- * @author Mohamed Kamil MELLOUK
- * 28.02.20
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk (312327)
  */
+
 public final class EquatorialToHorizontalConversion implements Function<EquatorialCoordinates, HorizontalCoordinates> {
 
-    private GeographicCoordinates where;
-    private double sidTime;
-    private double hourAngle;
+    // the sidereal time
+    private double siderealTime;
 
+    /**
+     * constructor of the coordinates system change
+     *
+     * @param when  date-time couple with time zone
+     * @param where the geographic coordinates of the place
+     */
     public EquatorialToHorizontalConversion(ZonedDateTime when, GeographicCoordinates where) {
-        this.where = where;
-        this.sidTime = SiderealTime.local(when, where);
+        this.siderealTime = SiderealTime.local(when, where);
     }
 
+    /**
+     * @param equ the given equatorial coordinates
+     * @return the horizontal coordinates corresponding to the given equatorial coordinates
+     */
     @Override
-    public HorizontalCoordinates apply(EquatorialCoordinates equat) {
-        hourAngle = sidTime - equat.ra();
-        double h = Math.asin(Math.sin(equat.dec())*Math.sin(equat.lat()) + Math.cos(equat.dec())*Math.cos(equat.lat())*Math.cos(hourAngle));
+    public HorizontalCoordinates apply(EquatorialCoordinates equ) {
+        double hourAngle = siderealTime - equ.ra();
+        // TODO: 29/02/2020 check h
+        double h = Math.asin(Math.sin(equ.dec()) * Math.sin(equ.lat()) + Math.cos(equ.dec()) * Math.cos(equ.lat()) * Math.cos(hourAngle));
         return HorizontalCoordinates.of(
-               Math.atan2(-Math.cos(equat.dec())*Math.cos(equat.lat())*Math.sin(hourAngle), Math.sin(equat.dec()) - Math.sin(equat.lat())*Math.sin(h)),
-               h
+                Math.atan2(-Math.cos(equ.dec()) * Math.cos(equ.lat()) * Math.sin(hourAngle), Math.sin(equ.dec()) - Math.sin(equ.lat()) * Math.sin(h)),
+                h
         );
     }
 
     /**
      * @param obj the object
      * @return nothing
-     * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
+     * @throws UnsupportedOperationException the exception to throw
      */
     @Override
     public final boolean equals(Object obj) throws UnsupportedOperationException {
@@ -42,7 +52,7 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
 
     /**
      * @return nothing
-     * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
+     * @throws UnsupportedOperationException the exception to throw
      */
     @Override
     public final int hashCode() throws UnsupportedOperationException {
