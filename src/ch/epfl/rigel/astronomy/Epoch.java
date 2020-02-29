@@ -43,4 +43,5 @@ public enum Epoch {
     public double julianCenturiesUntil(ZonedDateTime when) {
         return daysUntil(when) / (double) 36525;
     }
+
 }
