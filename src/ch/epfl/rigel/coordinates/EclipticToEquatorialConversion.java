@@ -15,6 +15,14 @@ import java.util.function.Function;
 public final class EclipticToEquatorialConversion implements Function<EclipticCoordinates, EquatorialCoordinates> {
 
     // TODO: 29/02/2020 check performances
+    private static final Polynomial eclObliquityFormula = Polynomial.of(
+            Angle.ofArcsec(0.00181),
+            -Angle.ofArcsec(0.0006),
+            -Angle.ofArcsec(46.815),
+            Angle.ofDMS(23, 26, 21.45)
+            );
+
+    private double eclipticObliquity;
     // the cosinus od the ecliptic obliquity
     private double cosOfEclipticObliquity;
     // the sinus of the ecliptic obliquity
@@ -27,12 +35,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
      */
     public EclipticToEquatorialConversion(ZonedDateTime when) {
         // compute the ecliptic obliquity
-        double eclipticObliquity = Polynomial.of(
-                Angle.ofArcsec(0.00181),
-                -Angle.ofArcsec(0.0006),
-                -Angle.ofArcsec(46.815),
-                Angle.ofDMS(23, 26, 21.45))
-                .at(Epoch.J2000.julianCenturiesUntil(when));
+        eclipticObliquity = eclObliquityFormula.at(Epoch.J2000.julianCenturiesUntil(when));
         cosOfEclipticObliquity = Math.cos(eclipticObliquity);
         sinOfEclipticObliquity = Math.sin(eclipticObliquity);
     }
