@@ -32,16 +32,16 @@ public final class SiderealTime {
         ZonedDateTime whenInUTC = when.withZoneSameInstant(ZoneOffset.UTC);
 
         // Compute the number of julian centuries between J2000 and the given time expressed in UTC
-        double T = Epoch.J2000.julianCenturiesUntil(whenInUTC.truncatedTo(ChronoUnit.DAYS));
+        double T = Epoch.J2000.julianCenturiesUntil(whenInUTC.truncatedTo(ChronoUnit.DAYS).truncatedTo(ChronoUnit.MINUTES).truncatedTo(ChronoUnit.SECONDS));
         // Compute the number of hours between the beginning of the day containing the specific moment and the moment itself
-        double t = when.getHour();
+        double t = whenInUTC.truncatedTo(ChronoUnit.DAYS).until(whenInUTC, ChronoUnit.MILLIS)/(double)3600*1000;
 
         // compute the two values of the given polynomial at T and t
         double s0 = Polynomial.of(0.000025862, 2400.051336, 6.697374558).at(T);
         double s1 = Polynomial.of(1.002737909, 0).at(t);
 
         // Reduce s0 + s1 to the interval [0, 24[ and convert it to rad
-        return Angle.ofHr(RightOpenInterval.of(0, 24).reduce(s0 + s1));
+        return Angle.normalizePositive(Angle.ofHr(s0 + s1));
     }
 
     /**
