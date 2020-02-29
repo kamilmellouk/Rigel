@@ -1,5 +1,7 @@
 package ch.epfl.rigel.coordinates;
 
+import ch.epfl.rigel.astronomy.SiderealTime;
+
 import java.time.ZonedDateTime;
 import java.util.function.Function;
 
@@ -10,16 +12,22 @@ import java.util.function.Function;
 public final class EquatorialToHorizontalConversion implements Function<EquatorialCoordinates, HorizontalCoordinates> {
 
     private GeographicCoordinates where;
+    private double sidTime;
+    private double hourAngle;
 
     public EquatorialToHorizontalConversion(ZonedDateTime when, GeographicCoordinates where) {
-    // TODO Find attributes to store, find how to use when
         this.where = where;
+        this.sidTime = SiderealTime.local(when, where);
     }
 
     @Override
-    public HorizontalCoordinates apply(EquatorialCoordinates equatorialCoordinates) {
-        // TODO plug in formula, and find out the use of atan2
-        return null;
+    public HorizontalCoordinates apply(EquatorialCoordinates equat) {
+        hourAngle = sidTime - equat.ra();
+        double h = Math.asin(Math.sin(equat.dec())*Math.sin(equat.lat()) + Math.cos(equat.dec())*Math.cos(equat.lat())*Math.cos(hourAngle));
+        return HorizontalCoordinates.of(
+               Math.atan2(-Math.cos(equat.dec())*Math.cos(equat.lat())*Math.sin(hourAngle), Math.sin(equat.dec()) - Math.sin(equat.lat())*Math.sin(h)),
+               h
+        );
     }
 
     /**
