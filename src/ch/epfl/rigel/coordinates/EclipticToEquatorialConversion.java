@@ -14,6 +14,7 @@ import java.util.function.Function;
 
 public final class EclipticToEquatorialConversion implements Function<EclipticCoordinates, EquatorialCoordinates> {
 
+    // TODO: 29/02/2020 check performances
     // the cosinus od the ecliptic obliquity
     private double cosOfEclipticObliquity;
     // the sinus of the ecliptic obliquity
