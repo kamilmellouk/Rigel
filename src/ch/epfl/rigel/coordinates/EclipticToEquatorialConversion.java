@@ -15,13 +15,14 @@ import java.util.function.Function;
 public final class EclipticToEquatorialConversion implements Function<EclipticCoordinates, EquatorialCoordinates> {
 
     // TODO: 29/02/2020 check performances
+    // formula used to compute the ecliptic obliquity
     private static final Polynomial eclObliquityFormula = Polynomial.of(
             Angle.ofArcsec(0.00181),
             -Angle.ofArcsec(0.0006),
             -Angle.ofArcsec(46.815),
             Angle.ofDMS(23, 26, 21.45)
             );
-
+    // ecliptic obliquity, to be determined at construction, when computing it with the formula
     private double eclipticObliquity;
     // the cosinus od the ecliptic obliquity
     private double cosOfEclipticObliquity;
