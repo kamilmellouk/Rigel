@@ -17,7 +17,7 @@ import java.time.temporal.ChronoUnit;
 public final class SiderealTime {
     private static final Polynomial s0Formula = Polynomial.of(0.000025862, 2400.051336, 6.697374558);
     private static final Polynomial s1Formula = Polynomial.of(1.002737909, 0);
-    private static final double milisecondsPerDay = 360000;
+    private static final double milisecondsPerDay = 3600000;
 
     // TODO: 29/02/2020 check with Oscar
     private SiderealTime() {
