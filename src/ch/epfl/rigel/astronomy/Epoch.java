@@ -20,9 +20,6 @@ public enum Epoch {
 
     private ZonedDateTime date;
 
-    // TODO: 29/02/2020 useful or not ?
-    private static final double MILLIS_PER_DAY = 24 * 60 * 60 * 1000;
-
     Epoch(ZonedDateTime date) {
         this.date = date;
     }
@@ -34,7 +31,7 @@ public enum Epoch {
      * @return difference in days (can be decimal)
      */
     public double daysUntil(ZonedDateTime when) {
-        return date.until(when, ChronoUnit.MILLIS) / MILLIS_PER_DAY;
+        return date.until(when, ChronoUnit.MILLIS) / (24d * 60 * 60 * 1000);
     }
 
     /**
