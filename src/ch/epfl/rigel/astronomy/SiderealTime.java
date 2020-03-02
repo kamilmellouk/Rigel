@@ -8,16 +8,17 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
+import static java.time.temporal.ChronoUnit.*;
+
 /**
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class SiderealTime {
 
     private static final Polynomial s0Formula = Polynomial.of(0.000025862, 2400.051336, 6.697374558);
     private static final Polynomial s1Formula = Polynomial.of(1.002737909, 0);
-    private static final double MILLISECONDS_PER_HOUR = 3600000;
+    private static final double MILLISECONDS_PER_HOUR = 3_600_000;
 
     private SiderealTime() {
     }
@@ -33,11 +34,11 @@ public final class SiderealTime {
         ZonedDateTime whenInUTC = when.withZoneSameInstant(ZoneOffset.UTC);
 
         // Compute the number of julian centuries between J2000 and the given time expressed in UTC
-        double T = Epoch.J2000.julianCenturiesUntil(whenInUTC.truncatedTo(ChronoUnit.DAYS));
+        double T = Epoch.J2000.julianCenturiesUntil(whenInUTC.truncatedTo(DAYS));
         // Compute the number of hours between the beginning of the day containing the specific moment and the moment itself
-        double t = whenInUTC.truncatedTo(ChronoUnit.DAYS).until(whenInUTC, ChronoUnit.MILLIS) / MILLISECONDS_PER_HOUR;
+        double t = whenInUTC.truncatedTo(DAYS).until(whenInUTC, MILLIS) / MILLISECONDS_PER_HOUR;
 
-        // compute the two values of the given polynomial at T and t
+        // Compute the two values of the given polynomial at T and t
         double s0 = s0Formula.at(T);
         double s1 = s1Formula.at(t);
 
