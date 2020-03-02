@@ -11,9 +11,16 @@ import java.util.Locale;
  */
 public final class Moon extends CelestialObject {
 
-    /// Attribute specific to the Moon
+    // Attribute specific to the Moon
     private float phase;
 
+    /**
+     * Constructing a Moon
+     * @param equatorialPos (not null) equatorial coordinates of the Moon
+     * @param angularSize (non negative) angular size of the Moon
+     * @param magnitude magnitude of the Moon
+     * @param phase (contained in [0, 1]) MoonPhase
+     */
     Moon(EquatorialCoordinates equatorialPos, float angularSize, float magnitude, float phase) {
         super("Lune", equatorialPos, angularSize, magnitude);
         if(!ClosedInterval.of(0,1).contains(phase)) throw new IllegalArgumentException();

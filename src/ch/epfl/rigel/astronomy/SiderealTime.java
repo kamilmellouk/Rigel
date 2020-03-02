@@ -16,12 +16,16 @@ import static java.time.temporal.ChronoUnit.*;
  */
 public final class SiderealTime {
 
+    // Polynomials used to compute the sideral time
     private static final Polynomial s0Formula = Polynomial.of(0.000025862, 2400.051336, 6.697374558);
     private static final Polynomial s1Formula = Polynomial.of(1.002737909, 0);
+    // Number of milliseconds in an hour
     private static final double MILLISECONDS_PER_HOUR = 3_600_000;
 
-    private SiderealTime() {
-    }
+    /**
+     * Default constructor
+     */
+    private SiderealTime() {}
 
     /**
      * Compute the sidereal time with respect to greenwich and J2000
