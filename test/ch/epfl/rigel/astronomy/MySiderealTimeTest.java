@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-public class SiderealTimeTest {
+public class MySiderealTimeTest {
 
     @Test
     void greenwichWorks() {

@@ -1,132 +1,177 @@
 package ch.epfl.rigel.coordinates;
 
-import ch.epfl.rigel.math.Angle;
+import ch.epfl.test.TestRandomizer;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
-/**
- * @author Bastien Faivre (310929)
- * @author Kamil Mellouk (312327)
- */
+import static java.lang.Math.PI;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class HorizontalCoordinatesTest {
+class HorizontalCoordinatesTest {
+    @Test
+    void horOfWorksWithValidCoordinates() {
+        var rng = TestRandomizer.newRandom();
+        for (int i = 0; i < TestRandomizer.RANDOM_ITERATIONS; i++) {
+            var az = rng.nextDouble(0, 2d * PI);
+            var alt = rng.nextDouble(-PI / 2d, PI / 2d);
+            var c = HorizontalCoordinates.of(az, alt);
+            assertEquals(az, c.az(), 1e-8);
+            assertEquals(alt, c.alt(), 1e-8);
+        }
+    }
 
     @Test
-    void ofTest() {
+    void horOfFailsWithInvalidCoordinates() {
         assertThrows(IllegalArgumentException.class, () -> {
-            HorizontalCoordinates.of(-1, 0);
+            HorizontalCoordinates.of(-1e-8, 0);
         });
         assertThrows(IllegalArgumentException.class, () -> {
-            HorizontalCoordinates.of(0, Math.PI);
+            HorizontalCoordinates.of(2d * PI + 1e-8, 0);
         });
         assertThrows(IllegalArgumentException.class, () -> {
-            HorizontalCoordinates.of(Angle.TAU, Math.PI / 2);
-        });
-    }
-
-    @Test
-    void ofDegTest() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            HorizontalCoordinates.ofDeg(-1, 0);
+            HorizontalCoordinates.of(0, -(PI + 1e-8));
         });
         assertThrows(IllegalArgumentException.class, () -> {
-            HorizontalCoordinates.ofDeg(0, 180);
+            HorizontalCoordinates.of(0, PI + 1e-8);
+        });
+    }
+
+    @Test
+    void horOfDegWorksWithValidCoordinates() {
+        var rng = TestRandomizer.newRandom();
+        for (int i = 0; i < TestRandomizer.RANDOM_ITERATIONS; i++) {
+            var azDeg = rng.nextDouble(0, 360);
+            var altDeg = rng.nextDouble(-90, 90);
+            var c = HorizontalCoordinates.ofDeg(azDeg, altDeg);
+            assertEquals(azDeg, c.azDeg(), 1e-8);
+            assertEquals(altDeg, c.altDeg(), 1e-8);
+        }
+    }
+
+    @Test
+    void horOfDegFailsWithInvalidCoordinates() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            HorizontalCoordinates.ofDeg(-0.0001, 0);
         });
         assertThrows(IllegalArgumentException.class, () -> {
-            HorizontalCoordinates.ofDeg(360, 90);
+            HorizontalCoordinates.ofDeg(360, 0);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            HorizontalCoordinates.ofDeg(0, -90.0001);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            HorizontalCoordinates.ofDeg(0, 90.0001);
         });
     }
 
     @Test
-    void returnAzTest() {
-        assertEquals(1, HorizontalCoordinates.of(1, 0).az());
-        assertEquals(2, HorizontalCoordinates.of(2, 0).az());
+    void horLonLatReturnValuesInRadians() {
+        var rng = TestRandomizer.newRandom();
+        for (int i = 0; i < TestRandomizer.RANDOM_ITERATIONS; i++) {
+            var azDeg = rng.nextDouble(0, 360);
+            var altDeg = rng.nextDouble(-90, 90);
+            var c = HorizontalCoordinates.ofDeg(azDeg, altDeg);
+            var az = Math.toRadians(azDeg);
+            var alt = Math.toRadians(altDeg);
+            assertEquals(az, c.lon(), 1e-8);
+            assertEquals(alt, c.lat(), 1e-8);
+        }
     }
 
     @Test
-    void returnAzDegTest() {
-        assertEquals(0, HorizontalCoordinates.of(0, 0).azDeg());
-        assertEquals(90, HorizontalCoordinates.of(Math.PI / 2, 0).azDeg());
+    public void azOctantNameCorrectlyCyclesThroughValues() {
+        String n = "north", e = "east", s = "south", w = "west";
+        var expected = new ArrayList<String>();
+        expected.addAll(Collections.nCopies(45, n));
+        expected.addAll(Collections.nCopies(45, n + e));
+        expected.addAll(Collections.nCopies(45, e));
+        expected.addAll(Collections.nCopies(45, s + e));
+        expected.addAll(Collections.nCopies(45, s));
+        expected.addAll(Collections.nCopies(45, s + w));
+        expected.addAll(Collections.nCopies(45, w));
+        expected.addAll(Collections.nCopies(45, n + w));
+        Collections.rotate(expected, -22);
+
+        for (var azDeg = 0; azDeg < 360; ++azDeg) {
+            var c = HorizontalCoordinates.ofDeg(azDeg, 0);
+            assertEquals(expected.get(azDeg), c.azOctantName(n, e, s, w));
+        }
     }
 
     @Test
-    void returnAltTest() {
-        assertEquals(1, HorizontalCoordinates.of(0, 1).alt());
-        assertEquals(0.5, HorizontalCoordinates.of(0, 0.5).alt());
+    public void angularDistanceToWorksAtHorizon() {
+        var rng = TestRandomizer.newRandom();
+        for (int i = 0; i < TestRandomizer.RANDOM_ITERATIONS; i++) {
+            var azDeg1 = rng.nextDouble(360);
+            var azDeg2 = rng.nextDouble(360);
+            var azDiffDeg = Math.abs(azDeg1 - azDeg2);
+            if (azDiffDeg > 180)
+                azDiffDeg = 360 - azDiffDeg;
+            if (azDiffDeg < 1e-6) {
+                // Avoid very small differences, for which our formula is not very stable
+                continue;
+            }
+            var c1 = HorizontalCoordinates.ofDeg(azDeg1, 0);
+            var c2 = HorizontalCoordinates.ofDeg(azDeg2, 0);
+            assertEquals(azDiffDeg, Math.toDegrees(c1.angularDistanceTo(c2)), 1e-8);
+        }
     }
 
     @Test
-    void returnAltDegTest() {
-        assertEquals(0, HorizontalCoordinates.of(0, 0).altDeg());
-        assertEquals(90, HorizontalCoordinates.of(0, Math.PI / 2).altDeg());
+    public void angularDistanceToWorksOnMeridians() {
+        var rng = TestRandomizer.newRandom();
+        for (int i = 0; i < TestRandomizer.RANDOM_ITERATIONS; i++) {
+            var azDeg = rng.nextDouble(360);
+            var altDeg1 = rng.nextDouble(-90, 90);
+            var altDeg2 = rng.nextDouble(-90, 90);
+            var altDiffDeg = Math.abs(altDeg1 - altDeg2);
+            if (altDiffDeg < 1e-6) {
+                // Avoid very small differences, for which our formula is not very stable
+                continue;
+            }
+            var c1 = HorizontalCoordinates.ofDeg(azDeg, altDeg1);
+            var c2 = HorizontalCoordinates.ofDeg(azDeg, altDeg2);
+            assertEquals(altDiffDeg, Math.toDegrees(c1.angularDistanceTo(c2)), 1e-8);
+        }
     }
 
     @Test
-    void asOctantNameBoundsTest() {
-        assertEquals("NE", HorizontalCoordinates.ofDeg(22.5, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("E", HorizontalCoordinates.ofDeg(67.5, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("SE", HorizontalCoordinates.ofDeg(112.5, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("S", HorizontalCoordinates.ofDeg(157.5, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("SW", HorizontalCoordinates.ofDeg(202.5, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("W", HorizontalCoordinates.ofDeg(247.5, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("NW", HorizontalCoordinates.ofDeg(292.5, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("N", HorizontalCoordinates.ofDeg(337.5, 0).azOctantName("N", "E", "S", "W"));
+    public void angularDistanceToIsCommutative() {
+        var rng = TestRandomizer.newRandom();
+        for (int i = 0; i < TestRandomizer.RANDOM_ITERATIONS; i++) {
+            var azDeg1 = rng.nextDouble(360);
+            var azDeg2 = rng.nextDouble(360);
+            var altDeg1 = rng.nextDouble(-90, 90);
+            var altDeg2 = rng.nextDouble(-90, 90);
+            var c1 = HorizontalCoordinates.ofDeg(azDeg1, altDeg1);
+            var c2 = HorizontalCoordinates.ofDeg(azDeg2, altDeg2);
+            assertEquals(0, c1.angularDistanceTo(c2) - c2.angularDistanceTo(c1), 1e-8);
+        }
+    }
+
+
+    @Test
+    public void angularDistanceToWorksOnKnownExample() {
+        var c1 = HorizontalCoordinates.ofDeg(5, 17);
+        var c2 = HorizontalCoordinates.ofDeg(18, -22);
+        assertEquals(0.7160252718946277, c1.angularDistanceTo(c2), 1e-8);
     }
 
     @Test
-    void asOctantNameNormalTest() {
-        assertEquals("N", HorizontalCoordinates.ofDeg(350, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("N", HorizontalCoordinates.ofDeg(0, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("N", HorizontalCoordinates.ofDeg(10, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("NE", HorizontalCoordinates.ofDeg(35, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("NE", HorizontalCoordinates.ofDeg(45, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("NE", HorizontalCoordinates.ofDeg(55, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("E", HorizontalCoordinates.ofDeg(80, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("E", HorizontalCoordinates.ofDeg(90, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("E", HorizontalCoordinates.ofDeg(100, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("SE", HorizontalCoordinates.ofDeg(125, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("SE", HorizontalCoordinates.ofDeg(135, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("SE", HorizontalCoordinates.ofDeg(145, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("S", HorizontalCoordinates.ofDeg(170, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("S", HorizontalCoordinates.ofDeg(180, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("S", HorizontalCoordinates.ofDeg(190, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("SW", HorizontalCoordinates.ofDeg(215, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("SW", HorizontalCoordinates.ofDeg(225, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("SW", HorizontalCoordinates.ofDeg(235, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("W", HorizontalCoordinates.ofDeg(260, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("W", HorizontalCoordinates.ofDeg(270, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("W", HorizontalCoordinates.ofDeg(280, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("NW", HorizontalCoordinates.ofDeg(305, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("NW", HorizontalCoordinates.ofDeg(315, 0).azOctantName("N", "E", "S", "W"));
-        assertEquals("NW", HorizontalCoordinates.ofDeg(325, 0).azOctantName("N", "E", "S", "W"));
+    void horEqualsThrowsUOE() {
+        assertThrows(UnsupportedOperationException.class, () -> {
+            var c = HorizontalCoordinates.ofDeg(0, 0);
+            c.equals(c);
+        });
     }
 
     @Test
-    void angularDistanceBoundsTest() {
-        assertEquals(0, HorizontalCoordinates.of(0, 0).angularDistanceTo(HorizontalCoordinates.of(0, 0)));
-        assertEquals(0, HorizontalCoordinates.of(Math.PI, 0).angularDistanceTo(HorizontalCoordinates.of(Math.PI, 0)));
-        assertEquals(0, HorizontalCoordinates.of(0, -Math.PI / 2).angularDistanceTo(HorizontalCoordinates.of(0, -Math.PI / 2)));
-        assertEquals(0, HorizontalCoordinates.of(0, Math.PI / 2).angularDistanceTo(HorizontalCoordinates.of(0, Math.PI / 2)));
-        assertEquals(Math.PI, HorizontalCoordinates.of(0, 0).angularDistanceTo(HorizontalCoordinates.of(Math.PI, 0)));
-        assertEquals(Math.PI, HorizontalCoordinates.of(Math.PI, 0).angularDistanceTo(HorizontalCoordinates.of(0, 0)));
-        assertEquals(Math.PI, HorizontalCoordinates.of(0, -Math.PI / 2).angularDistanceTo(HorizontalCoordinates.of(0, Math.PI / 2)));
-        assertEquals(Math.PI, HorizontalCoordinates.of(0, Math.PI / 2).angularDistanceTo(HorizontalCoordinates.of(0, -Math.PI / 2)));
+    void horHashCodeThrowsUOE() {
+        assertThrows(UnsupportedOperationException.class, () -> {
+            HorizontalCoordinates.ofDeg(0, 0).hashCode();
+        });
     }
-
-    @Test
-    void angularDistanceNormalTest() {
-        assertEquals(Angle.ofDeg(61.1056), HorizontalCoordinates.of(Angle.ofDeg(27.634), Angle.ofDeg(3.65432)).angularDistanceTo(HorizontalCoordinates.of(Angle.ofDeg(64.6243), Angle.ofDeg(-48.2532))), 1e-4);
-        assertEquals(Angle.ofDeg(94.8065), HorizontalCoordinates.of(Angle.ofDeg(174.2526), Angle.ofDeg(87.5235)).angularDistanceTo(HorizontalCoordinates.of(Angle.ofDeg(23.857), Angle.ofDeg(-2.6541))), 1e-4);
-        assertEquals(Angle.ofDeg(131.3288), HorizontalCoordinates.of(Angle.ofDeg(126.5262), Angle.ofDeg(-67.523)).angularDistanceTo(HorizontalCoordinates.of(Angle.ofDeg(12.5232), Angle.ofDeg(35.2564))), 1e-4);
-    }
-
-    @Test
-    void toStringTest() {
-        assertEquals("(az=0.0000°, alt=0.0000°)", HorizontalCoordinates.of(0, 0).toString());
-        assertEquals("(az=90.0000°, alt=22.5000°)", HorizontalCoordinates.of(Math.PI / 2, Math.PI / 8).toString());
-        assertEquals("(az=60.0000°, alt=36.0000°)", HorizontalCoordinates.of(Math.PI / 3, Math.PI / 5).toString());
-        assertEquals("(az=70.7316°, alt=24.7575°)", HorizontalCoordinates.of(1.2345, 0.4321).toString());
-    }
-
 }

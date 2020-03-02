@@ -10,10 +10,10 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-public class PlanetTest {
+public class MyCelestialObjectTest {
     @Test
-    void planetThrowsRightException() {
-        assertThrows(IllegalArgumentException.class,() -> new Planet("Objet Celeste", null, 20, 20));
-        assertThrows(IllegalArgumentException.class,() -> new Planet("Objet Celeste", EquatorialCoordinates.of(0, 0), -3, 20));
+    void celestialObjectThrowsRightException() {
+       assertThrows(IllegalArgumentException.class,() -> new Planet("Objet Celeste", null, 20, 20));
+       assertThrows(IllegalArgumentException.class,() -> new Planet("Objet Celeste", EquatorialCoordinates.of(0, 0), -3, 20));
     }
 }

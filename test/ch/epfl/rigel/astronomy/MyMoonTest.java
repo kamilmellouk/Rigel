@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-public class MoonTest {
+public class MyMoonTest {
 
     @Test
     void infoWorksOnTrivialCases() {

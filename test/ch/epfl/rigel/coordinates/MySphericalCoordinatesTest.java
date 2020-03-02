@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Kamil Mellouk (312327)
  */
 
-public class SphericalCoordinatesTest {
+public class MySphericalCoordinatesTest {
 
     /*@Test
     void returnLonTest() {

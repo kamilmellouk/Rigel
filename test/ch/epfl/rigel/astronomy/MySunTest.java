@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-public class SunTest {
+public class MySunTest {
     @Test
     void sunThrowsRightException() {
         assertThrows(IllegalArgumentException.class,() -> new Sun(null, null, 20, 20));
