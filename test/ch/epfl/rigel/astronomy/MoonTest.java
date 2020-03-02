@@ -29,7 +29,9 @@ public class MoonTest {
 
     @Test
     void moonThrowsRightException() {
+       assertThrows(IllegalArgumentException.class,() -> new Moon(null, 2, 1, 0.5f));
        assertThrows(IllegalArgumentException.class,() -> new Moon(EquatorialCoordinates.of(0, 0), 2, 1, 2f));
        assertThrows(IllegalArgumentException.class,() -> new Moon(EquatorialCoordinates.of(0, 0), 2, 1, -4f));
+       assertThrows(IllegalArgumentException.class,() -> new Moon(EquatorialCoordinates.of(0, 0), -3, 1, 0.5f));
     }
 }
