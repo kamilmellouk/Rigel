@@ -14,20 +14,17 @@ import java.util.function.Function;
 
 public final class EclipticToEquatorialConversion implements Function<EclipticCoordinates, EquatorialCoordinates> {
 
-    // TODO: 29/02/2020 check performances
-    // formula used to compute the ecliptic obliquity
-    private static final Polynomial eclObliquityFormula = Polynomial.of(
+    // formula used to compute the ecliptic obliqueness
+    private static final Polynomial OBLIQUENESS_POLYNOMIAL = Polynomial.of(
             Angle.ofArcsec(0.00181),
             -Angle.ofArcsec(0.0006),
             -Angle.ofArcsec(46.815),
             Angle.ofDMS(23, 26, 21.45)
             );
-    // ecliptic obliquity, to be determined at construction, when computing it with the formula
-    private double eclipticObliquity;
-    // the cosinus od the ecliptic obliquity
-    private double cosOfEclipticObliquity;
-    // the sinus of the ecliptic obliquity
-    private double sinOfEclipticObliquity;
+    // the cosine od the ecliptic obliqueness
+    private final double cosOfEclipticObliqueness;
+    // the sinus of the ecliptic obliqueness
+    private final double sinOfEclipticObliqueness;
 
     /**
      * constructor of the coordinates system change
@@ -35,10 +32,10 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
      * @param when date-time couple with time zone
      */
     public EclipticToEquatorialConversion(ZonedDateTime when) {
-        // compute the ecliptic obliquity
-        eclipticObliquity = eclObliquityFormula.at(Epoch.J2000.julianCenturiesUntil(when));
-        cosOfEclipticObliquity = Math.cos(eclipticObliquity);
-        sinOfEclipticObliquity = Math.sin(eclipticObliquity);
+        // compute the ecliptic obliqueness
+        double eclipticObliqueness = OBLIQUENESS_POLYNOMIAL.at(Epoch.J2000.julianCenturiesUntil(when));
+        cosOfEclipticObliqueness = Math.cos(eclipticObliqueness);
+        sinOfEclipticObliqueness = Math.sin(eclipticObliqueness);
     }
 
     /**
@@ -48,8 +45,8 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
     @Override
     public EquatorialCoordinates apply(EclipticCoordinates ecl) {
         return EquatorialCoordinates.of(
-                Math.atan2(Math.sin(ecl.lon()) * cosOfEclipticObliquity - Math.tan(ecl.lat()) * sinOfEclipticObliquity, Math.cos(ecl.lon())),
-                Math.asin(Math.sin(ecl.lat()) * cosOfEclipticObliquity + Math.cos(ecl.lat()) * sinOfEclipticObliquity * Math.sin(ecl.lon()))
+                Math.atan2(Math.sin(ecl.lon()) * cosOfEclipticObliqueness - Math.tan(ecl.lat()) * sinOfEclipticObliqueness, Math.cos(ecl.lon())),
+                Math.asin(Math.sin(ecl.lat()) * cosOfEclipticObliqueness + Math.cos(ecl.lat()) * sinOfEclipticObliqueness * Math.sin(ecl.lon()))
         );
     }
 

@@ -17,7 +17,7 @@ public final class SiderealTime {
 
     private static final Polynomial s0Formula = Polynomial.of(0.000025862, 2400.051336, 6.697374558);
     private static final Polynomial s1Formula = Polynomial.of(1.002737909, 0);
-    private static final double milisecondsPerDay = 3600000;
+    private static final double MILLISECONDS_PER_HOUR = 3600000;
 
     private SiderealTime() {
     }
@@ -35,7 +35,7 @@ public final class SiderealTime {
         // Compute the number of julian centuries between J2000 and the given time expressed in UTC
         double T = Epoch.J2000.julianCenturiesUntil(whenInUTC.truncatedTo(ChronoUnit.DAYS));
         // Compute the number of hours between the beginning of the day containing the specific moment and the moment itself
-        double t = whenInUTC.truncatedTo(ChronoUnit.DAYS).until(whenInUTC, ChronoUnit.MILLIS) / milisecondsPerDay;
+        double t = whenInUTC.truncatedTo(ChronoUnit.DAYS).until(whenInUTC, ChronoUnit.MILLIS) / MILLISECONDS_PER_HOUR;
 
         // compute the two values of the given polynomial at T and t
         double s0 = s0Formula.at(T);

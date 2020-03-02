@@ -13,7 +13,10 @@ import java.util.function.Function;
 public final class EquatorialToHorizontalConversion implements Function<EquatorialCoordinates, HorizontalCoordinates> {
 
     // the sidereal time
-    private double siderealTime;
+    private final double siderealTime;
+    // the observer
+    private final double observerSinLat;
+    private final double observerCosLat;
 
     /**
      * constructor of the coordinates system change
@@ -23,6 +26,8 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      */
     public EquatorialToHorizontalConversion(ZonedDateTime when, GeographicCoordinates where) {
         this.siderealTime = SiderealTime.local(when, where);
+        observerSinLat = Math.sin(where.lat());
+        observerCosLat = Math.cos(where.lat());
     }
 
     /**
@@ -32,10 +37,9 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
     @Override
     public HorizontalCoordinates apply(EquatorialCoordinates equ) {
         double hourAngle = siderealTime - equ.ra();
-        // TODO: 29/02/2020 check h
-        double h = Math.asin(Math.sin(equ.dec()) * Math.sin(equ.lat()) + Math.cos(equ.dec()) * Math.cos(equ.lat()) * Math.cos(hourAngle));
+        double h = Math.asin(Math.sin(equ.dec()) * observerSinLat + Math.cos(equ.dec()) * observerCosLat * Math.cos(hourAngle));
         return HorizontalCoordinates.of(
-                Math.atan2(-Math.cos(equ.dec()) * Math.cos(equ.lat()) * Math.sin(hourAngle), Math.sin(equ.dec()) - Math.sin(equ.lat()) * Math.sin(h)),
+                Math.atan2(-Math.cos(equ.dec()) * observerCosLat * Math.sin(hourAngle), Math.sin(equ.dec()) - observerSinLat * Math.sin(h)),
                 h
         );
     }

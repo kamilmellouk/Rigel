@@ -19,7 +19,7 @@ public class SiderealTimeTest {
                 LocalDate.of(1980, Month.APRIL, 22),
                 LocalTime.of(14, 36, 51, (int) 6.7e8),
                 ZoneOffset.UTC)),
-                1e-6);
+                1e-10);
     }
 
     @Test
