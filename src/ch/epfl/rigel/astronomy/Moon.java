@@ -3,6 +3,8 @@ package ch.epfl.rigel.astronomy;
 import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 import ch.epfl.rigel.math.ClosedInterval;
 
+import java.util.Locale;
+
 /**
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
@@ -21,6 +23,6 @@ public final class Moon extends CelestialObject {
 
     @Override
     public String info() {
-        return String.format(super.name() + " (%s%)", phase*100);
+        return String.format(Locale.ROOT,super.name() + " (%.1f%%)", phase*100);
     }
 }
