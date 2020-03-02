@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class EquatorialToHorizontalConversionTest {
 
     @Test
-    void ConversionWorksOnTrivialCases() {
+    void conversionWorksOnTrivialCases() {
 
     }
 

@@ -22,4 +22,9 @@ public class EclipticToEquatorialConversionTest {
         assertEquals(0, coordinates2.dec());
     }
 
+    @Test
+    void conversionWorks() {
+
+    }
+
 }
