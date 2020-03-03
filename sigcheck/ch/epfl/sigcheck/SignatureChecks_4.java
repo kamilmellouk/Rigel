@@ -39,7 +39,7 @@ final class SignatureChecks_4 {
         s = c.info();
     }
 
-    void checkSun() {
+    /*void checkSun() {
         CelestialObject c;
         Sun s;
         EclipticCoordinates e = null;
@@ -69,5 +69,5 @@ final class SignatureChecks_4 {
         float f = 0f;
         m = new Planet(s, e, f, f);
         c = m;
-    }
+    }*/
 }
