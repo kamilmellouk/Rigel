@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class MyCelestialObjectTest {
     @Test
-    void celestialObjectThrowsRightException() {
+    void celestialObjectThrowsIAE() {
        assertThrows(IllegalArgumentException.class,() -> new Planet("Objet Celeste", null, 20, 20));
        assertThrows(IllegalArgumentException.class,() -> new Planet("Objet Celeste", EquatorialCoordinates.of(0, 0), -3, 20));
     }

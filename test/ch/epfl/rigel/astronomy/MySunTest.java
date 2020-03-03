@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class MySunTest {
     @Test
-    void sunThrowsRightException() {
+    void sunThrowsIAE() {
         assertThrows(IllegalArgumentException.class,() -> new Sun(null, null, 20, 20));
         assertThrows(IllegalArgumentException.class,() -> new Sun(EclipticCoordinates.of(0,0), null, 20, 20));
         assertThrows(IllegalArgumentException.class,() -> new Sun(null, EquatorialCoordinates.of(0,0), 20, 20));

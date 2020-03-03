@@ -28,4 +28,14 @@ public class MyCartesianCoordinatesTest {
     void toStringWorks() {
         assertEquals("(x, y) = (1.0, -1.0)", CartesianCoordinates.of(1, -1).toString());
     }
+
+    @Test
+    void equalsThrowsUOE() {
+        assertThrows(UnsupportedOperationException.class, () -> CartesianCoordinates.of(0, 0).equals(CartesianCoordinates.of(0, 0)));
+    }
+
+    @Test
+    void hashCodeThrowsUOE() {
+        assertThrows(UnsupportedOperationException.class, () -> CartesianCoordinates.of(0, 0).hashCode());
+    }
 }
