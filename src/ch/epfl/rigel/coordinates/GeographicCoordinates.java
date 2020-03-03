@@ -44,7 +44,7 @@ public final class GeographicCoordinates extends SphericalCoordinates {
      * @return {@code true} if and only if the longitude is contained in [-180, 180[
      */
     public static boolean isValidLonDeg(double lonDeg) {
-        return RightOpenInterval.of(-180, 180).contains(lonDeg);
+        return RightOpenInterval.symmetric(360).contains(lonDeg);
     }
 
     /**
@@ -54,7 +54,7 @@ public final class GeographicCoordinates extends SphericalCoordinates {
      * @return {@code true} if and only if the longitude is contained in [-90, 90]
      */
     public static boolean isValidLatDeg(double latDeg) {
-        return ClosedInterval.of(-90, 90).contains(latDeg);
+        return ClosedInterval.symmetric(180).contains(latDeg);
     }
 
     @Override

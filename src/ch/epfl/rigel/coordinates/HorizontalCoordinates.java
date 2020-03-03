@@ -34,7 +34,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     public static HorizontalCoordinates of(double az, double alt) {
         return new HorizontalCoordinates(
                 Preconditions.checkInInterval(RightOpenInterval.of(0, Angle.TAU), az),
-                Preconditions.checkInInterval(ClosedInterval.of(-Math.PI / 2, Math.PI / 2), alt)
+                Preconditions.checkInInterval(ClosedInterval.symmetric(Math.PI), alt)
         );
     }
 

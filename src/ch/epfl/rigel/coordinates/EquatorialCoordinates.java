@@ -34,7 +34,7 @@ public final class EquatorialCoordinates extends SphericalCoordinates {
     public static EquatorialCoordinates of(double ra, double dec) {
         return new EquatorialCoordinates(
                 Preconditions.checkInInterval(RightOpenInterval.of(0, Angle.TAU), ra),
-                Preconditions.checkInInterval(ClosedInterval.of(-Math.PI / 2, Math.PI / 2), dec)
+                Preconditions.checkInInterval(ClosedInterval.symmetric(Math.PI), dec)
         );
     }
 

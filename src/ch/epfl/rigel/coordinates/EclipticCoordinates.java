@@ -33,7 +33,7 @@ public final class EclipticCoordinates extends SphericalCoordinates {
     public static EclipticCoordinates of(double lon, double lat) {
         return new EclipticCoordinates(
                 Preconditions.checkInInterval(RightOpenInterval.of(0, Angle.TAU), lon),
-                Preconditions.checkInInterval(ClosedInterval.of(-Math.PI / 2, Math.PI / 2), lat)
+                Preconditions.checkInInterval(ClosedInterval.symmetric(Math.PI), lat)
         );
     }
 

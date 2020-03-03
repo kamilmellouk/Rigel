@@ -20,7 +20,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
             -Angle.ofArcsec(0.0006),
             -Angle.ofArcsec(46.815),
             Angle.ofDMS(23, 26, 21.45)
-            );
+    );
     // the cosine od the ecliptic obliqueness
     private final double cosOfEclipticObliqueness;
     // the sinus of the ecliptic obliqueness
@@ -34,7 +34,6 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
     public EclipticToEquatorialConversion(ZonedDateTime when) {
         // compute the ecliptic obliqueness
         double eclipticObliqueness = OBLIQUENESS_POLYNOMIAL.at(Epoch.J2000.julianCenturiesUntil(when));
-        System.out.println(Math.toDegrees(eclipticObliqueness));
         cosOfEclipticObliqueness = Math.cos(eclipticObliqueness);
         sinOfEclipticObliqueness = Math.sin(eclipticObliqueness);
     }
@@ -45,10 +44,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
      */
     @Override
     public EquatorialCoordinates apply(EclipticCoordinates ecl) {
-        System.out.println(Math.atan2(Math.sin(ecl.lon()) * cosOfEclipticObliqueness - Math.tan(ecl.lat()) * sinOfEclipticObliqueness, Math.cos(ecl.lon())));
-        System.out.println(Math.asin(Math.sin(ecl.lat()) * cosOfEclipticObliqueness + Math.cos(ecl.lat()) * sinOfEclipticObliqueness * Math.sin(ecl.lon())));
         return EquatorialCoordinates.of(
-                // TODO: 03/03/2020 check normalize
                 Angle.normalizePositive(Math.atan2(Math.sin(ecl.lon()) * cosOfEclipticObliqueness - Math.tan(ecl.lat()) * sinOfEclipticObliqueness, Math.cos(ecl.lon()))),
                 Math.asin(Math.sin(ecl.lat()) * cosOfEclipticObliqueness + Math.cos(ecl.lat()) * sinOfEclipticObliqueness * Math.sin(ecl.lon()))
         );
