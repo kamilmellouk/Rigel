@@ -16,9 +16,8 @@ public class MyEclipticToEquatorialConversionTest {
 
     @Test
     void conversionWorksOnTrivialCases() {
-        EclipticCoordinates coordinates1 = EclipticCoordinates.of(0,0);
         EclipticToEquatorialConversion system = new EclipticToEquatorialConversion(ZonedDateTime.now());
-        EquatorialCoordinates coordinates2 = system.apply(coordinates1);
+        EquatorialCoordinates coordinates2 = system.apply(EclipticCoordinates.of(0,0));
         assertEquals(0, coordinates2.ra());
         assertEquals(0, coordinates2.dec());
     }
