@@ -48,6 +48,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
         System.out.println(Math.atan2(Math.sin(ecl.lon()) * cosOfEclipticObliqueness - Math.tan(ecl.lat()) * sinOfEclipticObliqueness, Math.cos(ecl.lon())));
         System.out.println(Math.asin(Math.sin(ecl.lat()) * cosOfEclipticObliqueness + Math.cos(ecl.lat()) * sinOfEclipticObliqueness * Math.sin(ecl.lon())));
         return EquatorialCoordinates.of(
+                // TODO: 03/03/2020 check normalize
                 Angle.normalizePositive(Math.atan2(Math.sin(ecl.lon()) * cosOfEclipticObliqueness - Math.tan(ecl.lat()) * sinOfEclipticObliqueness, Math.cos(ecl.lon()))),
                 Math.asin(Math.sin(ecl.lat()) * cosOfEclipticObliqueness + Math.cos(ecl.lat()) * sinOfEclipticObliqueness * Math.sin(ecl.lon()))
         );
