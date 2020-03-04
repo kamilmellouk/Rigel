@@ -10,16 +10,24 @@ import java.time.temporal.ChronoUnit;
 
 public enum Epoch {
 
+    // 01.01.2000 12am UTC
     J2000(ZonedDateTime.of(LocalDate.of(2000, Month.JANUARY, 1),
             LocalTime.of(12, 0),
             ZoneOffset.UTC)),
 
+    // 00.01.2010 0am UTC
     J2010(ZonedDateTime.of(LocalDate.of(2010, Month.JANUARY, 1).minusDays(1),
             LocalTime.of(0, 0),
             ZoneOffset.UTC));
 
+    // the specific date
     private ZonedDateTime date;
 
+    /**
+     * constructor of epoch
+     *
+     * @param date the specific date
+     */
     Epoch(ZonedDateTime date) {
         this.date = date;
     }
@@ -41,7 +49,7 @@ public enum Epoch {
      * @return difference in julian centuries (can be decimal)
      */
     public double julianCenturiesUntil(ZonedDateTime when) {
-        return daysUntil(when) / (double) 36525;
+        return daysUntil(when) / 36525d;
     }
 
 }
