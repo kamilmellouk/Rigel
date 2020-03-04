@@ -26,7 +26,8 @@ public final class SiderealTime {
      * private default constructor
      * the class is not instantiable
      */
-    private SiderealTime() {}
+    private SiderealTime() {
+    }
 
     /**
      * Compute the sidereal time with respect to greenwich and J2000

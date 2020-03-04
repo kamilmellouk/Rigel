@@ -14,7 +14,7 @@ import java.util.function.Function;
 
 public final class EclipticToEquatorialConversion implements Function<EclipticCoordinates, EquatorialCoordinates> {
 
-    // formula used to compute the ecliptic obliqueness
+    // polynomial used to compute the ecliptic obliqueness
     private static final Polynomial OBLIQUENESS_POLYNOMIAL = Polynomial.of(
             Angle.ofArcsec(0.00181),
             -Angle.ofArcsec(0.0006),
@@ -34,6 +34,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
     public EclipticToEquatorialConversion(ZonedDateTime when) {
         // compute the ecliptic obliqueness
         double eclipticObliqueness = OBLIQUENESS_POLYNOMIAL.at(Epoch.J2000.julianCenturiesUntil(when));
+        // compute the cosine and sinus of the ecliptic obliqueness
         cosOfEclipticObliqueness = Math.cos(eclipticObliqueness);
         sinOfEclipticObliqueness = Math.sin(eclipticObliqueness);
     }
