@@ -1,6 +1,7 @@
 package ch.epfl.rigel.coordinates;
 
 import ch.epfl.rigel.astronomy.SiderealTime;
+import ch.epfl.rigel.math.Angle;
 
 import java.time.ZonedDateTime;
 import java.util.function.Function;
@@ -41,7 +42,7 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
         // compute the altitude
         double h = Math.asin(Math.sin(equ.dec()) * observerSinLat + Math.cos(equ.dec()) * observerCosLat * Math.cos(hourAngle));
         return HorizontalCoordinates.of(
-                Math.atan2(-Math.cos(equ.dec()) * observerCosLat * Math.sin(hourAngle), Math.sin(equ.dec()) - observerSinLat * Math.sin(h)),
+                Angle.normalizePositive(Math.atan2(-Math.cos(equ.dec()) * observerCosLat * Math.sin(hourAngle), Math.sin(equ.dec()) - observerSinLat * Math.sin(h))),
                 h
         );
     }
