@@ -37,4 +37,15 @@ public class MyEquatorialToHorizontalConversionTest {
         //assertEquals(0, coordinates2.lat());
     }
 
+    @Test
+    void conversionWorksOnBook() {
+        EquatorialCoordinates coordinates1 = EquatorialCoordinates.of(0,Angle.ofDMS(23,13,10));
+        EquatorialToHorizontalConversion system = new EquatorialToHorizontalConversion(ZonedDateTime.of(LocalDate.of(2000, Month.JANUARY, 1),
+                LocalTime.of(12, 0),
+                ZoneOffset.UTC),
+                GeographicCoordinates.ofDeg(0,52));
+        HorizontalCoordinates coordinates2 = system.apply(coordinates1);
+        //assertEquals(0, coordinates2.azDeg());
+    }
+
 }
