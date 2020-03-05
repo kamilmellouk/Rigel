@@ -44,7 +44,7 @@ public final class CartesianCoordinates {
 
     @Override
     public String toString() {
-        return String.format(Locale.ROOT, "(x, y) = (%s, %s)", this.x, this.y);
+        return String.format(Locale.ROOT, "(x=%s, y=%s)", this.x, this.y);
     }
 
     /**

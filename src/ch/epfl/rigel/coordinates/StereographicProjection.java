@@ -4,8 +4,8 @@ import java.util.Locale;
 import java.util.function.Function;
 
 /**
- * @author Mohamed Kamil MELLOUK
- * 03.03.20
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk (312327)
  */
 public final class StereographicProjection implements Function<HorizontalCoordinates, CartesianCoordinates> {
 

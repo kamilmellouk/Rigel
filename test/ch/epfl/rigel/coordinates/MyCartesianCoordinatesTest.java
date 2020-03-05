@@ -26,7 +26,7 @@ public class MyCartesianCoordinatesTest {
 
     @Test
     void toStringWorks() {
-        assertEquals("(x, y) = (1.0, -1.0)", CartesianCoordinates.of(1, -1).toString());
+        assertEquals("(x=1.0, y=-1.0)", CartesianCoordinates.of(1, -1).toString());
     }
 
     @Test
