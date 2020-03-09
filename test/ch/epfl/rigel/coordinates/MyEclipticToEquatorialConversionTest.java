@@ -39,5 +39,4 @@ public class MyEclipticToEquatorialConversionTest {
         assertEquals(Angle.ofDMS(13,48,42), coordinates2.ra(), 10e-6);
         assertEquals(Angle.ofDMS(5,54,33), coordinates2.dec(), 10e-5);
     }
-
 }

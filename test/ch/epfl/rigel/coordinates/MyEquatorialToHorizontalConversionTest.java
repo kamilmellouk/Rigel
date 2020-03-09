@@ -48,4 +48,15 @@ public class MyEquatorialToHorizontalConversionTest {
         //assertEquals(0, coordinates2.azDeg());
     }
 
+    @Test
+    void MyApplyWorksWithLeKhey(){
+        ZonedDateTime d = ZonedDateTime.of(LocalDate.of(2000, Month.JANUARY, 1), LocalTime.of(12, 0), ZoneOffset.UTC).plusDays(36525*4);
+        double lon = 2.5843;
+        double lat = 1.2345;
+        EquatorialCoordinates eC = EquatorialCoordinates.of(lon, lat);
+        EquatorialToHorizontalConversion e = new EquatorialToHorizontalConversion(d, GeographicCoordinates.ofDeg(50.123456, 60.563231));
+        assertEquals(0.042919, (e.apply(eC)).az(), 1e-6);
+        assertEquals(0.721763, (e.apply(eC).alt()), 1e-6);
+    }
+
 }
