@@ -7,85 +7,112 @@ import java.util.function.Function;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
+
 public final class StereographicProjection implements Function<HorizontalCoordinates, CartesianCoordinates> {
 
     // HorizontalCoordinates of the center point of the projection
     private final HorizontalCoordinates center;
-    // Storing values exclusive to the projection center to help with computing the projection
-    private final double centerAz, centerAlt, cosCenterAlt, sinCenterAlt;
+    // Storing values exclusive to the projection center to compute the projection
+    private final double centerAz;
+    private final double cosCenterAlt;
+    private final double sinCenterAlt;
 
+    /**
+     * constructor of the stereographic projection
+     *
+     * @param center the center point of the projection
+     */
+    // TODO: 09/03/2020 how can the constructor return a value ?
     public StereographicProjection(HorizontalCoordinates center) {
         this.center = center;
         this.centerAz = center.az();
-        this.centerAlt = center.alt();
-        this.cosCenterAlt = Math.cos(centerAlt);
-        this.sinCenterAlt = Math.sin(centerAlt);
+        this.cosCenterAlt = Math.cos(center.alt());
+        this.sinCenterAlt = Math.sin(center.alt());
     }
 
     /**
-     * Computing the coordinates for the circle center of the StereographicProjection of a parallel
+     * Compute the coordinates for the circle center of the StereographicProjection of a parallel
+     *
      * @param hor HorizontalCoordinates of the parallel
      * @return xy-coordinates for the circle center of the projection of the parallel
      */
     public CartesianCoordinates circleCenterForParallel(HorizontalCoordinates hor) {
-        return CartesianCoordinates.of(0, cosCenterAlt/(Math.sin(hor.alt()) + sinCenterAlt));
+        return CartesianCoordinates.of(0, cosCenterAlt / (Math.sin(hor.alt()) + sinCenterAlt));
     }
 
     /**
-     * Computing the circle radius for the StereographicProjection of a parallel
+     * Compute the circle radius for the StereographicProjection of a parallel
+     *
      * @param parallel to project
      * @return circle radius of the StereographicProjection of parallel
      */
-    public double  circleRadiusForParallel(HorizontalCoordinates parallel) {
-        return Math.cos(parallel.alt())/(Math.sin(parallel.alt()) + sinCenterAlt);
+    public double circleRadiusForParallel(HorizontalCoordinates parallel) {
+        return Math.cos(parallel.alt()) / (Math.sin(parallel.alt()) + sinCenterAlt);
     }
 
     /**
-     * Computing the diameter of an object of given angular size
-     * @param rad angular size of the object
-     * @return actual diameter of the object of given angular size
+     * Compute the projected diameter of an object of given angular size
+     *
+     * @param rad the angular size of the object
+     * @return the projected diameter of the object of given angular size
      */
     public double applyToAngle(double rad) {
-        return 2*Math.tan(rad/4);
+        return 2 * Math.tan(rad / 4);
     }
 
+    /**
+     * Compute the cartesian coordinates of the projection of the given point
+     *
+     * @param azAlt the given horizontal coordinates
+     * @return the cartesian coordinates of the projection of the given point
+     */
     @Override
     public CartesianCoordinates apply(HorizontalCoordinates azAlt) {
+        // compute the sinus and cosine of the altitude of the given point
+        double azAltSin = Math.sin(azAlt.alt());
+        double azAltCos = Math.cos(azAlt.alt());
+
+        // compute the delta azimuth value and the d value
         double deltaAz = azAlt.az() - centerAz;
-        double d = 1/(1 + Math.sin(azAlt.alt())*sinCenterAlt + Math.cos(azAlt.alt()) * cosCenterAlt * Math.cos(deltaAz));
+        double d = 1d / (1 + azAltSin * sinCenterAlt + azAltCos * cosCenterAlt * Math.cos(deltaAz));
 
         return CartesianCoordinates.of(
-                d * Math.cos(azAlt.alt()) * Math.sin(deltaAz),
-                d*(Math.sin(azAlt.alt())*cosCenterAlt - Math.cos(azAlt.alt()) * cosCenterAlt * Math.cos(deltaAz))
+                d * azAltCos * Math.sin(deltaAz),
+                d * (azAltSin * cosCenterAlt - azAltCos * cosCenterAlt * Math.cos(deltaAz))
         );
     }
 
     /**
-     * Computing the inverse StereographicProjection of given cartesian coordinates
+     * Compute the inverse StereographicProjection of given cartesian coordinates
+     *
      * @param xy CartesianCoordinates to inverse project
      * @return HorizontalCoordinates resulting from the inverse projection
      */
     public HorizontalCoordinates inverseApply(CartesianCoordinates xy) {
-        double p = Math.sqrt(xy.x()*xy.x() + xy.y()*xy.y());
-        double sinC = (2*p)/(p*p + 1);
-        double cosC = (1 - p*p)/(p*p + 1);
+        // get the value of the given cartesian coordinates
+        double x = xy.x();
+        double y = xy.y();
+        // compute the rho value, the sinus and cosine of the implicit angle c
+        double p = Math.sqrt(x * x + y * y);
+        double sinC = (2 * p) / (p * p + 1);
+        double cosC = (1 - p * p) / (p * p + 1);
 
         return HorizontalCoordinates.of(
-                Math.atan2(xy.x()*sinC, p*cosCenterAlt*cosC - xy.y()*sinCenterAlt*sinC) + centerAz,
-                Math.asin(cosC*sinCenterAlt + (xy.y()*sinC*cosCenterAlt)/p)
+                Math.atan2(x * sinC, p * cosCenterAlt * cosC - y * sinCenterAlt * sinC) + centerAz,
+                Math.asin(cosC * sinCenterAlt + (y * sinC * cosCenterAlt) / p)
         );
     }
 
     @Override
     public String toString() {
         // TODO Find what to display
-        return String.format(Locale.ROOT, "StereographicProjection of center %s : %s --> %s", center);
+        return String.format(Locale.ROOT, "StereographicProjection of center : x=%.4f, y=%.4f", centerAz, center.alt());
     }
 
     /**
      * @param obj the object
      * @return nothing
-     * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
+     * @throws UnsupportedOperationException the exception to throw
      */
     @Override
     public final boolean equals(Object obj) throws UnsupportedOperationException {
@@ -94,7 +121,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
 
     /**
      * @return nothing
-     * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
+     * @throws UnsupportedOperationException the exception to throw
      */
     @Override
     public final int hashCode() throws UnsupportedOperationException {
