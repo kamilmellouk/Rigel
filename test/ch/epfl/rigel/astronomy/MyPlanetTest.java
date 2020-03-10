@@ -11,9 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Kamil Mellouk (312327)
  */
 public class MyPlanetTest {
-    @Test
-    void planetThrowsIAE() {
-        assertThrows(IllegalArgumentException.class,() -> new Planet("Objet Celeste", null, 20, 20));
-        assertThrows(IllegalArgumentException.class,() -> new Planet("Objet Celeste", EquatorialCoordinates.of(0, 0), -3, 20));
-    }
+
+    // see MyCelestialObjectTest
+
 }
