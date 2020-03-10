@@ -15,18 +15,21 @@ public class MyCartesianCoordinatesTest {
     void xWorks() {
         assertEquals(3, CartesianCoordinates.of(3,5).x());
         assertEquals(-4.66, CartesianCoordinates.of(-4.66,5).x());
+        assertEquals(1.2345678, CartesianCoordinates.of(1.2345678,0).x());
     }
 
     @Test
     void yWorks() {
         assertEquals(0, CartesianCoordinates.of(3,0).y());
         assertEquals(2.3, CartesianCoordinates.of(-4.66,2.3).y());
+        assertEquals(9.87654321, CartesianCoordinates.of(0,9.87654321).y());
 
     }
 
     @Test
     void toStringWorks() {
-        assertEquals("(x=1.0, y=-1.0)", CartesianCoordinates.of(1, -1).toString());
+        assertEquals("(x=1.0000, y=-1.0000)", CartesianCoordinates.of(1, -1).toString());
+        assertEquals("(x=1.0001, y=2.0002)", CartesianCoordinates.of(1.00009,2.00019).toString());
     }
 
     @Test

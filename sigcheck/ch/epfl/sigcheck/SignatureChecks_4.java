@@ -67,7 +67,7 @@ final class SignatureChecks_4 {
         EquatorialCoordinates e = null;
         String s = null;
         float f = 0f;
-        m = new Planet(s, e, f, f);
-        c = m;
+        //m = new Planet(s, e, f, f);
+        //c = m;
     }
 }
