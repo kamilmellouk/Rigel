@@ -57,7 +57,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @return the projected diameter of the object of given angular size
      */
     public double applyToAngle(double rad) {
-        return 2 * Math.tan(rad / 4);
+        return 2 * Math.tan(rad / 4d);
     }
 
     /**
@@ -78,7 +78,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
 
         return CartesianCoordinates.of(
                 d * azAltCos * Math.sin(deltaAz),
-                d * (azAltSin * cosCenterAlt - azAltCos * cosCenterAlt * Math.cos(deltaAz))
+                d * (azAltSin * cosCenterAlt - azAltCos * sinCenterAlt * Math.cos(deltaAz))
         );
     }
 
