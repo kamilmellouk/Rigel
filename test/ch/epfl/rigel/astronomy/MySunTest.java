@@ -38,5 +38,9 @@ public class MySunTest {
         assertEquals(1, new Sun(EclipticCoordinates.of(1, 1), EquatorialCoordinates.of(1, 1), 2, 2f).eclipticPos().lat());
     }
 
+    @Test
+    void magnitudeWorks() {
+        assertEquals(-26.7f, new Sun(EclipticCoordinates.of(0, 0), EquatorialCoordinates.of(0, 0), 2, 2f).magnitude());
+    }
 
 }
