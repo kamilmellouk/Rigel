@@ -10,7 +10,6 @@ import java.util.function.Function;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class EquatorialToHorizontalConversion implements Function<EquatorialCoordinates, HorizontalCoordinates> {
 
     // the sidereal time
