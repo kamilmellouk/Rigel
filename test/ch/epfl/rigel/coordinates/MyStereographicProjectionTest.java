@@ -1,5 +1,6 @@
 package ch.epfl.rigel.coordinates;
 
+import ch.epfl.rigel.math.Angle;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -116,6 +117,55 @@ public class MyStereographicProjectionTest {
     @Test
     void hashcodeWorks() {
         assertThrows(UnsupportedOperationException.class, () -> new StereographicProjection(HorizontalCoordinates.of(0,0)).hashCode());
+    }
+
+    HorizontalCoordinates center = HorizontalCoordinates.of(1,1);
+    StereographicProjection sProj = new StereographicProjection(center);
+    HorizontalCoordinates testApplyHor = HorizontalCoordinates.ofDeg(10,20);
+
+    StereographicProjection a = new StereographicProjection (HorizontalCoordinates.ofDeg(45,45));
+    StereographicProjection c = new StereographicProjection(HorizontalCoordinates.ofDeg(23, 45));
+
+    @Test
+    void doesApplywork() {
+        assertEquals(-0.1316524976, a.apply(HorizontalCoordinates.ofDeg(45, 30)).y(), 1e-8);
+    }
+
+    @Test
+    void doesInverseApplyWork() {
+        assertEquals(3.648704525474978, a.inverseApply(CartesianCoordinates.of(10, 0)).az(), 1e-6);
+    }
+
+    @Test
+    void doesApplyToAngleWork() {
+        assertEquals(0.004363316207379377, c.applyToAngle(Angle.ofDeg(1 / 2.0)), 1e-7);
+    }
+
+    @Test
+    void doesCircleCenterWork() {
+        assertEquals(0.6089987401, a.circleCenterForParallel(HorizontalCoordinates.ofDeg(0, 27)).y(), 1e-8);
+    }
+
+    @Test
+    void doesCircleRadiusParallelWork() {
+        assertEquals(0.7673831804, a.circleRadiusForParallel(HorizontalCoordinates.ofDeg(0, 27)), 1e-8);
+    }
+
+    @Test
+    void doesHashCodeAndEqualsFail() {
+        assertThrows(UnsupportedOperationException.class, () -> {
+            sProj.hashCode();
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            sProj.equals(null);
+        });
+    }
+
+    @Test
+    void doesApplyAndReverseApplyReturnTheBaseCoords() {
+        HorizontalCoordinates actualApplyHor = sProj.inverseApply(sProj.apply(testApplyHor));
+        assertEquals(testApplyHor.lon(), actualApplyHor.lon(), 1e-10);
+        assertEquals(testApplyHor.lat(), actualApplyHor.lat(), 1e-10);
     }
 
 }
