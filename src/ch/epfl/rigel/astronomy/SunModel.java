@@ -35,6 +35,7 @@ public enum SunModel implements CelestialObjectModel<Sun> {
                 EclipticCoordinates.of(sunGeoEclLon, sunGeoEclLat),
                 eclipticToEquatorialConversion.apply(EclipticCoordinates.of(sunGeoEclLon, sunGeoEclLat)),
                 (float) (theta0*((1+sunEarthExcentricity*Math.cos(sunRealAnomaly))/(1-sunEarthExcentricity*sunEarthExcentricity))),
-                (float) sunMeanAnomaly);
+                (float) sunMeanAnomaly
+                );
     }
 }

@@ -15,6 +15,7 @@ public final class Star extends CelestialObject {
 
     /**
      * Constructing a new Star
+     *
      * @param hipparcosId HIP identification number for the star
      * @param name of the star
      * @param equatorialPos position of the star (in equatorial coordinates, relative to the earth)
@@ -32,6 +33,7 @@ public final class Star extends CelestialObject {
 
     /**
      * Getter for the HipparcosId
+     *
      * @return hipparcosId
      */
     public int hipparcorId() {
@@ -40,6 +42,7 @@ public final class Star extends CelestialObject {
 
     /**
      * Computing the color temperature of the star, given its color index
+     *
      * @return floor of the temperature, in Kelvins
      */
     public int colorTemperature() {
