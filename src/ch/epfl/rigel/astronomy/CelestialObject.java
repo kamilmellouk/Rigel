@@ -13,10 +13,10 @@ import java.util.Objects;
 public abstract class CelestialObject {
 
     // Attributes used to describe every celestial object
-    private String name;
-    private EquatorialCoordinates equatorialPos;
-    private float angularSize;
-    private float magnitude;
+    private final String name;
+    private final EquatorialCoordinates equatorialPos;
+    private final float angularSize;
+    private final float magnitude;
 
     /**
      * Constructor of a new Celestial Object (in subclasses)
