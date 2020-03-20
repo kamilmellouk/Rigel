@@ -16,13 +16,13 @@ final class SignatureChecks_5 {
         i = t.hipparcosId();
         i = t.colorTemperature();
     }
-/*
+
     void checkAsterism() {
         List<Star> l = null;
         Asterism a = new Asterism(l);
         l = a.stars();
     }
-
+/*
     void checkCelestialObjectModel() {
         CelestialObjectModel<Sun> s = null;
         double d = 0;
