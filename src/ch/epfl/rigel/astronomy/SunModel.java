@@ -13,7 +13,7 @@ public enum SunModel implements CelestialObjectModel<Sun> {
 
     private final double sunLonAtJ2010 = Angle.ofDeg(279.557208);
     private final double sunLonAtPerig = Angle.ofDeg(283.112438);
-    private final double sunEarthExcentricity = 0.016705;
+    private final double sunEarthExcentricity = Angle.ofArcsec(0.016705);
 
     private double daysSinceJ2010;
     private double sunMeanAnomaly;
