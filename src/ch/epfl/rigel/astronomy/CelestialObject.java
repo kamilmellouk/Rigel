@@ -26,7 +26,6 @@ public abstract class CelestialObject {
      * @param magnitude     the magnitude of the celestial object
      */
     CelestialObject(String name, EquatorialCoordinates equatorialPos, float angularSize, float magnitude) {
-        // TODO: 09/03/2020 check angularSize == 0 ?
         // check exception
         if (angularSize < 0) {
             throw new IllegalArgumentException();

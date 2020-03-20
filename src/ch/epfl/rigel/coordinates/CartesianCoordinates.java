@@ -9,7 +9,6 @@ import java.util.Locale;
 
 public final class CartesianCoordinates {
 
-    // TODO: 09/03/2020 check the final for immutability
     // the cartesian coordinates
     private final double x, y;
 

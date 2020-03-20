@@ -22,7 +22,6 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      *
      * @param center the center point of the projection
      */
-    // TODO: 09/03/2020 how can the constructor return a value ?
     public StereographicProjection(HorizontalCoordinates center) {
         this.center = center;
         this.centerAz = center.az();

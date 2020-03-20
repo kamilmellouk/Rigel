@@ -7,6 +7,7 @@ import ch.epfl.rigel.math.ClosedInterval;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
+
 public final class Star extends CelestialObject {
 
     // Attributes used to identify a Star, in additions to the ones used for a CelestialObject
@@ -16,15 +17,15 @@ public final class Star extends CelestialObject {
     /**
      * Constructing a new Star
      *
-     * @param hipparcosId HIP identification number for the star
-     * @param name of the star
+     * @param hipparcosId   HIP identification number for the star
+     * @param name          of the star
      * @param equatorialPos position of the star (in equatorial coordinates, relative to the earth)
-     * @param magnitude of the star
-     * @param colorIndex of the star
+     * @param magnitude     of the star
+     * @param colorIndex    of the star
      */
     public Star(int hipparcosId, String name, EquatorialCoordinates equatorialPos, float magnitude, float colorIndex) {
         super(name, equatorialPos, 0, magnitude);
-        if(hipparcosId < 0 || !ClosedInterval.of(-0.5, 0.5).contains(colorIndex))
+        if (hipparcosId < 0 || !ClosedInterval.of(-0.5, 0.5).contains(colorIndex))
             throw new IllegalArgumentException();
 
         this.hipparcosId = hipparcosId;
@@ -46,7 +47,7 @@ public final class Star extends CelestialObject {
      * @return floor of the temperature, in Kelvins
      */
     public int colorTemperature() {
-        return (int) Math.floor(4600*(1/(0.92*colorIndex + 1.7) + 1/(0.92*colorIndex + 0.62)));
+        return (int) Math.floor(4600 * (1 / (0.92 * colorIndex + 1.7) + 1 / (0.92 * colorIndex + 0.62)));
     }
 
 }

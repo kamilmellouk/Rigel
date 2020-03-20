@@ -11,7 +11,6 @@ import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 public final class Sun extends CelestialObject {
 
     // Attributes specific to the Sun
-    // TODO: 09/03/2020 check the immutability
     private final EclipticCoordinates eclipticPos;
     private final float meanAnomaly;
 
