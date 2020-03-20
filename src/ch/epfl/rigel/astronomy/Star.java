@@ -1,5 +1,6 @@
 package ch.epfl.rigel.astronomy;
 
+import ch.epfl.rigel.Preconditions;
 import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 import ch.epfl.rigel.math.ClosedInterval;
 
@@ -7,6 +8,7 @@ import ch.epfl.rigel.math.ClosedInterval;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
+
 public final class Star extends CelestialObject {
 
     // Attributes used to identify a Star, in additions to the ones used for a CelestialObject
@@ -14,39 +16,39 @@ public final class Star extends CelestialObject {
     private float colorIndex;
 
     /**
-     * Constructing a new Star
+     * Constructor of a star
      *
-     * @param hipparcosId HIP identification number for the star
-     * @param name of the star
-     * @param equatorialPos position of the star (in equatorial coordinates, relative to the earth)
-     * @param magnitude of the star
-     * @param colorIndex of the star
+     * @param hipparcosId   HIP identification number for the star
+     * @param name          the name of the star
+     * @param equatorialPos the position of the star (in equatorial coordinates, relative to the earth)
+     * @param magnitude     the magnitude of the star
+     * @param colorIndex    the color index of the star
      */
     public Star(int hipparcosId, String name, EquatorialCoordinates equatorialPos, float magnitude, float colorIndex) {
         super(name, equatorialPos, 0, magnitude);
-        if(hipparcosId < 0 || !ClosedInterval.of(-0.5, 0.5).contains(colorIndex))
-            throw new IllegalArgumentException();
+
+        // check exception
+        Preconditions.checkInInterval(ClosedInterval.of(-0.5, 5.5), colorIndex);
+        Preconditions.checkArgument(hipparcosId >= 0);
 
         this.hipparcosId = hipparcosId;
         this.colorIndex = colorIndex;
     }
 
     /**
-     * Getter for the HipparcosId
-     *
-     * @return hipparcosId
+     * @return the hipparcosId of the star
      */
-    public int hipparcorId() {
+    public int hipparcosId() {
         return hipparcosId;
     }
 
     /**
-     * Computing the color temperature of the star, given its color index
+     * Compute the color temperature of the star, given its color index
      *
-     * @return floor of the temperature, in Kelvins
+     * @return the floor of the temperature, in Kelvins
      */
     public int colorTemperature() {
-        return (int) Math.floor(4600*(1/(0.92*colorIndex + 1.7) + 1/(0.92*colorIndex + 0.62)));
+        return (int) Math.floor(4600 * (1 / (0.92 * colorIndex + 1.7) + 1 / (0.92 * colorIndex + 0.62)));
     }
 
 }

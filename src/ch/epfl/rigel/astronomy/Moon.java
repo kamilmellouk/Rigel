@@ -14,7 +14,6 @@ import java.util.Locale;
 public final class Moon extends CelestialObject {
 
     // Attribute specific to the Moon
-    // TODO: 09/03/2020 check the immutability
     private final float phase;
 
     /**
@@ -28,7 +27,10 @@ public final class Moon extends CelestialObject {
     public Moon(EquatorialCoordinates equatorialPos, float angularSize, float magnitude, float phase) {
         super("Lune", equatorialPos, angularSize, magnitude);
 
-        this.phase = (float) Preconditions.checkInInterval(ClosedInterval.of(0, 1), phase);
+        //check exception
+        Preconditions.checkInInterval(ClosedInterval.of(0, 1), phase);
+
+        this.phase = phase;
     }
 
     @Override

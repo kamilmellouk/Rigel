@@ -32,8 +32,10 @@ public final class GeographicCoordinates extends SphericalCoordinates {
      * @return the geographic coordinates of given longitude and latitude in deg
      */
     public static GeographicCoordinates ofDeg(double lonDeg, double latDeg) {
+        // check exceptions
         Preconditions.checkArgument(isValidLonDeg(lonDeg));
         Preconditions.checkArgument(isValidLatDeg(latDeg));
+
         return new GeographicCoordinates(Angle.ofDeg(lonDeg), Angle.ofDeg(latDeg));
     }
 

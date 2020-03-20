@@ -7,7 +7,7 @@ import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 import java.util.List;
 
 final class SignatureChecks_5 {
-    /*void checkStar() {
+    void checkStar() {
         int i = 0;
         String s = null;
         EquatorialCoordinates e = null;
@@ -34,7 +34,7 @@ final class SignatureChecks_5 {
         Enum<SunModel> m1 = SunModel.SUN;
         CelestialObjectModel<Sun> m2 = SunModel.SUN;
     }
-
+/*
     void checkPlanetModel() {
         List<PlanetModel> a = PlanetModel.ALL;
         Enum<PlanetModel> mercury1 = PlanetModel.MERCURY;

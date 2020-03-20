@@ -8,34 +8,44 @@ import ch.epfl.rigel.math.Angle;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
+
 public enum SunModel implements CelestialObjectModel<Sun> {
+
     SUN();
 
-    private final double sunLonAtJ2010 = Angle.ofDeg(279.557208);
-    private final double sunLonAtPerig = Angle.ofDeg(283.112438);
-    private final double sunEarthExcentricity = Angle.ofArcsec(0.016705);
+    // the longitude of the sun at J2010
+    private static final double SUN_LON_AT_J2010 = Angle.ofDeg(279.557208);
+    // the longitude of the sun at perigee
+    private static final double SUN_LON_AT_PERIGEE = Angle.ofDeg(283.112438);
+    // the eccentricity of the orbit sun-earth
+    private static final double SUN_EARTH_ECCENTRICITY = 0.016705;
+    // the theta0 angle
+    private static final double THETA_0 = Angle.ofDeg(0.533128);
 
-    private double daysSinceJ2010;
-    private double sunMeanAnomaly;
-    private double sunRealAnomaly;
-    private double sunGeoEclLon;
-    private double sunGeoEclLat;
-
-    private final double theta0 = Angle.ofDeg(0.0533128);
-
+    /**
+     * Compute the model of the sun
+     *
+     * @param daysSinceJ2010                 days since Epoch.J2010 (positive or negative)
+     * @param eclipticToEquatorialConversion conversion of the object's coordinates
+     * @return the sun model
+     */
     @Override
     public Sun at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
-        this.daysSinceJ2010 = daysSinceJ2010;
-        sunMeanAnomaly = Angle.normalizePositive(Angle.TAU/365.242191)*this.daysSinceJ2010 + sunLonAtJ2010 - sunLonAtPerig;
-        sunRealAnomaly = sunMeanAnomaly + 2*sunEarthExcentricity*Math.sin(sunMeanAnomaly);
-        sunGeoEclLon = sunRealAnomaly + sunLonAtPerig;
-        sunGeoEclLat = 0;
+        // compute the mean anomaly of the sun
+        double sunMeanAnomaly = (Angle.TAU / 365.242191) * daysSinceJ2010 + SUN_LON_AT_J2010 - SUN_LON_AT_PERIGEE;
+        // compute the real anomaly of the sun
+        double sunRealAnomaly = sunMeanAnomaly + 2 * SUN_EARTH_ECCENTRICITY * Math.sin(sunMeanAnomaly);
+        // compute the geocentric ecliptic longitude of the sun
+        double sunGeoEclLon = sunRealAnomaly + SUN_LON_AT_PERIGEE;
+        // compute the ecliptic coordinates of the sun
+        EclipticCoordinates sunEclipticCoordinates = EclipticCoordinates.of(sunGeoEclLon, 0);
 
         return new Sun(
-                EclipticCoordinates.of(sunGeoEclLon, sunGeoEclLat),
-                eclipticToEquatorialConversion.apply(EclipticCoordinates.of(sunGeoEclLon, sunGeoEclLat)),
-                (float) (theta0*((1+sunEarthExcentricity*Math.cos(sunRealAnomaly))/(1-sunEarthExcentricity*sunEarthExcentricity))),
+                sunEclipticCoordinates,
+                eclipticToEquatorialConversion.apply(sunEclipticCoordinates),
+                (float) (THETA_0 * ((1 + SUN_EARTH_ECCENTRICITY * Math.cos(sunRealAnomaly)) / (1 - SUN_EARTH_ECCENTRICITY * SUN_EARTH_ECCENTRICITY))),
                 (float) sunMeanAnomaly
-                );
+        );
     }
+
 }

@@ -22,7 +22,6 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      *
      * @param center the center point of the projection
      */
-    // TODO: 09/03/2020 how can the constructor return a value ?
     public StereographicProjection(HorizontalCoordinates center) {
         this.center = center;
         this.centerAz = center.az();
@@ -72,13 +71,14 @@ public final class StereographicProjection implements Function<HorizontalCoordin
         double azAltSin = Math.sin(azAlt.alt());
         double azAltCos = Math.cos(azAlt.alt());
 
-        // compute the delta azimuth value and the d value
+        // compute the delta azimuth value, its cosine and the d value
         double deltaAz = azAlt.az() - centerAz;
-        double d = 1d / (1 + azAltSin * sinCenterAlt + azAltCos * cosCenterAlt * Math.cos(deltaAz));
+        double cosDeltaAz = Math.cos(deltaAz);
+        double d = 1d / (1 + azAltSin * sinCenterAlt + azAltCos * cosCenterAlt * cosDeltaAz);
 
         return CartesianCoordinates.of(
                 d * azAltCos * Math.sin(deltaAz),
-                d * (azAltSin * cosCenterAlt - azAltCos * sinCenterAlt * Math.cos(deltaAz))
+                d * (azAltSin * cosCenterAlt - azAltCos * sinCenterAlt * cosDeltaAz)
         );
     }
 
@@ -92,6 +92,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
         // get the value of the given cartesian coordinates
         double x = xy.x();
         double y = xy.y();
+
         // compute the rho value, the sinus and cosine of the implicit angle c
         double p = Math.sqrt(x * x + y * y);
         double sinC = (2 * p) / (p * p + 1);

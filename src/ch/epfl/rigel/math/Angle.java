@@ -1,5 +1,7 @@
 package ch.epfl.rigel.math;
 
+import ch.epfl.rigel.Preconditions;
+
 /**
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
@@ -41,16 +43,14 @@ public final class Angle {
      * @param deg the degrees value
      * @param min the minutes value
      * @param sec the seconds value
-     * @return the same angle expressed in rad or throws an exception if the seconds or minutes value
-     * do not belong to the interval [0,60[
+     * @return the same angle expressed in rad
      */
     public static double ofDMS(int deg, int min, double sec) {
-        if ((RightOpenInterval.of(0, 60).contains(min)) &&
-                (RightOpenInterval.of(0, 60).contains(sec))) {
-            return ofArcsec(deg * 60 * 60 + min * 60 + sec);
-        } else {
-            throw new IllegalArgumentException();
-        }
+        // check exceptions
+        Preconditions.checkInInterval(RightOpenInterval.of(0, 60), min);
+        Preconditions.checkInInterval(RightOpenInterval.of(0, 60), sec);
+
+        return ofArcsec(deg * 60 * 60 + min * 60 + sec);
     }
 
     /**

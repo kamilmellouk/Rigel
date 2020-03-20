@@ -3,6 +3,8 @@ package ch.epfl.rigel.astronomy;
 import ch.epfl.rigel.coordinates.EclipticCoordinates;
 import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 
+import java.util.Objects;
+
 /**
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
@@ -11,7 +13,6 @@ import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 public final class Sun extends CelestialObject {
 
     // Attributes specific to the Sun
-    // TODO: 09/03/2020 check the immutability
     private final EclipticCoordinates eclipticPos;
     private final float meanAnomaly;
 
@@ -26,12 +27,7 @@ public final class Sun extends CelestialObject {
     public Sun(EclipticCoordinates eclipticPos, EquatorialCoordinates equatorialPos, float angularSize, float meanAnomaly) {
         super("Soleil", equatorialPos, angularSize, -26.7f);
 
-        // check exception
-        if (eclipticPos == null) {
-            throw new IllegalArgumentException();
-        }
-
-        this.eclipticPos = eclipticPos;
+        this.eclipticPos = Objects.requireNonNull(eclipticPos);
         this.meanAnomaly = meanAnomaly;
     }
 
