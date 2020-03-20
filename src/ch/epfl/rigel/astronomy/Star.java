@@ -16,7 +16,7 @@ public final class Star extends CelestialObject {
     private float colorIndex;
 
     /**
-     * Constructing a new Star
+     * Constructor of a star
      *
      * @param hipparcosId   HIP identification number for the star
      * @param name          the name of the star
@@ -43,7 +43,7 @@ public final class Star extends CelestialObject {
     }
 
     /**
-     * Computing the color temperature of the star, given its color index
+     * Compute the color temperature of the star, given its color index
      *
      * @return the floor of the temperature, in Kelvins
      */

@@ -22,7 +22,7 @@ final class SignatureChecks_5 {
         Asterism a = new Asterism(l);
         l = a.stars();
     }
-/*
+
     void checkCelestialObjectModel() {
         CelestialObjectModel<Sun> s = null;
         double d = 0;
@@ -34,7 +34,7 @@ final class SignatureChecks_5 {
         Enum<SunModel> m1 = SunModel.SUN;
         CelestialObjectModel<Sun> m2 = SunModel.SUN;
     }
-
+/*
     void checkPlanetModel() {
         List<PlanetModel> a = PlanetModel.ALL;
         Enum<PlanetModel> mercury1 = PlanetModel.MERCURY;

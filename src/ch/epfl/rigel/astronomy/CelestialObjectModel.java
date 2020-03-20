@@ -10,7 +10,7 @@ import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 public interface CelestialObjectModel<O> {
 
     /**
-     * Computing the model of the CelestialObject O
+     * Compute the model of the CelestialObject O
      *
      * @param daysSinceJ2010                 days since Epoch.J2010 (positive or negative)
      * @param eclipticToEquatorialConversion conversion of the object's coordinates

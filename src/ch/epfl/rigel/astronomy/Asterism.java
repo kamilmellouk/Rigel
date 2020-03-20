@@ -15,7 +15,7 @@ public final class Asterism {
     private final List<Star> stars;
 
     /**
-     * Creating a new Asterism containing the given list of stars
+     * Constructor of an asterism containing the given list of stars
      *
      * @param stars List of the stars contained in the Asterism, not empty
      */
