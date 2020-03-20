@@ -28,6 +28,7 @@ public final class Polynomial {
      * @return a polynomial
      */
     public static Polynomial of(double coefficientN, double... coefficients) {
+        // check exception
         Preconditions.checkArgument(coefficientN != 0);
 
         // create new array used to contain all coefficients

@@ -46,6 +46,7 @@ public final class Angle {
      * @return the same angle expressed in rad
      */
     public static double ofDMS(int deg, int min, double sec) {
+        // check exceptions
         Preconditions.checkInInterval(RightOpenInterval.of(0, 60), min);
         Preconditions.checkInInterval(RightOpenInterval.of(0, 60), sec);
 

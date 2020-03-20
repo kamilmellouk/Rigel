@@ -29,7 +29,9 @@ public final class RightOpenInterval extends Interval {
      * @return a right open interval
      */
     public static RightOpenInterval of(double lowBound, double highBound) {
+        // check exception
         Preconditions.checkArgument(lowBound < highBound);
+
         return new RightOpenInterval(lowBound, highBound);
     }
 
@@ -40,7 +42,9 @@ public final class RightOpenInterval extends Interval {
      * @return a right open interval of the specified size, centered around 0
      */
     public static RightOpenInterval symmetric(double size) {
+        // check exception
         Preconditions.checkArgument(size > 0);
+
         return new RightOpenInterval(-size / 2, size / 2);
     }
 

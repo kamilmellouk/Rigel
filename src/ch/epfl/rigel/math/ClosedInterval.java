@@ -29,7 +29,9 @@ public final class ClosedInterval extends Interval {
      * @return a closed interval
      */
     public static ClosedInterval of(double lowBound, double highBound) {
+        // check exception
         Preconditions.checkArgument(lowBound < highBound);
+
         return new ClosedInterval(lowBound, highBound);
     }
 
@@ -40,7 +42,9 @@ public final class ClosedInterval extends Interval {
      * @return a closed interval of the specified size, centered around 0
      */
     public static ClosedInterval symmetric(double size) {
+        // check exception
         Preconditions.checkArgument(size > 0);
+
         return new ClosedInterval(-size / 2, size / 2);
     }
 
