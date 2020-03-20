@@ -20,9 +20,9 @@ public final class Asterism {
      * @param stars List of the stars contained in the Asterism, not empty
      */
     // TODO: 20/03/2020 check access
-    Asterism(List<Star> stars) {
+    public Asterism(List<Star> stars) {
         // check exception
-        Preconditions.checkArgument(stars.isEmpty());
+        Preconditions.checkArgument(!stars.isEmpty());
 
         // TODO: 20/03/2020 check immutability
         this.stars = List.copyOf(stars);
