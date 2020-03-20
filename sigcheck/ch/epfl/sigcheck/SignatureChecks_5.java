@@ -16,7 +16,7 @@ final class SignatureChecks_5 {
         i = t.hipparcosId();
         i = t.colorTemperature();
     }
-
+/*
     void checkAsterism() {
         List<Star> l = null;
         Asterism a = new Asterism(l);
@@ -53,5 +53,5 @@ final class SignatureChecks_5 {
         CelestialObjectModel<Planet> uranus2 = PlanetModel.URANUS;
         Enum<PlanetModel> neptune1 = PlanetModel.NEPTUNE;
         CelestialObjectModel<Planet> neptune2 = PlanetModel.NEPTUNE;
-    }
+    }*/
 }
