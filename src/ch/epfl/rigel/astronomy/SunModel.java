@@ -31,20 +31,21 @@ public enum SunModel implements CelestialObjectModel<Sun> {
      */
     @Override
     public Sun at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
-        // the mean anomaly of the sun
-        double sunMeanAnomaly = Angle.normalizePositive(Angle.TAU / 365.242191) * daysSinceJ2010 + SUN_LON_AT_J2010 - SUN_LON_AT_PERIGEE;
-        // the real anomaly of the sun
+        // compute the mean anomaly of the sun
+        double sunMeanAnomaly = (Angle.TAU / 365.242191) * daysSinceJ2010 + SUN_LON_AT_J2010 - SUN_LON_AT_PERIGEE;
+        // compute the real anomaly of the sun
         double sunRealAnomaly = sunMeanAnomaly + 2 * SUN_EARTH_ECCENTRICITY * Math.sin(sunMeanAnomaly);
-        // the geocentric ecliptic longitude of the sun
+        // compute the geocentric ecliptic longitude of the sun
         double sunGeoEclLon = sunRealAnomaly + SUN_LON_AT_PERIGEE;
-        // the geocentric ecliptic latitude of the sun
-        double sunGeoEclLat = 0;
+        // compute the ecliptic coordinates of the sun
+        EclipticCoordinates sunEclipticCoordinates = EclipticCoordinates.of(sunGeoEclLon, 0);
 
         return new Sun(
-                EclipticCoordinates.of(sunGeoEclLon, sunGeoEclLat),
-                eclipticToEquatorialConversion.apply(EclipticCoordinates.of(sunGeoEclLon, sunGeoEclLat)),
+                sunEclipticCoordinates,
+                eclipticToEquatorialConversion.apply(sunEclipticCoordinates),
                 (float) (THETA_0 * ((1 + SUN_EARTH_ECCENTRICITY * Math.cos(sunRealAnomaly)) / (1 - SUN_EARTH_ECCENTRICITY * SUN_EARTH_ECCENTRICITY))),
                 (float) sunMeanAnomaly
         );
     }
+
 }
