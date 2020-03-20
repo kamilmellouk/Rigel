@@ -29,9 +29,7 @@ public final class Star extends CelestialObject {
 
         // check exception
         Preconditions.checkInInterval(ClosedInterval.of(-0.5, 5.5), colorIndex);
-        if (hipparcosId < 0) {
-            throw new IllegalArgumentException();
-        }
+        Preconditions.checkArgument(hipparcosId >= 0);
 
         this.hipparcosId = hipparcosId;
         this.colorIndex = colorIndex;

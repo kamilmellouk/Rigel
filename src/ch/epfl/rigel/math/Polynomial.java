@@ -1,5 +1,7 @@
 package ch.epfl.rigel.math;
 
+import ch.epfl.rigel.Preconditions;
+
 /**
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
@@ -23,20 +25,18 @@ public final class Polynomial {
      *
      * @param coefficientN the highest coefficient
      * @param coefficients the rest of coefficients
-     * @return a polynomial or throws an exception if the highest coefficient is 0
+     * @return a polynomial
      */
     public static Polynomial of(double coefficientN, double... coefficients) {
-        if (coefficientN == 0) {
-            throw new IllegalArgumentException();
-        } else {
-            // create new array used to contain all coefficients
-            double[] coefficientsArray = new double[coefficients.length + 1];
-            // place the coefficients in the specific array
-            coefficientsArray[0] = coefficientN;
-            System.arraycopy(coefficients, 0, coefficientsArray, 1, coefficients.length);
-            // return the related polynomial
-            return new Polynomial(coefficientsArray);
-        }
+        Preconditions.checkArgument(coefficientN != 0);
+
+        // create new array used to contain all coefficients
+        double[] coefficientsArray = new double[coefficients.length + 1];
+        // place the coefficients in the specific array
+        coefficientsArray[0] = coefficientN;
+        System.arraycopy(coefficients, 0, coefficientsArray, 1, coefficients.length);
+        // return the related polynomial
+        return new Polynomial(coefficientsArray);
     }
 
     /**

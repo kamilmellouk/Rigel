@@ -18,13 +18,13 @@ public class MySunTest {
     void moonThrowsIAE() {
         assertThrows(IllegalArgumentException.class, () -> new Sun(EclipticCoordinates.of(0, 0), EquatorialCoordinates.of(0, 0), -1, 1.5f));
         assertThrows(IllegalArgumentException.class, () -> new Sun(EclipticCoordinates.of(0, 0), EquatorialCoordinates.of(0, 0), -2, 2f));
-        assertThrows(IllegalArgumentException.class, () -> new Sun(null, EquatorialCoordinates.of(0, 0), 1, -4f));
-        assertThrows(IllegalArgumentException.class, () -> new Sun(null, EquatorialCoordinates.of(0, 0), 1, 0.5f));
     }
 
     @Test
     void moonThrowsNPE() {
         assertThrows(NullPointerException.class, () -> new Sun(EclipticCoordinates.of(0,0),null, 1, 0.5f));
+        assertThrows(NullPointerException.class, () -> new Sun(null, EquatorialCoordinates.of(0, 0), 1, -4f));
+        assertThrows(NullPointerException.class, () -> new Sun(null, EquatorialCoordinates.of(0, 0), 1, 0.5f));
     }
 
     @Test
