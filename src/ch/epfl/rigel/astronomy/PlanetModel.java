@@ -64,6 +64,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
             real anomaly v
             radius r
             longitude l
+        of the planet
          */
         double M = (Angle.TAU / 365.242191) * (daysSinceJ2010 / revolutionPeriod) + lonAtJ2010 - lonAtPerigee;
         double v = M + 2 * orbitEccentricity * Math.sin(M);
