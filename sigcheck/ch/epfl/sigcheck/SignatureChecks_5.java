@@ -34,7 +34,7 @@ final class SignatureChecks_5 {
         Enum<SunModel> m1 = SunModel.SUN;
         CelestialObjectModel<Sun> m2 = SunModel.SUN;
     }
-/*
+
     void checkPlanetModel() {
         List<PlanetModel> a = PlanetModel.ALL;
         Enum<PlanetModel> mercury1 = PlanetModel.MERCURY;
@@ -53,5 +53,5 @@ final class SignatureChecks_5 {
         CelestialObjectModel<Planet> uranus2 = PlanetModel.URANUS;
         Enum<PlanetModel> neptune1 = PlanetModel.NEPTUNE;
         CelestialObjectModel<Planet> neptune2 = PlanetModel.NEPTUNE;
-    }*/
+    }
 }
