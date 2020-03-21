@@ -9,9 +9,10 @@ import java.time.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * @author Bastien Faivre
- * 20/03/2020
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk (312327)
  */
+
 class MySunModelTest {
 
     @Test

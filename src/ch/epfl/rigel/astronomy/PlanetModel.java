@@ -7,9 +7,10 @@ import ch.epfl.rigel.math.Angle;
 import java.util.List;
 
 /**
- * @author Bastien Faivre
- * 20/03/2020
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk (312327)
  */
+
 public enum PlanetModel implements CelestialObjectModel<Planet> {
 
     MERCURY("Mercure", 0.24085, 75.5671, 77.612, 0.205627,
@@ -57,52 +58,74 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 
     @Override
     public Planet at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
-        // compute the mean anomaly of the planet
-        double planetMeanAnomaly = (Angle.TAU / 365.242191) * (daysSinceJ2010 / revolutionPeriod) + lonAtJ2010 - lonAtPerigee;
-        // compute the real anomaly of the planet
-        double planetRealAnomaly = planetMeanAnomaly + 2 * orbitEccentricity * Math.sin(planetMeanAnomaly);
-        // compute the radius of the planet on the orbit plan
-        double radius = (halfAxisOrbit * (1 - orbitEccentricity * orbitEccentricity)) / (1 + orbitEccentricity * Math.cos(planetRealAnomaly));
-        // compute the longitude of the planet on the orbit plan
-        double longitude = planetRealAnomaly + lonAtPerigee;
-
-        // compute an intermediate value for the performances
-        double intermediateValue = Math.sin(longitude - ascendingNodeLon);
-
-        // compute the heliocentric ecliptic latitude of the planet
-        double heliocentricEclipticLat = Math.asin(intermediateValue * Math.sin(orbitInclinationAtEcliptic));
-        // project the radius on the ecliptic plan
-        double projectedRadius = radius * Math.cos(heliocentricEclipticLat);
-        // project the longitude on the ecliptic plan
-        double projectedLongitude = Math.atan2(intermediateValue * Math.cos(orbitInclinationAtEcliptic), Math.cos(longitude - ascendingNodeLon)) + ascendingNodeLon;
-
-        // compute an intermediate value for the performances
-        double intermediateValue2 = radius * Math.sin(projectedLongitude - longitude);
-
-        // TODO: 20/03/2020 L and R are for the earth 
         /*
-        // compute the geocentric ecliptic longitude of the planet depending on its type
-        double geoEclLon;
-        if (name.equals("Mercure") || name.equals("Vénus")) {
-            geoEclLon = Math.PI + longitude + Math.atan2(projectedRadius * Math.sin(longitude - projectedLongitude), radius - projectedRadius * Math.cos(longitude - projectedLongitude));
-        } else {
-            geoEclLon = projectedLongitude + Math.atan2(intermediateValue2, projectedRadius - radius * Math.cos(projectedLongitude - longitude));
-        }
-
-        // compute the geocentric ecliptic latitude of the planet
-        double geoEclLat = Math.atan2(projectedRadius * Math.tan(heliocentricEclipticLat) * Math.sin(geoEclLon - projectedLongitude), intermediateValue2);
-
-        double distancePlanetEarth = Math.sqrt(radius * radius);
-
-        float planetAngularSize = (float) (angularSize / distancePlanetEarth);
-
+        compute :
+            mean anomaly M
+            real anomaly v
+            radius r
+            longitude l
          */
-        EclipticCoordinates geoEclCoordinates = EclipticCoordinates.of(0, 0);
+        double M = (Angle.TAU / 365.242191) * (daysSinceJ2010 / revolutionPeriod) + lonAtJ2010 - lonAtPerigee;
+        double v = M + 2 * orbitEccentricity * Math.sin(M);
+        double r = (halfAxisOrbit * (1 - orbitEccentricity * orbitEccentricity)) / (1 + orbitEccentricity * Math.cos(v));
+        double l = v + lonAtPerigee;
 
+        // compute an intermediate value for the performances
+        double sin_l_minus_omega = Math.sin(l - ascendingNodeLon);
+
+        // compute the heliocentric ecliptic latitude
+        double phi = Math.asin(sin_l_minus_omega * Math.sin(orbitInclinationAtEcliptic));
+        // compute an intermediate value for performances
+        double cosPhi = Math.cos(phi);
+
+        // project the radius and the longitude on the ecliptic plan
+        double rPrime = r * cosPhi;
+        double lPrime = Math.atan2(sin_l_minus_omega * Math.cos(orbitInclinationAtEcliptic), Math.cos(l - ascendingNodeLon)) + ascendingNodeLon;
+
+        /*
+        compute :
+            mean anomaly M
+            real anomaly v
+            radius r
+            longitude l
+        of the earth
+         */
+        double M_earth = (Angle.TAU / 365.242191) * (daysSinceJ2010 / PlanetModel.EARTH.revolutionPeriod) + PlanetModel.EARTH.lonAtJ2010 - PlanetModel.EARTH.lonAtPerigee;
+        double v_earth = M_earth + 2 * PlanetModel.EARTH.orbitEccentricity * Math.sin(M_earth);
+        double R = (PlanetModel.EARTH.halfAxisOrbit * (1 - PlanetModel.EARTH.orbitEccentricity * PlanetModel.EARTH.orbitEccentricity)) / (1 + PlanetModel.EARTH.orbitEccentricity * Math.cos(v_earth));
+        double L = v_earth + PlanetModel.EARTH.lonAtPerigee;
+
+        // compute an intermediate value for performances
+        double R_sin_lPrime_minus_L = R * Math.sin(lPrime - L);
+
+        // compute the geocentric ecliptic longitude of the planet depending on its type
+        double lambda;
+        if (name.equals("Mercure") || name.equals("Vénus")) {
+            lambda = Math.PI + L + Math.atan2(Math.sin(L - lPrime) * rPrime, R - rPrime * Math.cos(lPrime - L));
+        } else {
+            lambda = lPrime + Math.atan2(R_sin_lPrime_minus_L, rPrime - R * Math.cos(lPrime - L));
+        }
+        // compute the geocentric ecliptic latitude of the planet
+        double beta = Math.atan2(rPrime * Math.tan(phi) * Math.sin(lambda - lPrime), R_sin_lPrime_minus_L);
+        // compute the geocentric ecliptic coordinates of the planet
+        EclipticCoordinates geoEclCoordinates = EclipticCoordinates.of(lambda, beta);
+
+        // compute the between the planet and the earth
+        double rho = Math.sqrt(R * R + r * r - 2 * R * Math.cos(l - L) * cosPhi);
+        // compute the angular size of the planet
+        float theta = (float) (angularSize / rho);
+
+        // compute the phase of the planet
+        double F = (1 + Math.cos(lambda - l)) / 2;
+        // compute the magnitude of the planet
+        float m = (float) (magnitude + 5 * Math.log10((r * rho) / Math.sqrt(F)));
+
+        // return the computed planet model
         return new Planet(
                 name,
                 eclipticToEquatorialConversion.apply(geoEclCoordinates),
-                planetAngularSize,
-                magnitude);
+                theta,
+                m);
     }
+
 }
