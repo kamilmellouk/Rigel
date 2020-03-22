@@ -20,12 +20,22 @@ public enum MoonModel implements CelestialObjectModel<Moon> {
 
     @Override
     public Moon at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
+        // TODO finish implementing
+        Sun currentSun = SunModel.SUN.at(daysSinceJ2010, eclipticToEquatorialConversion);
 
-        return new Moon(
+        double orbitalLon = Angle.ofDeg(13.1763966) * daysSinceJ2010 + meanLon;
+
+        double meanMoonAnomaly = orbitalLon - Angle.ofDeg(0.1114041) * daysSinceJ2010 - perigMeanLon;
+
+        // Correction terms for the Sun's influence on the Moon's trajectory
+        ///double evection = Angle.ofDeg(1.2739) * Math.sin(2*(orbitalLon - SunModel.));
+
+       /* return new Moon(
                 ,
                 ,
                 0,
 
-        );
+        );*/
+       return null;
     }
 }
