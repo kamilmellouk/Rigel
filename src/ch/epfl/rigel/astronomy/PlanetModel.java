@@ -125,10 +125,10 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
             lambda = lPrime + Math.atan2(R_sin_lPrime_minus_L, rPrime - R * Math.cos(lPrime - L));
         }
         // compute the geocentric ecliptic latitude of the planet
-        double beta = RightOpenInterval.symmetric(Math.PI).reduce(Math.atan2(rPrime * Math.tan(phi) * Math.sin(lambda - lPrime), R_sin_lPrime_minus_L));
+        double beta = Math.atan((rPrime * Math.tan(phi) * Math.sin(lambda - lPrime)) / R_sin_lPrime_minus_L);
         // compute the geocentric ecliptic coordinates of the planet
         System.out.println("lambda = " + Angle.toDeg(lambda));
-        System.out.println("beta no reduce = " + Angle.toDeg(Math.atan2(rPrime * Math.tan(phi) * Math.sin(lambda - lPrime), R_sin_lPrime_minus_L)));
+        System.out.println("beta no reduce = " + Angle.toDeg(Math.atan((rPrime * Math.tan(phi) * Math.sin(lambda - lPrime)) / R_sin_lPrime_minus_L)));
         System.out.println("beta = " + Angle.toDeg(beta));
         EclipticCoordinates geoEclCoordinates = EclipticCoordinates.of(Angle.normalizePositive(lambda), beta);
 
