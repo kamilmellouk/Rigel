@@ -23,6 +23,8 @@ public final class Star extends CelestialObject {
      * @param equatorialPos the position of the star (in equatorial coordinates, relative to the earth)
      * @param magnitude     the magnitude of the star
      * @param colorIndex    the color index of the star
+     *
+     * @throws IllegalArgumentException if hipparcorId < 0 or colorIndex isn't in [-0.5, 5.5]
      */
     public Star(int hipparcosId, String name, EquatorialCoordinates equatorialPos, float magnitude, float colorIndex) {
         super(name, equatorialPos, 0, magnitude);

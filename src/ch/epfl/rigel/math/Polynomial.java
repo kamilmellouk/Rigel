@@ -25,7 +25,10 @@ public final class Polynomial {
      *
      * @param coefficientN the highest coefficient
      * @param coefficients the rest of coefficients
+     *
      * @return a polynomial
+     *
+     * @throws IllegalArgumentException if coefficientN = 0
      */
     public static Polynomial of(double coefficientN, double... coefficients) {
         // check exception

@@ -117,7 +117,7 @@ public final class StarCatalogue {
         }
 
         /**
-         *
+         * 
          * @param inputStream
          * @param loader
          * @return

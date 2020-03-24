@@ -44,6 +44,8 @@ public final class Angle {
      * @param min the minutes value
      * @param sec the seconds value
      * @return the same angle expressed in rad
+     *
+     * @throws IllegalArgumentException if min or sec aren't in [0, 60[
      */
     public static double ofDMS(int deg, int min, double sec) {
         // check exceptions

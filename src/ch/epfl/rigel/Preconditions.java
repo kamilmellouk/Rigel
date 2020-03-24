@@ -16,6 +16,8 @@ public final class Preconditions {
      * Throwing an IllegalArgumentException if a condition is not satisfied
      *
      * @param isTrue the condition to check
+     *
+     * @throws IllegalArgumentException if isTrue is false
      */
     public static void checkArgument(boolean isTrue) {
         if (!isTrue) {
@@ -28,7 +30,10 @@ public final class Preconditions {
      *
      * @param interval the interval used
      * @param value    the value to check
-     * @return the value if it is contained in the interval, or throws an IllegalArgumentException if not
+     *
+     * @return the value if it is contained in the interval
+     *
+     * @throws IllegalArgumentException if value isn't contained in interval
      */
     public static double checkInInterval(Interval interval, double value) {
         if (interval.contains(value)) {
