@@ -37,22 +37,22 @@ class MySunModelTest {
 
     @Test
     void test() {
-        assertEquals(5.9325494700300885, SunModel.SUN.at(Epoch.J2010.daysUntil(zdt2), eclToEqu2).equatorialPos().ra(),1e-11);
+        assertEquals(5.9325494700300885, SunModel.SUN.at(Epoch.J2010.daysUntil(zdt2), eclToEqu2).equatorialPos().ra());
     }
 
     @Test
     void test2() {
-        assertEquals(8.392682808297806, SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().raHr(), 1e-11);
+        assertEquals(8.392682808297806, SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().raHr(), 1e-13);
     }
 
     @Test
     void test3() {
-        assertEquals(19.35288373097352, SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().decDeg(), 1e-11);
+        assertEquals(19.35288373097352, SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().decDeg(), 1e-13);
     }
 
     @Test
     void test4() {
-        assertEquals(Angle.ofHr(8) + Angle.ofDMS(0, 23, 34), SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().ra(), 1e-11);
+        assertEquals(Angle.ofHr(8.392701704), SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().ra(), 1e-9);
     }
 
     @Test
