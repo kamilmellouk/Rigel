@@ -7,7 +7,6 @@ import java.time.temporal.ChronoUnit;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public enum Epoch {
 
     // 01.01.2000 12am UTC

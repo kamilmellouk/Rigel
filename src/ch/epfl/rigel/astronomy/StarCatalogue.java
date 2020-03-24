@@ -2,10 +2,7 @@ package ch.epfl.rigel.astronomy;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Bastien Faivre (310929)
@@ -69,63 +66,80 @@ public final class StarCatalogue {
         return List.copyOf(asterismIndicesMap.get(asterism));
     }
 
-    public final class Builder {
+
+    public static final class Builder {
+
         private List<Star> stars;
         private List<Asterism> asterisms;
 
-        private Map<Asterism, List<Integer>> asterismIndicesMap;
-
+        /**
+         * Default constructor for the StarCatalogue.Builder
+         */
         public Builder() {
             this.stars = new ArrayList<>();
             this.asterisms = new ArrayList<>();
-            this.asterismIndicesMap = new HashMap<>();
         }
 
+        /**
+         * Adding a Star to the Builder
+         * @param star to add
+         * @return this
+         */
         public Builder addStar(Star star) {
             stars.add(star);
-            // TODO implement
             return this;
         }
 
+        /**
+         * Getter for stars
+         * @return unmodifiable but mutable view of stars
+         */
         public List<Star> stars() {
-            // TODO is this really unmodifiable but non immutable ?
-            return List.copyOf(stars);
+            return Collections.unmodifiableList(stars);
         }
 
+        /**
+         * Adding an Asterism (and its stars) to the Builder
+         * @param asterism to add
+         * @return this
+         */
         public Builder addAsterism(Asterism asterism) {
-            // TODO check
             asterisms.add(asterism);
-            List<Integer> indices = new ArrayList<>();
-            for(Star star : asterism.stars()) {
-                stars.add(star);
-                indices.add(stars.indexOf(star));
-            }
-            asterismIndicesMap.put(asterism, indices);
-
             return this;
         }
 
+        /**
+         * Getter for asterisms
+         * @return unmodifiable but mutable view of asterisms
+         */
         public List<Asterism> asterisms() {
-            // TODO is this really unmodifiable but non immutable ?
-            return List.copyOf(asterisms);
+            return Collections.unmodifiableList(asterisms);
         }
 
+        /**
+         *
+         * @param inputStream
+         * @param loader
+         * @return
+         * @throws IOException
+         */
         public Builder loadFrom(InputStream inputStream, Loader loader) throws IOException {
-            // TODO implement
+            loader.load(inputStream, this);
             return this;
         }
 
+        /**
+         * Building method for the StarCatalogue
+         * @return new StarCatalogue with stars and asterisms
+         */
         public StarCatalogue build() {
-            // TODO implement
-            return null;
+            return new StarCatalogue(stars, asterisms);
         }
 
     }
 
     public interface Loader {
 
-        public default void load(InputStream inputStream, Builder builder) throws IOException {
-            // TODO implement
-        }
+        public void load(InputStream inputStream, Builder builder) throws IOException;
     }
 }
