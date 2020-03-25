@@ -10,7 +10,6 @@ import ch.epfl.rigel.math.Angle;
  */
 
 public enum SunModel implements CelestialObjectModel<Sun> {
-
     SUN();
 
     // the longitude of the sun at J2010

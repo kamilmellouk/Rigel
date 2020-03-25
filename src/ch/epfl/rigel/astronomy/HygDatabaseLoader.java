@@ -21,17 +21,25 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader{
     public void load(InputStream inputStream, StarCatalogue.Builder builder) throws IOException {
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.US_ASCII);
         try (BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
-            String s;
+            String s = bufferedReader.readLine();
             while ((s = bufferedReader.readLine()) != null) {
-                builder.addStar(new Star(
-                        Integer.parseInt(s.split(",")[HygDatabaseColumnIndex.HIP.ordinal()]),
-                        s.split(",")[HygDatabaseColumnIndex.PROPER.ordinal()],
+
+
+                Star star = new Star(
+                        !s.isEmpty() ? Integer.parseInt(s.split(",")[HygDatabaseColumnIndex.HIP.ordinal()]) : 0,
+                        !s.isEmpty() ?
+                                s.split(",")[HygDatabaseColumnIndex.PROPER.ordinal()]
+                                : !s.split(",")[HygDatabaseColumnIndex.BAYER.ordinal()].isEmpty() ?
+                                s.split(",")[HygDatabaseColumnIndex.BAYER.ordinal()] + " " + s.split(",")[HygDatabaseColumnIndex.CON.ordinal()]
+                                : "? " + s.split(",")[HygDatabaseColumnIndex.CON.ordinal()],
                         EquatorialCoordinates.of((Double.parseDouble(s.split(",")[HygDatabaseColumnIndex.RARAD.ordinal()])),
-                                                  Double.parseDouble(s.split(",")[HygDatabaseColumnIndex.DECRAD.ordinal()])),
-                        Float.parseFloat(s.split(",")[HygDatabaseColumnIndex.MAG.ordinal()]),
-                        Float.parseFloat(s.split(",")[HygDatabaseColumnIndex.CI.ordinal()])
-                        )
+                                Double.parseDouble(s.split(",")[HygDatabaseColumnIndex.DECRAD.ordinal()])),
+                        !s.isEmpty() ? Float.parseFloat(s.split(",")[HygDatabaseColumnIndex.MAG.ordinal()]) : 0f,
+                        !s.isEmpty() ? Float.parseFloat(s.split(",")[HygDatabaseColumnIndex.CI.ordinal()]) : 0f
                 );
+                // TODO why NumberFormatException ?
+                System.out.printf("%s, %d, %f, %d, %f \n", star.name(), star.hipparcosId(), star.magnitude(), star.colorTemperature(), star.equatorialPos().ra());
+                builder.addStar(star);
             }
         }
     }

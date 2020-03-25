@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 class MySunModelTest {
 
     @Test
@@ -52,7 +51,7 @@ class MySunModelTest {
 
     @Test
     void test4() {
-        assertEquals(Angle.ofHr(8.392701704), SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().ra(), 1e-9);
+        assertEquals(Angle.ofHr(8.3924701704), SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().ra(), 1e-9);
     }
 
     @Test
