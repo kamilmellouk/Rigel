@@ -7,7 +7,8 @@ import ch.epfl.rigel.math.Polynomial;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-import static java.time.temporal.ChronoUnit.*;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.MILLIS;
 
 /**
  * @author Bastien Faivre (310929)

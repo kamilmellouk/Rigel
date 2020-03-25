@@ -25,7 +25,6 @@ public abstract class CelestialObject {
      * @param equatorialPos (not null) the equatorial coordinates of the celestial object
      * @param angularSize   (non negative) the angular size of the celestial object
      * @param magnitude     the magnitude of the celestial object
-     *
      * @throws IllegalArgumentException if the angular size is negative
      */
     CelestialObject(String name, EquatorialCoordinates equatorialPos, float angularSize, float magnitude) {

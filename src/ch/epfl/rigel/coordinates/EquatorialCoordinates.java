@@ -29,7 +29,6 @@ public final class EquatorialCoordinates extends SphericalCoordinates {
      * @param ra  the right ascension in rad
      * @param dec the declination in rad
      * @return the equatorial coordinates of given right ascension and declination in rad
-     *
      * @throws IllegalArgumentException if ra isn't in [0, 2PI[ or dec isn't in [-PI/2, PI/2]
      */
     public static EquatorialCoordinates of(double ra, double dec) {

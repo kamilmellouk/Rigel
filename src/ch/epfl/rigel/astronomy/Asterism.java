@@ -18,7 +18,6 @@ public final class Asterism {
      * Constructor of an asterism containing the given list of stars
      *
      * @param stars List of the stars contained in the Asterism, not empty
-     *
      * @throws IllegalArgumentException if stars is empty
      */
     // TODO: 20/03/2020 check access

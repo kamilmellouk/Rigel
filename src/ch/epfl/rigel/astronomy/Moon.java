@@ -22,14 +22,13 @@ public final class Moon extends CelestialObject {
      * @param angularSize   (non negative) the angular size of the Moon
      * @param magnitude     the magnitude of the Moon
      * @param phase         (contained in [0, 1]) the MoonPhase
-     *
      * @throws IllegalArgumentException if phase isn't contained in [0, 1]
      */
     public Moon(EquatorialCoordinates equatorialPos, float angularSize, float magnitude, float phase) {
         super("Lune", equatorialPos, angularSize, magnitude);
 
         //checking if valid arguments
-        this.phase = (float)Preconditions.checkInInterval(ClosedInterval.of(0, 1), phase);
+        this.phase = (float) Preconditions.checkInInterval(ClosedInterval.of(0, 1), phase);
     }
 
     @Override

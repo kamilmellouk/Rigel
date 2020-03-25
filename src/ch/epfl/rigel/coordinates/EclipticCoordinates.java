@@ -29,7 +29,6 @@ public final class EclipticCoordinates extends SphericalCoordinates {
      * @param lon the ecliptic longitude in rad
      * @param lat the ecliptic latitude in rad
      * @return the ecliptic coordinates of given ecliptic longitude and ecliptic latitude in rad
-     *
      * @throws IllegalArgumentException if lon isn't in [0, 2PI[ or lat isn't in [-PI/2, PI/2]
      */
     public static EclipticCoordinates of(double lon, double lat) {

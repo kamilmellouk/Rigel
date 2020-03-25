@@ -30,7 +30,6 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      * @param az  the azimuth in rad
      * @param alt the altitude in rad
      * @return the horizontal coordinates of given azimuth and altitude in rad
-     *
      * @throws IllegalArgumentException if az isn't in [0, 2PI[ or alt isn't in [-PI/2, PI/2]
      */
     public static HorizontalCoordinates of(double az, double alt) {

@@ -30,7 +30,6 @@ public final class GeographicCoordinates extends SphericalCoordinates {
      * @param lonDeg the longitude in deg
      * @param latDeg the latitude in deg
      * @return the geographic coordinates of given longitude and latitude in deg
-     *
      * @throws IllegalArgumentException if lonDeg isn't in [-180, 190[ or latDeg isn't in [90, 90]
      */
     public static GeographicCoordinates ofDeg(double lonDeg, double latDeg) {

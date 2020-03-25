@@ -3,9 +3,6 @@ package ch.epfl.rigel.astronomy;
 import ch.epfl.rigel.coordinates.EclipticCoordinates;
 import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 import ch.epfl.rigel.math.Angle;
-import ch.epfl.rigel.math.ClosedInterval;
-import ch.epfl.rigel.math.Interval;
-import ch.epfl.rigel.math.RightOpenInterval;
 
 import java.util.List;
 
