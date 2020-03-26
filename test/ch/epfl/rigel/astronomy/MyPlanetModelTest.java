@@ -18,23 +18,19 @@ class MyPlanetModelTest {
     @Test
     void atTest() {
         Planet jupiter = PlanetModel.JUPITER.at(-2231.0,
-                new EclipticToEquatorialConversion(ZonedDateTime
-                        .of(LocalDate.of(2003, Month.NOVEMBER, 22),
-                                LocalTime.of(0, 0, 0, 0),
-                                ZoneOffset.UTC)));
-        assertEquals(11.18715493470968, jupiter.equatorialPos().raHr(),
-                10e-15);
+                new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003, Month.NOVEMBER, 22),
+                        LocalTime.of(0, 0, 0, 0),
+                        ZoneOffset.UTC)));
+        assertEquals(11.18715493470968, jupiter.equatorialPos().raHr(), 10e-15);
 
-        assertEquals(35.11141185362771, Angle
-                .toDeg(PlanetModel.JUPITER.at(-2231.0,new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003, Month.NOVEMBER, 22), LocalTime.of(0, 0, 0, 0), ZoneOffset.UTC))).angularSize())*3600);
+        assertEquals(35.11141185362771, Angle.toDeg(jupiter.angularSize()) * 3600);
 
-        assertEquals(-1.9885659217834473, PlanetModel.JUPITER.at(-2231.0,new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003, Month.NOVEMBER, 22), LocalTime.of(0, 0, 0, 0), ZoneOffset.UTC))).magnitude());
+        assertEquals(-1.9885659217834473, PlanetModel.JUPITER.at(-2231.0, new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003, Month.NOVEMBER, 22), LocalTime.of(0, 0, 0, 0), ZoneOffset.UTC))).magnitude());
 
         Planet mercury = PlanetModel.MERCURY.at(-2231.0,
-                new EclipticToEquatorialConversion(ZonedDateTime
-                        .of(LocalDate.of(2003, Month.NOVEMBER, 22),
-                                LocalTime.of(0, 0, 0, 0),
-                                ZoneOffset.UTC)));
+                new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003, Month.NOVEMBER, 22),
+                        LocalTime.of(0, 0, 0, 0),
+                        ZoneOffset.UTC)));
 
         assertEquals(16.8200745658971, mercury.equatorialPos().raHr(),
                 10e-14);
