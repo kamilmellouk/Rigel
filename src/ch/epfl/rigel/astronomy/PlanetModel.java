@@ -40,8 +40,8 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
     private final double halfAxisOrbit;
     private final double orbitInclinationAtEcliptic;
     private final double ascendingNodeLon;
-    private final float angularSize;
-    private final float magnitude;
+    private final double angularSize;
+    private final double magnitude;
 
     PlanetModel(String name, double revolutionPeriod, double lonAtJ2010, double lonAtPerigee, double orbitEccentricity, double halfAxisOrbit, double orbitInclinationAtEcliptic, double ascendingNodeLon, double angularSize, double magnitude) {
         this.name = name;
@@ -52,8 +52,8 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
         this.halfAxisOrbit = halfAxisOrbit;
         this.orbitInclinationAtEcliptic = Angle.ofDeg(orbitInclinationAtEcliptic);
         this.ascendingNodeLon = Angle.ofDeg(ascendingNodeLon);
-        this.angularSize = (float) Angle.ofArcsec(angularSize);
-        this.magnitude = (float) magnitude;
+        this.angularSize = Angle.ofArcsec(angularSize);
+        this.magnitude = magnitude;
     }
 
     @Override
