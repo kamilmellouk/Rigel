@@ -41,4 +41,23 @@ public class MyHygDatabaseLoaderTest {
             assertEquals((int) Math.floor(4600 * (1 / (0.92 * -0.030 + 1.7) + 1 / (0.92 * -0.030 + 0.62))), rigel.colorTemperature());
         }
     }
+
+    @Test
+    void testFramepad() throws IOException {
+        try (InputStream hygStream = getClass()
+                .getResourceAsStream(HYG_CATALOGUE_NAME)) {
+            StarCatalogue catalogue = new StarCatalogue.Builder()
+                    .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
+                    .build();
+            int i = 0;
+            for(Star star : catalogue.stars()) {
+                if (star.name().charAt(0) == '?') {
+                    i = 1;
+                    assertEquals(' ', star.name().charAt(1));
+                }
+            }
+                    assertEquals(1,i);
+
+        }
+    }
 }
