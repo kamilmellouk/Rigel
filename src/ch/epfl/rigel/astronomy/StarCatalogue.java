@@ -65,7 +65,7 @@ public final class StarCatalogue {
      * @param asterism of which we want to find the star indices
      * @return immutable copy of the list of indices
      */
-    public List<Integer> asterismsIndices(Asterism asterism) {
+    public List<Integer> asterismIndices(Asterism asterism) {
         return List.copyOf(asterismIndicesMap.get(asterism));
     }
 
