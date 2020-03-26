@@ -43,7 +43,7 @@ class MyPlanetModelTest {
 
     }
 
-    @Test
+   /* @Test
     void atWorksForJupiter() {
         EclipticToEquatorialConversion system = new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003, Month.NOVEMBER, 22),
                 LocalTime.of(0, 0),
@@ -78,5 +78,7 @@ class MyPlanetModelTest {
         assertEquals(4.2844853, mercury.angularSize(), 1e-6);
         assertEquals(-1.0694658, mercury.magnitude(), 1e-7);
     }
+
+    */
 
 }
