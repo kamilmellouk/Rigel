@@ -111,18 +111,15 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
         // compute the geocentric ecliptic coordinates of the planet
         EclipticCoordinates geoEclCoordinates = EclipticCoordinates.of(Angle.normalizePositive(lambda), beta);
 
-
         // compute the between the planet and the earth
         double rho = Math.sqrt(R * R + r * r - 2 * r * R * Math.cos(l - L) * cosPhi);
         // compute the angular size of the planet
         double theta = angularSize / rho;
 
-
         // compute the phase of the planet
         double F = (1 + Math.cos(lambda - l)) / 2;
         // compute the magnitude of the planet
         double m = magnitude + 5 * Math.log10(r * rho / Math.sqrt(F));
-
 
         // return the computed planet model
         return new Planet(
