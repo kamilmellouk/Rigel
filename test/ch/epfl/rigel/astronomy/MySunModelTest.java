@@ -23,7 +23,7 @@ class MySunModelTest {
                 LocalTime.of(0, 0),
                 ZoneOffset.UTC)),
                 system);
-        assertEquals(123.58060053153336, sun.eclipticPos().lonDeg());
+        assertEquals(123.58060053153356, sun.eclipticPos().lonDeg());
         assertEquals(0, sun.eclipticPos().latDeg());
         assertEquals(system.apply(sun.eclipticPos()).raDeg(), sun.equatorialPos().raDeg());
         assertEquals(system.apply(sun.eclipticPos()).decDeg(), sun.equatorialPos().decDeg());
@@ -35,28 +35,11 @@ class MySunModelTest {
     EclipticToEquatorialConversion eclToEqu2 = new EclipticToEquatorialConversion(zdt2);
 
     @Test
-    void test() {
-        assertEquals(5.9325494700300885, SunModel.SUN.at(Epoch.J2010.daysUntil(zdt2), eclToEqu2).equatorialPos().ra());
-    }
+    void testFramePad() {
+        assertEquals(5.9325494700300885, SunModel.SUN.at(27 + 31, new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2010,  Month.FEBRUARY, 27),LocalTime.of(0,0), ZoneOffset.UTC))).equatorialPos().ra());
+        assertEquals(8.3926828082978, SunModel.SUN.at(-2349, new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003, Month.JULY, 27), LocalTime.of(0, 0, 0, 0), ZoneOffset.UTC))).equatorialPos().raHr(), 1e-14);
+        assertEquals(19.35288373097352, SunModel.SUN.at(-2349, new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003, Month.JULY, 27), LocalTime.of(0, 0, 0, 0), ZoneOffset.UTC))).equatorialPos().decDeg());
 
-    @Test
-    void test2() {
-        assertEquals(8.392682808297806, SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().raHr(), 1e-13);
-    }
-
-    @Test
-    void test3() {
-        assertEquals(19.35288373097352, SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().decDeg(), 1e-13);
-    }
-
-    @Test
-    void test4() {
-        assertEquals(Angle.ofHr(8.3924701704), SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().ra(), 1e-4);
-    }
-
-    @Test
-    void test5() {
-        assertEquals(Angle.ofDMS(19, 21, 10), SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().dec(), 1e-4);
     }
 
 }
