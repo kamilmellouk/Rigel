@@ -10,6 +10,7 @@ import java.util.List;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
+
 public enum PlanetModel implements CelestialObjectModel<Planet> {
 
     MERCURY("Mercure", 0.24085, 75.5671, 77.612, 0.205627,
@@ -29,7 +30,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
     NEPTUNE("Neptune", 165.84539, 326.895127, 23.07, 0.010483,
             30.1985, 1.7673, 131.879, 62.20, -6.87);
 
-    public static List<PlanetModel> ALL = List.of(PlanetModel.values());
+    public static List<PlanetModel> ALL = List.copyOf(List.of(PlanetModel.values()));
 
     private final String name;
     private final double revolutionPeriod;
@@ -117,7 +118,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
         // compute the geocentric ecliptic longitude of the planet depending on its type
         double lambda;
         if (name.equals("Mercure") || name.equals("Vénus")) {
-            lambda = Math.PI + L + Math.atan2(Math.sin(L - lPrime) * rPrime, R - rPrime * Math.cos(lPrime - L));
+            lambda = Math.PI + L + Math.atan2(Math.sin(L - lPrime) * rPrime, R - rPrime * Math.cos(L - lPrime));
         } else {
             lambda = lPrime + Math.atan2(R_sin_lPrime_minus_L, rPrime - R * Math.cos(lPrime - L));
         }

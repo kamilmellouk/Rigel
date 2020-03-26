@@ -20,12 +20,10 @@ public final class Asterism {
      * @param stars List of the stars contained in the Asterism, not empty
      * @throws IllegalArgumentException if stars is empty
      */
-    // TODO: 20/03/2020 check access
     public Asterism(List<Star> stars) {
         // check exception
         Preconditions.checkArgument(!stars.isEmpty());
 
-        // TODO: 20/03/2020 check immutability
         this.stars = List.copyOf(stars);
     }
 

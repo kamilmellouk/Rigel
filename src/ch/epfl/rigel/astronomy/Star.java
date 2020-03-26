@@ -13,7 +13,7 @@ public final class Star extends CelestialObject {
 
     // Attributes used to identify a Star, in additions to the ones used for a CelestialObject
     private final int hipparcosId;
-    private float colorIndex;
+    private final float colorIndex;
 
     /**
      * Constructor of a star
