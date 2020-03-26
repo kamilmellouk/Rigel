@@ -28,18 +28,21 @@ public enum AsterismLoader implements StarCatalogue.Loader {
 
                 //Map<Integer, Star> starHipMap = new HashMap<>();
                 List<Integer> starHipList = new ArrayList<>(s.split(",").length);
+
+                for (int i = 0; i < s.split(",").length; i++) {
+                    starHipList.add(Integer.parseInt(s.split(",")[i]));
+                }
+
                 List<Star> starList = new ArrayList<>(s.split(",").length);
 
                 for (int hip : starHipList) {
                     for (Star star : builder.stars()) {
                         if (star.hipparcosId() == hip) {
                             starList.add(star);
-                            System.out.print(hip + ", ");
                         }
                     }
                 }
 
-                System.out.print('\n');
                 builder.addAsterism(new Asterism(starList));
             }
         }

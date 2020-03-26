@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,19 +29,25 @@ public class MyAsterismLoaderTest {
     }
 
     @Test
-    void astDatabaseContainsRigel() throws IOException {
+    void astDatabaseContainsRigelAsterism() throws IOException {
         InputStream hygStream = getClass().getResourceAsStream(HYG_CATALOGUE_NAME);
         try (InputStream astStream = getClass().getResourceAsStream(AST_CATALOGUE_NAME)) {
             StarCatalogue catalogue = new StarCatalogue.Builder()
                     .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
                     .loadFrom(astStream, AsterismLoader.INSTANCE)
                     .build();
-            Star rigel = null;
-            for (Star s : catalogue.stars()) {
-                if (s.name().equalsIgnoreCase("rigel"))
-                    rigel = s;
+
+            for(Asterism ast : catalogue.asterisms()) {
+                if(ast.stars().get(0).hipparcosId() == 24436) {
+                    assertTrue(ast.stars().get(1).hipparcosId() == 27366);
+                    assertTrue(ast.stars().get(2).hipparcosId() == 26727);
+                    assertTrue(ast.stars().get(3).hipparcosId() == 27989);
+                    assertTrue(ast.stars().get(4).hipparcosId() == 28614);
+                    assertTrue(ast.stars().get(5).hipparcosId() == 29426);
+                    assertTrue(ast.stars().get(6).hipparcosId() == 28716);
+                }
             }
-            assertNotNull(rigel);
+
         }
     }
 

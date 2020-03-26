@@ -2,10 +2,7 @@ package ch.epfl.rigel.astronomy;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Bastien Faivre (310929)
@@ -16,7 +13,7 @@ public final class StarCatalogue {
     private final List<Star> stars;
     private final List<Asterism> asterisms;
 
-    private Map<Asterism, List<Integer>> asterismIndicesMap;
+    private Map<Asterism, List<Integer>> asterismIndicesMap = new HashMap<>();
 
     /**
      * Constructing a new StarCatalogue
@@ -25,10 +22,9 @@ public final class StarCatalogue {
      * @param asterisms Remarkable groups of stars, which have to be all contained in the list
      */
     public StarCatalogue(List<Star> stars, List<Asterism> asterisms) {
-
         for (Asterism ast : asterisms) {
             // Constructing a list of integers dedicated to stock the indices of stars forming an asterism
-            List<Integer> indices = new ArrayList<Integer>();
+            List<Integer> indices = new ArrayList<>();
 
             for (Star star : ast.stars()) {
                 // Checking if all the stars in the asterisms are references in the list of stars
@@ -59,8 +55,8 @@ public final class StarCatalogue {
      *
      * @return immutable copy of asterisms
      */
-    public List<Asterism> asterisms() {
-        return List.copyOf(asterisms);
+    public Set<Asterism> asterisms() {
+        return Set.copyOf(asterisms);
     }
 
     /**

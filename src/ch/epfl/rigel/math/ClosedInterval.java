@@ -27,7 +27,6 @@ public final class ClosedInterval extends Interval {
      * @param lowBound  the low bound
      * @param highBound the high bound
      * @return a closed interval
-     *
      * @throws IllegalArgumentException if lowBound >= highBound
      */
     public static ClosedInterval of(double lowBound, double highBound) {
@@ -42,7 +41,6 @@ public final class ClosedInterval extends Interval {
      *
      * @param size the size of the interval
      * @return a closed interval of the specified size, centered around 0
-     *
      * @throws IllegalArgumentException if size <= 0
      */
     public static ClosedInterval symmetric(double size) {
