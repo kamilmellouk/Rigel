@@ -26,19 +26,21 @@ public enum AsterismLoader implements StarCatalogue.Loader {
             String s;
             while ((s = bufferedReader.readLine()) != null) {
 
-                Map<Integer, Star> starHipMap = new HashMap<>();
+                //Map<Integer, Star> starHipMap = new HashMap<>();
                 List<Integer> starHipList = new ArrayList<>(s.split(",").length);
                 List<Star> starList = new ArrayList<>(s.split(",").length);
 
                 for (int hip : starHipList) {
                     for (Star star : builder.stars()) {
                         if (star.hipparcosId() == hip) {
-                            starHipMap.put(hip, star);
+                            starList.add(star);
+                            System.out.print(hip + ", ");
                         }
                     }
                 }
 
-                builder.addAsterism(new Asterism((List<Star>) starHipMap.values()));
+                System.out.print('\n');
+                builder.addAsterism(new Asterism(starList));
             }
         }
     }
