@@ -36,6 +36,9 @@ public class MyHygDatabaseLoaderTest {
                     rigel = s;
             }
             assertNotNull(rigel);
+            assertEquals("Rigel", rigel.name());
+            assertEquals(24436, rigel.hipparcosId());
+            assertEquals((int) Math.floor(4600 * (1 / (0.92 * -0.030 + 1.7) + 1 / (0.92 * -0.030 + 0.62))), rigel.colorTemperature());
         }
     }
 }
