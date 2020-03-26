@@ -51,12 +51,12 @@ class MySunModelTest {
 
     @Test
     void test4() {
-        assertEquals(Angle.ofHr(8.3924701704), SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().ra(), 1e-9);
+        assertEquals(Angle.ofHr(8.3924701704), SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().ra(), 1e-4);
     }
 
     @Test
     void test5() {
-        assertEquals(Angle.ofDMS(19, 21, 10), SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().dec(), 1e-11);
+        assertEquals(Angle.ofDMS(19, 21, 10), SunModel.SUN.at(Epoch.J2010.daysUntil(zdt), eclToEqu).equatorialPos().dec(), 1e-4);
     }
 
 }
