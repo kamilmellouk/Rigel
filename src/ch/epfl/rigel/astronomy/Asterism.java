@@ -2,6 +2,7 @@ package ch.epfl.rigel.astronomy;
 
 import ch.epfl.rigel.Preconditions;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ public final class Asterism {
      * @return a copy of the list of stars
      */
     public List<Star> stars() {
-        return List.copyOf(stars);
+        return stars;
     }
 
 }

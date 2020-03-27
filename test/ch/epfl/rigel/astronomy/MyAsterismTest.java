@@ -31,4 +31,13 @@ class MyAsterismTest {
         assertEquals("star", new Asterism(stars).stars().get(0).name());
     }
 
+    @Test
+    void starsIsUnmodifiable() {
+        List<Star> stars = new ArrayList();
+        stars.add(new Star(1, "star", EquatorialCoordinates.of(0, 0), 1, 0));
+        Asterism asterism = new Asterism(stars);
+        assertThrows(UnsupportedOperationException.class, () -> {asterism.stars().add(null);});
+        assertThrows(UnsupportedOperationException.class, () -> {asterism.stars().add(0, null);});
+    }
+
 }

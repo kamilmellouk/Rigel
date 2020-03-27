@@ -29,7 +29,7 @@ class MySunModelTest {
         assertEquals(system.apply(sun.eclipticPos()).decDeg(), sun.equatorialPos().decDeg());
     }
 
-    ZonedDateTime zdt = ZonedDateTime.of(LocalDateTime.of(LocalDate.of(2003, 7, 27), LocalTime.MIDNIGHT), ZoneOffset.UTC);
+    ZonedDateTime zdt = ZonedDateTime.of(LocalDateTime.of(LocalDate.of(2003, Month.JULY, 27), LocalTime.MIDNIGHT), ZoneOffset.UTC);
     EclipticToEquatorialConversion eclToEqu = new EclipticToEquatorialConversion(zdt);
     ZonedDateTime zdt2 = ZonedDateTime.of(LocalDate.of(2010,  Month.FEBRUARY, 27),LocalTime.of(0,0), ZoneOffset.UTC);
     EclipticToEquatorialConversion eclToEqu2 = new EclipticToEquatorialConversion(zdt2);
@@ -40,6 +40,17 @@ class MySunModelTest {
         assertEquals(8.3926828082978, SunModel.SUN.at(-2349, new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003, Month.JULY, 27), LocalTime.of(0, 0, 0, 0), ZoneOffset.UTC))).equatorialPos().raHr(), 1e-14);
         assertEquals(19.35288373097352, SunModel.SUN.at(-2349, new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003, Month.JULY, 27), LocalTime.of(0, 0, 0, 0), ZoneOffset.UTC))).equatorialPos().decDeg());
 
+    }
+
+    @Test
+    void atTest4() {
+        ZonedDateTime zdt = ZonedDateTime.of(
+                        LocalDate.of(1988, Month.JULY, 27),
+                        LocalTime.of(0, 0), ZoneOffset.UTC);
+        assertEquals(0.3353207024580374, SunModel.SUN
+                .at(Epoch.J2010.daysUntil(zdt),
+                        new EclipticToEquatorialConversion(zdt))
+                .equatorialPos().dec());
     }
 
 }

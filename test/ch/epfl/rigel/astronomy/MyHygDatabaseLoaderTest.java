@@ -57,7 +57,6 @@ public class MyHygDatabaseLoaderTest {
                 }
             }
                     assertEquals(1,i);
-
         }
     }
 }
