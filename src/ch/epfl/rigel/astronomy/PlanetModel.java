@@ -30,8 +30,10 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
     NEPTUNE("Neptune", 165.84539, 326.895127, 23.07, 0.010483,
             30.1985, 1.7673, 131.879, 62.20, -6.87);
 
+    // List containing the model of all planets
     public static List<PlanetModel> ALL = List.copyOf(List.of(PlanetModel.values()));
 
+    // Attributes of a planet
     private final String name;
     private final double revolutionPeriod;
     private final double lonAtJ2010;
@@ -43,6 +45,20 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
     private final double angularSize;
     private final double magnitude;
 
+    /**
+     * the constructor of a planet
+     *
+     * @param name                       the name of the planet
+     * @param revolutionPeriod           the revolution period
+     * @param lonAtJ2010                 the longitude at J2010
+     * @param lonAtPerigee               the longitude at perigee
+     * @param orbitEccentricity          the orbit eccentricity
+     * @param halfAxisOrbit              the half big axis of orbit
+     * @param orbitInclinationAtEcliptic the orbit inclination at ecliptic
+     * @param ascendingNodeLon           the longitude of the ascending node
+     * @param angularSize                the angular size
+     * @param magnitude                  the magnitude
+     */
     PlanetModel(String name, double revolutionPeriod, double lonAtJ2010, double lonAtPerigee, double orbitEccentricity, double halfAxisOrbit, double orbitInclinationAtEcliptic, double ascendingNodeLon, double angularSize, double magnitude) {
         this.name = name;
         this.revolutionPeriod = revolutionPeriod;
@@ -56,6 +72,13 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
         this.magnitude = magnitude;
     }
 
+    /**
+     * Compute the model of the planet
+     *
+     * @param daysSinceJ2010                 days since Epoch.J2010 (positive or negative)
+     * @param eclipticToEquatorialConversion conversion of the object's coordinates
+     * @return the planet model
+     */
     @Override
     public Planet at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
         /*
