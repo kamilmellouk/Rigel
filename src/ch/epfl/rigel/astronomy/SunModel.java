@@ -20,7 +20,7 @@ public enum SunModel implements CelestialObjectModel<Sun> {
     private static final double SUN_EARTH_ECCENTRICITY = 0.016705;
     // the theta0 angle
     private static final double THETA_0 = Angle.ofDeg(0.533128);
-    // mean earth rotating speed around the sun
+    // the mean earth rotating speed around the sun
     private static final double EARTH_ROT_SPEED = Angle.TAU / 365.242191;
 
     /**
