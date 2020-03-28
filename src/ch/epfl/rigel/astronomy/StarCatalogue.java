@@ -14,7 +14,7 @@ public final class StarCatalogue {
     // the list of all stars containing in the catalogue
     private final List<Star> stars;
     // the list of all asterisms containing in the catalogue
-    private final Set<Asterism> asterisms;
+    private final List<Asterism> asterisms;
 
     // map an asterism with its stars
     private Map<Asterism, List<Integer>> asterismIndicesMap = new HashMap<>();
@@ -27,7 +27,7 @@ public final class StarCatalogue {
      */
     public StarCatalogue(List<Star> stars, List<Asterism> asterisms) {
         this.stars = List.copyOf(stars);
-        this.asterisms = Set.copyOf(asterisms);
+        this.asterisms = List.copyOf(asterisms);
 
         for (Asterism asterism : asterisms) {
             // Construct a list of integers dedicated to stock the indices of stars forming the asterism
@@ -61,7 +61,7 @@ public final class StarCatalogue {
      * @return immutable copy of asterisms
      */
     public Set<Asterism> asterisms() {
-        return asterisms;
+        return Set.copyOf(asterisms);
     }
 
     /**
@@ -74,11 +74,15 @@ public final class StarCatalogue {
         return asterismIndicesMap.get(asterism);
     }
 
-
+    /**
+     * Builder of a star catalogue
+     */
     public static final class Builder {
 
-        private List<Star> stars;
-        private List<Asterism> asterisms;
+        // the list of all stars containing in the catalogue
+        private final List<Star> stars;
+        // the list of all asterisms containing in the catalogue
+        private final List<Asterism> asterisms;
 
         /**
          * Default constructor for the StarCatalogue.Builder
@@ -89,7 +93,7 @@ public final class StarCatalogue {
         }
 
         /**
-         * Adding a Star to the Builder
+         * Add a Star to the Builder
          *
          * @param star to add
          * @return this
@@ -109,7 +113,7 @@ public final class StarCatalogue {
         }
 
         /**
-         * Adding an Asterism (and its stars) to the Builder
+         * Add an asterism to the Builder
          *
          * @param asterism to add
          * @return this
@@ -129,10 +133,10 @@ public final class StarCatalogue {
         }
 
         /**
-         * @param inputStream
-         * @param loader
-         * @return
-         * @throws IOException
+         * @param inputStream the input stream
+         * @param loader      the loader
+         * @return this
+         * @throws IOException in case of input/output error
          */
         public Builder loadFrom(InputStream inputStream, Loader loader) throws IOException {
             loader.load(inputStream, this);
@@ -140,7 +144,7 @@ public final class StarCatalogue {
         }
 
         /**
-         * Building method for the StarCatalogue
+         * Build method for the StarCatalogue
          *
          * @return new StarCatalogue with stars and asterisms
          */
@@ -150,8 +154,11 @@ public final class StarCatalogue {
 
     }
 
+    /**
+     * Loader of a star catalogue
+     */
     public interface Loader {
-
-        public void load(InputStream inputStream, Builder builder) throws IOException;
+        void load(InputStream inputStream, Builder builder) throws IOException;
     }
+
 }
