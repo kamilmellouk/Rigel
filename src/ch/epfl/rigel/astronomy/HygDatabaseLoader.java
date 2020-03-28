@@ -20,8 +20,11 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
     public void load(InputStream inputStream, StarCatalogue.Builder builder) throws IOException {
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.US_ASCII);
         try (BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
-            String s = bufferedReader.readLine(); // skipping the first line (column headers)
+            // skipping the first line (column headers)
+            String s = bufferedReader.readLine();
+
             while ((s = bufferedReader.readLine()) != null) {
+                // add the star to the builder
                 builder.addStar(new Star(
                                 readHip(s),
                                 readProper(s),
