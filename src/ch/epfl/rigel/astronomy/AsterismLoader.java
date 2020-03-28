@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Mohamed Kamil MELLOUK
- * 25.03.20
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk (312327)
  */
 public enum AsterismLoader implements StarCatalogue.Loader {
     INSTANCE();
