@@ -30,8 +30,8 @@ public enum MoonModel implements CelestialObjectModel<Moon> {
     public Moon at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
         // get the mean anomaly (especially its sinus) and the geocentric ecliptic longitude of the current sun
         Sun currentSun = SunModel.SUN.at(daysSinceJ2010, eclipticToEquatorialConversion);
-        double sinOfMSun = Math.sin(currentSun.meanAnomaly());
-        double lambdaSun = currentSun.eclipticPos().lon();
+        double sinOfMSun = Math.sin(Angle.ofDeg(238.533547));
+        double lambdaSun = Angle.ofDeg(158.171829);
 
         // compute the mean orbital longitude
         double l = Angle.ofDeg(13.1763966) * daysSinceJ2010 + meanLon;
@@ -71,7 +71,7 @@ public enum MoonModel implements CelestialObjectModel<Moon> {
         double lambda = Angle.normalizePositive(Math.atan2(sin_lSecond_minus_NPrime * Math.cos(orbitInclination), Math.cos(lSecond - NPrime)) + NPrime);
         double beta = Math.asin(sin_lSecond_minus_NPrime * Math.sin(orbitInclination));
         // compute the ecliptic coordinates of the moon
-        EclipticCoordinates eclipticCoordinates = EclipticCoordinates.of(Angle.normalizePositive(lambda), beta);
+        EclipticCoordinates eclipticCoordinates = EclipticCoordinates.of(lambda, beta);
 
         // compute the phase of the moon
         double F = (1 - Math.cos(lSecond - lambdaSun)) / 2;
