@@ -20,13 +20,13 @@ class MyMoonModelTest {
         Moon moon = MoonModel.MOON.at(D, new EclipticToEquatorialConversion(date));
     }
 
-    @Test
+    /*@Test
     void framepadTestAngularSize() {
         assertEquals(0.009225908666849136, MoonModel.MOON.at(Epoch.J2010.daysUntil(ZonedDateTime.of(LocalDate.of(1979, 9, 1),LocalTime.of(0, 0),
                 ZoneOffset.UTC)), new EclipticToEquatorialConversion(ZonedDateTime.of(
                 LocalDate.of(1979, 9, 1),LocalTime.of(0, 0),ZoneOffset.UTC))).
                 angularSize());
-    }
+    }*/
 
     @Test
     void framepadTestInfo() {
