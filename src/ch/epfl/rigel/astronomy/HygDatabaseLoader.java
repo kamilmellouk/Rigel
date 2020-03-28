@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
+
 public enum HygDatabaseLoader implements StarCatalogue.Loader {
     INSTANCE();
 
@@ -22,11 +23,11 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
             String s = bufferedReader.readLine(); // skipping the first line (column headers)
             while ((s = bufferedReader.readLine()) != null) {
                 builder.addStar(new Star(
-                        readHip(s),
-                        readProper(s),
-                        readEquatorialPos(s),
-                        readMag(s),
-                        readCi(s)
+                                readHip(s),
+                                readProper(s),
+                                readEquatorialPos(s),
+                                readMag(s),
+                                readCi(s)
                         )
                 );
             }
@@ -34,7 +35,8 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
     }
 
     /**
-     * Getting the Hipparcos number of the Star associated with one given line of the CSV file
+     * Get the Hipparcos number of the Star associated with one given line of the CSV file
+     *
      * @param s given line of the CSV file
      * @return Hipparcos number of the Star
      */
@@ -43,32 +45,38 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
     }
 
     /**
-     * Getting the proper name (if it exists) of the Star associated with one given line of the CSV file
+     * Get the proper name (if it exists) of the Star associated with one given line of the CSV file
+     *
      * @param s given line of the CSV file
-     * @return If it exists, proper name of the star, or the concatenation of the Bayer naming (if it exists, "?" by default) with the Constellation name
+     * @return If it exists, proper name of the star, or the concatenation of the Bayer name (if it exists, "?" by default) with the Constellation name
      */
     private static String readProper(String s) {
-        if(!s.split(",")[ColumnIndex.PROPER.ordinal()].isEmpty()) {
+        if (!s.split(",")[ColumnIndex.PROPER.ordinal()].isEmpty()) {
+            // the proper name
             return s.split(",")[ColumnIndex.PROPER.ordinal()];
         } else if (!s.split(",")[ColumnIndex.BAYER.ordinal()].isEmpty()) {
+            // the concatenation of the Bayer name with the Constellation name
             return s.split(",")[ColumnIndex.BAYER.ordinal()] + " " + s.split(",")[ColumnIndex.CON.ordinal()];
         } else {
+            // the concatenation of '?' with the Constellation name
             return "? " + s.split(",")[ColumnIndex.CON.ordinal()];
         }
     }
 
     /**
-     * Getting the equatorialPosition of the Star associated with one given line of the CSV file
+     * Get the equatorialPosition of the Star associated with one given line of the CSV file
+     *
      * @param s given line of the CSV file
      * @return EquatorialCoordinates of the Star
      */
     private static EquatorialCoordinates readEquatorialPos(String s) {
         return EquatorialCoordinates.of((Double.parseDouble(s.split(",")[ColumnIndex.RARAD.ordinal()])),
-                                         Double.parseDouble(s.split(",")[ColumnIndex.DECRAD.ordinal()]));
+                Double.parseDouble(s.split(",")[ColumnIndex.DECRAD.ordinal()]));
     }
 
     /**
-     * Getting the magnitude of the Star associated with one given line of the CSV file
+     * Get the magnitude of the Star associated with one given line of the CSV file
+     *
      * @param s given line of the CSV file
      * @return magnitude of the Star
      */
@@ -77,7 +85,8 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
     }
 
     /**
-     * Getting the colorIndex of the Star associated with one given line of the CSV file
+     * Get the colorIndex of the Star associated with one given line of the CSV file
+     *
      * @param s given line of the CSV file
      * @return colorIndex of the Star
      */
@@ -85,10 +94,9 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
         return !s.split(",")[ColumnIndex.CI.ordinal()].isEmpty() ? Float.parseFloat(s.split(",")[ColumnIndex.CI.ordinal()]) : 0f;
     }
 
-
-
-
-
+    /**
+     * enum composed of all column members of the HYG data base
+     */
     private enum ColumnIndex {
         ID, HIP, HD, HR, GL, BF, PROPER, RA, DEC, DIST, PMRA, PMDEC,
         RV, MAG, ABSMAG, SPECT, CI, X, Y, Z, VX, VY, VZ,
