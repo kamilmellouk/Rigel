@@ -29,7 +29,7 @@ public class MyAsterismLoaderTest {
     }
 
     @Test
-    void astDatabaseContainsRigelAsterism() throws IOException {
+    void astDatabaseContainsRigelAsterisms() throws IOException {
         InputStream hygStream = getClass().getResourceAsStream(HYG_CATALOGUE_NAME);
         try (InputStream astStream = getClass().getResourceAsStream(AST_CATALOGUE_NAME)) {
             StarCatalogue catalogue = new StarCatalogue.Builder()
@@ -46,8 +46,12 @@ public class MyAsterismLoaderTest {
                     assertTrue(ast.stars().get(5).hipparcosId() == 29426);
                     assertTrue(ast.stars().get(6).hipparcosId() == 28716);
                 }
+                if(ast.stars().get(0).hipparcosId() == 25336) {
+                    assertTrue(ast.stars().get(1).hipparcosId() == 25930);
+                    assertTrue(ast.stars().get(2).hipparcosId() == 24674);
+                    assertTrue(ast.stars().get(3).hipparcosId() == 24436);
+                }
             }
-
         }
     }
 
