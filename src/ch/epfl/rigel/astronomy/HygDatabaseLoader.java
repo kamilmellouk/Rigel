@@ -12,7 +12,6 @@ import java.nio.charset.StandardCharsets;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public enum HygDatabaseLoader implements StarCatalogue.Loader {
     INSTANCE();
 
