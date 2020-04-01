@@ -1,5 +1,7 @@
 package ch.epfl.rigel.astronomy;
 
+import ch.epfl.rigel.Preconditions;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -29,21 +31,15 @@ public final class StarCatalogue {
         this.stars = List.copyOf(stars);
         this.asterisms = List.copyOf(asterisms);
 
-        for (Asterism asterism : asterisms) {
-            // Construct a list of integers dedicated to stock the indices of stars forming the asterism
+        for (Asterism a : asterisms) {
             List<Integer> indices = new ArrayList<>();
-
-            for (Star star : asterism.stars()) {
-                // Check if all the stars in the asterisms are references in the list of stars
-                if (!stars.contains(star)) {
-                    throw new IllegalArgumentException();
-                }
-                // Add the index of each star in the asterism to the dedicated list of indices, so we can map it to asterismIndicesMap
-                indices.add(stars.indexOf(star));
+            for (Star s : a.stars()) {
+                Preconditions.checkArgument(stars.contains(s));
+                indices.add(stars.indexOf(s));
             }
-            // Map the asterism to its list of indices
-            asterismIndicesMap.put(asterism, indices);
+            asterismIndicesMap.put(a, indices);
         }
+
     }
 
     /**
@@ -60,9 +56,7 @@ public final class StarCatalogue {
      *
      * @return immutable copy of asterisms
      */
-    public Set<Asterism> asterisms() {
-        return Set.copyOf(asterisms);
-    }
+    public Set<Asterism> asterisms() { return asterismIndicesMap.keySet(); }
 
     /**
      * Getter for the indices of the stars contained in a given asterism

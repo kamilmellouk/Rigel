@@ -17,16 +17,14 @@ public class MyHygDatabaseLoaderTest {
 
     @Test
     void hygDatabaseIsCorrectlyInstalled() throws IOException {
-        try (InputStream hygStream = getClass()
-                .getResourceAsStream(HYG_CATALOGUE_NAME)) {
+        try (InputStream hygStream = getClass().getResourceAsStream(HYG_CATALOGUE_NAME)) {
             assertNotNull(hygStream);
         }
     }
 
     @Test
     void hygDatabaseContainsRigel() throws IOException {
-        try (InputStream hygStream = getClass()
-                .getResourceAsStream(HYG_CATALOGUE_NAME)) {
+        try (InputStream hygStream = getClass().getResourceAsStream(HYG_CATALOGUE_NAME)) {
             StarCatalogue catalogue = new StarCatalogue.Builder()
                     .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
                     .build();
@@ -36,16 +34,15 @@ public class MyHygDatabaseLoaderTest {
                     rigel = s;
             }
             assertNotNull(rigel);
-            assertEquals("Rigel", rigel.name());
+            assertTrue(rigel.name().equalsIgnoreCase("rigel"));
             assertEquals(24436, rigel.hipparcosId());
             assertEquals((int) Math.floor(4600 * (1 / (0.92 * -0.030 + 1.7) + 1 / (0.92 * -0.030 + 0.62))), rigel.colorTemperature());
         }
     }
 
     @Test
-    void testFramepad() throws IOException {
-        try (InputStream hygStream = getClass()
-                .getResourceAsStream(HYG_CATALOGUE_NAME)) {
+    void frameTest1() throws IOException {
+        try (InputStream hygStream = getClass().getResourceAsStream(HYG_CATALOGUE_NAME)) {
             StarCatalogue catalogue = new StarCatalogue.Builder()
                     .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
                     .build();
@@ -59,4 +56,5 @@ public class MyHygDatabaseLoaderTest {
                     assertEquals(1,i);
         }
     }
+
 }
