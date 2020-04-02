@@ -84,4 +84,12 @@ public class ShareTest {
         }
     }
 
+    @Test
+    void stars() throws IOException {
+        StarCatalogue catalogue = new StarCatalogue.Builder()
+                .loadFrom(getClass().getResourceAsStream(HYG_CATALOGUE_NAME), HygDatabaseLoader.INSTANCE)
+                .loadFrom(getClass().getResourceAsStream(ASTERISMS_FILE), AsterismLoader.INSTANCE)
+                .build();
+    }
+
 }

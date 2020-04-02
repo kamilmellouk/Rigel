@@ -20,7 +20,9 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.US_ASCII);
         try (BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
             // skipping the first line (column headers)
-            String s = bufferedReader.readLine();
+            bufferedReader.readLine();
+
+            String s;
 
             while ((s = bufferedReader.readLine()) != null) {
 
@@ -38,10 +40,10 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
                                 !s.split(",")[ColumnIndex.HIP.ordinal()].isEmpty() ? Integer.parseInt(s.split(",")[ColumnIndex.HIP.ordinal()]) : 0,
                                 proper,
                                 EquatorialCoordinates.of((Double.parseDouble(s.split(",")[ColumnIndex.RARAD.ordinal()])),
-                                                          Double.parseDouble(s.split(",")[ColumnIndex.DECRAD.ordinal()])),
+                                        Double.parseDouble(s.split(",")[ColumnIndex.DECRAD.ordinal()])),
                                 !s.split(",")[ColumnIndex.MAG.ordinal()].isEmpty() ? Float.parseFloat(s.split(",")[ColumnIndex.MAG.ordinal()]) : 0f,
                                 !s.split(",")[ColumnIndex.CI.ordinal()].isEmpty() ? Float.parseFloat(s.split(",")[ColumnIndex.CI.ordinal()]) : 0f
-                                )
+                        )
                 );
             }
         }
