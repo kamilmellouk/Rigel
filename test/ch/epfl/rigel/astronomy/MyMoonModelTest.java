@@ -47,6 +47,6 @@ class MyMoonModelTest {
     void framepadTestRaHr() {
         assertEquals(14.211456457836, MoonModel.MOON.at(-2313,
                       new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003,  Month.SEPTEMBER, 1),LocalTime.of(0,0), ZoneOffset.UTC))).equatorialPos().raHr(),
-                1e-13);
+                1e-12);
     }
 }
