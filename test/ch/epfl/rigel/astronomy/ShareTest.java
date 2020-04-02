@@ -1,5 +1,7 @@
 package ch.epfl.rigel.astronomy;
 
+
+import ch.epfl.rigel.astronomy.*;
 import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -52,11 +54,8 @@ public class ShareTest {
                     ZoneOffset.UTC
             );
             Moon moon = MoonModel.MOON.at(Epoch.J2010.daysUntil(date), new EclipticToEquatorialConversion(date));
-            writer.write(String.format("%s,%f,%f,%f,%f\n", moon.info(),
-                    moon.magnitude(),
-                    moon.angularSize(),
-                    moon.equatorialPos().ra(),
-                    moon.equatorialPos().dec()));
+            writer.write(moon.info() + "," + moon.angularSize() + "," + moon.equatorialPos().ra() + "," + moon.equatorialPos().dec());
+            writer.newLine();
         }
     }
 
