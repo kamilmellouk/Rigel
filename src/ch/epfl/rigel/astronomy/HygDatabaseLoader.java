@@ -23,78 +23,30 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
             String s = bufferedReader.readLine();
 
             while ((s = bufferedReader.readLine()) != null) {
-                // add the star to the builder
+
+                String proper;
+                if (!s.split(",")[ColumnIndex.PROPER.ordinal()].isEmpty()) {
+                    proper = s.split(",")[ColumnIndex.PROPER.ordinal()];
+                } else if (!s.split(",")[ColumnIndex.BAYER.ordinal()].isEmpty()) {
+                    proper = s.split(",")[ColumnIndex.BAYER.ordinal()] + " " + s.split(",")[ColumnIndex.CON.ordinal()];
+                } else {
+                    proper = "? " + s.split(",")[ColumnIndex.CON.ordinal()];
+                }
+
+
                 builder.addStar(new Star(
-                                readHip(s),
-                                readProper(s),
-                                readEquatorialPos(s),
-                                readMag(s),
-                                readCi(s)
-                        )
+                                !s.split(",")[ColumnIndex.HIP.ordinal()].isEmpty() ? Integer.parseInt(s.split(",")[ColumnIndex.HIP.ordinal()]) : 0,
+                                proper,
+                                EquatorialCoordinates.of((Double.parseDouble(s.split(",")[ColumnIndex.RARAD.ordinal()])),
+                                                          Double.parseDouble(s.split(",")[ColumnIndex.DECRAD.ordinal()])),
+                                !s.split(",")[ColumnIndex.MAG.ordinal()].isEmpty() ? Float.parseFloat(s.split(",")[ColumnIndex.MAG.ordinal()]) : 0f,
+                                !s.split(",")[ColumnIndex.CI.ordinal()].isEmpty() ? Float.parseFloat(s.split(",")[ColumnIndex.CI.ordinal()]) : 0f
+                                )
                 );
             }
         }
     }
 
-    /**
-     * Get the Hipparcos number of the Star associated with one given line of the CSV file
-     *
-     * @param s given line of the CSV file
-     * @return Hipparcos number of the Star
-     */
-    private static int readHip(String s) {
-        return !s.split(",")[ColumnIndex.HIP.ordinal()].isEmpty() ? Integer.parseInt(s.split(",")[ColumnIndex.HIP.ordinal()]) : 0;
-    }
-
-    /**
-     * Get the proper name (if it exists) of the Star associated with one given line of the CSV file
-     *
-     * @param s given line of the CSV file
-     * @return If it exists, proper name of the star, or the concatenation of the Bayer name (if it exists, "?" by default) with the Constellation name
-     */
-    private static String readProper(String s) {
-        if (!s.split(",")[ColumnIndex.PROPER.ordinal()].isEmpty()) {
-            // the proper name
-            return s.split(",")[ColumnIndex.PROPER.ordinal()];
-        } else if (!s.split(",")[ColumnIndex.BAYER.ordinal()].isEmpty()) {
-            // the concatenation of the Bayer name with the Constellation name
-            return s.split(",")[ColumnIndex.BAYER.ordinal()] + " " + s.split(",")[ColumnIndex.CON.ordinal()];
-        } else {
-            // the concatenation of '?' with the Constellation name
-            return "? " + s.split(",")[ColumnIndex.CON.ordinal()];
-        }
-    }
-
-    /**
-     * Get the equatorialPosition of the Star associated with one given line of the CSV file
-     *
-     * @param s given line of the CSV file
-     * @return EquatorialCoordinates of the Star
-     */
-    private static EquatorialCoordinates readEquatorialPos(String s) {
-        return EquatorialCoordinates.of((Double.parseDouble(s.split(",")[ColumnIndex.RARAD.ordinal()])),
-                Double.parseDouble(s.split(",")[ColumnIndex.DECRAD.ordinal()]));
-    }
-
-    /**
-     * Get the magnitude of the Star associated with one given line of the CSV file
-     *
-     * @param s given line of the CSV file
-     * @return magnitude of the Star
-     */
-    private static float readMag(String s) {
-        return !s.split(",")[ColumnIndex.MAG.ordinal()].isEmpty() ? Float.parseFloat(s.split(",")[ColumnIndex.MAG.ordinal()]) : 0f;
-    }
-
-    /**
-     * Get the colorIndex of the Star associated with one given line of the CSV file
-     *
-     * @param s given line of the CSV file
-     * @return colorIndex of the Star
-     */
-    private static float readCi(String s) {
-        return !s.split(",")[ColumnIndex.CI.ordinal()].isEmpty() ? Float.parseFloat(s.split(",")[ColumnIndex.CI.ordinal()]) : 0f;
-    }
 
     /**
      * enum composed of all column members of the HYG data base

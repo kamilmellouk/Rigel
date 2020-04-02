@@ -15,11 +15,9 @@ public final class StarCatalogue {
 
     // the list of all stars containing in the catalogue
     private final List<Star> stars;
-    // the list of all asterisms containing in the catalogue
-    private final List<Asterism> asterisms;
 
     // map an asterism with its stars
-    private Map<Asterism, List<Integer>> asterismIndicesMap = new HashMap<>();
+    private Map<Asterism, List<Integer>> asterismMap = new HashMap<>();
 
     /**
      * Constructor of a StarCatalogue
@@ -29,7 +27,6 @@ public final class StarCatalogue {
      */
     public StarCatalogue(List<Star> stars, List<Asterism> asterisms) {
         this.stars = List.copyOf(stars);
-        this.asterisms = List.copyOf(asterisms);
 
         for (Asterism a : asterisms) {
             List<Integer> indices = new ArrayList<>();
@@ -37,7 +34,7 @@ public final class StarCatalogue {
                 Preconditions.checkArgument(stars.contains(s));
                 indices.add(stars.indexOf(s));
             }
-            asterismIndicesMap.put(a, indices);
+            asterismMap.put(a, indices);
         }
 
     }
@@ -56,7 +53,7 @@ public final class StarCatalogue {
      *
      * @return immutable copy of asterisms
      */
-    public Set<Asterism> asterisms() { return asterismIndicesMap.keySet(); }
+    public Set<Asterism> asterisms() { return asterismMap.keySet(); }
 
     /**
      * Getter for the indices of the stars contained in a given asterism
@@ -65,7 +62,7 @@ public final class StarCatalogue {
      * @return immutable copy of the list of indices
      */
     public List<Integer> asterismIndices(Asterism asterism) {
-        return asterismIndicesMap.get(asterism);
+        return asterismMap.get(asterism);
     }
 
     /**
@@ -152,6 +149,16 @@ public final class StarCatalogue {
      * Loader of a star catalogue
      */
     public interface Loader {
+
+        /**
+         * Loading the stars from a text file (to be redefined)
+         *
+         * @param inputStream input of the file
+         * @param builder where to add the stars
+         * @throws IOException
+         * @see HygDatabaseLoader
+         * @see AsterismLoader
+         */
         void load(InputStream inputStream, Builder builder) throws IOException;
     }
 
