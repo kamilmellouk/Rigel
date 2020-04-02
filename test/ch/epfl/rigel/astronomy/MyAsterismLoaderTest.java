@@ -128,5 +128,30 @@ public class MyAsterismLoaderTest {
         }
     }
 
+    @Test
+    void asterismsContainsRigelandBetelgeuse() throws IOException {
+        StarCatalogue.Builder cb = new StarCatalogue.Builder();
+        try (InputStream hygStream = getClass()
+                .getResourceAsStream(HYG_CATALOGUE_NAME)) {
+            cb.loadFrom(hygStream, HygDatabaseLoader.INSTANCE);
+        }
+        try (InputStream astStream = getClass()
+                .getResourceAsStream(AST_CATALOGUE_NAME)) {
+            cb.loadFrom(astStream, AsterismLoader.INSTANCE);
+        }
+        StarCatalogue catalogue = cb.build();
+        Queue<Asterism> a = new ArrayDeque<>();
+        Star beltegeuse = null;
+        for (Asterism ast : catalogue.asterisms()) {
+            for (Star s : ast.stars()) {if (s.name().equalsIgnoreCase("Rigel")) { a.add(ast);}}}
+        int astCount = 0;
+        for (Asterism ast : a) {
+            ++astCount;
+            for (Star s : ast.stars()) {if (s.name().equalsIgnoreCase("Betelgeuse")) { beltegeuse = s; }}}
+        assertNotNull(beltegeuse);
+        assertEquals(2,astCount);
+    }
+
+
 
 }

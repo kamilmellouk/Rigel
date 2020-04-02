@@ -58,11 +58,12 @@ public final class StarCatalogue {
     /**
      * Getter for the indices of the stars contained in a given asterism
      *
-     * @param asterism of which we want to find the star indices
+     * @param ast of which we want to find the star indices
      * @return immutable copy of the list of indices
      */
-    public List<Integer> asterismIndices(Asterism asterism) {
-        return asterismMap.get(asterism);
+    public List<Integer> asterismIndices(Asterism ast) {
+        Preconditions.checkArgument(this.asterisms().contains(ast));
+        return asterismMap.get(ast);
     }
 
     /**
