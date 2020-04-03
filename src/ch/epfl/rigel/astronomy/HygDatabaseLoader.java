@@ -26,23 +26,26 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
 
             while ((s = bufferedReader.readLine()) != null) {
 
+                // array containing each element of the line
+                String[] tabLine = s.split(",");
+
+                // compute the name of the star depending on given info
                 String proper;
-                if (!s.split(",")[ColumnIndex.PROPER.ordinal()].isEmpty()) {
-                    proper = s.split(",")[ColumnIndex.PROPER.ordinal()];
-                } else if (!s.split(",")[ColumnIndex.BAYER.ordinal()].isEmpty()) {
-                    proper = s.split(",")[ColumnIndex.BAYER.ordinal()] + " " + s.split(",")[ColumnIndex.CON.ordinal()];
+                if (!tabLine[ColumnIndex.PROPER.ordinal()].isEmpty()) {
+                    proper = tabLine[ColumnIndex.PROPER.ordinal()];
+                } else if (!tabLine[ColumnIndex.BAYER.ordinal()].isEmpty()) {
+                    proper = tabLine[ColumnIndex.BAYER.ordinal()] + " " + tabLine[ColumnIndex.CON.ordinal()];
                 } else {
-                    proper = "? " + s.split(",")[ColumnIndex.CON.ordinal()];
+                    proper = "? " + tabLine[ColumnIndex.CON.ordinal()];
                 }
 
-
                 builder.addStar(new Star(
-                                !s.split(",")[ColumnIndex.HIP.ordinal()].isEmpty() ? Integer.parseInt(s.split(",")[ColumnIndex.HIP.ordinal()]) : 0,
-                                proper,
-                                EquatorialCoordinates.of((Double.parseDouble(s.split(",")[ColumnIndex.RARAD.ordinal()])),
-                                        Double.parseDouble(s.split(",")[ColumnIndex.DECRAD.ordinal()])),
-                                !s.split(",")[ColumnIndex.MAG.ordinal()].isEmpty() ? Float.parseFloat(s.split(",")[ColumnIndex.MAG.ordinal()]) : 0f,
-                                !s.split(",")[ColumnIndex.CI.ordinal()].isEmpty() ? Float.parseFloat(s.split(",")[ColumnIndex.CI.ordinal()]) : 0f
+                                !tabLine[ColumnIndex.HIP.ordinal()].isEmpty() ? Integer.parseInt(tabLine[ColumnIndex.HIP.ordinal()]) : 0,   // hipparcos number
+                                proper, // name
+                                EquatorialCoordinates.of((Double.parseDouble(tabLine[ColumnIndex.RARAD.ordinal()])),    // equatorial coordinates
+                                        Double.parseDouble(tabLine[ColumnIndex.DECRAD.ordinal()])),
+                                !tabLine[ColumnIndex.MAG.ordinal()].isEmpty() ? Float.parseFloat(tabLine[ColumnIndex.MAG.ordinal()]) : 0f,  // magnitude
+                                !tabLine[ColumnIndex.CI.ordinal()].isEmpty() ? Float.parseFloat(tabLine[ColumnIndex.CI.ordinal()]) : 0f // color index
                         )
                 );
             }
@@ -57,6 +60,6 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
         ID, HIP, HD, HR, GL, BF, PROPER, RA, DEC, DIST, PMRA, PMDEC,
         RV, MAG, ABSMAG, SPECT, CI, X, Y, Z, VX, VY, VZ,
         RARAD, DECRAD, PMRARAD, PMDECRAD, BAYER, FLAM, CON,
-        COMP, COMP_PRIMARY, BASE, LUM, VAR, VAR_MIN, VAR_MAX;
+        COMP, COMP_PRIMARY, BASE, LUM, VAR, VAR_MIN, VAR_MAX
     }
 }

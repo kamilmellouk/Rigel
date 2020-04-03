@@ -17,7 +17,7 @@ public final class StarCatalogue {
     private final List<Star> stars;
 
     // map an asterism with its stars
-    private Map<Asterism, List<Integer>> asterismMap = new HashMap<>();
+    private final Map<Asterism, List<Integer>> asterismMap = new HashMap<>();
 
     /**
      * Constructor of a StarCatalogue
@@ -158,7 +158,7 @@ public final class StarCatalogue {
          *
          * @param inputStream input of the file
          * @param builder     where to add the stars
-         * @throws IOException
+         * @throws IOException in case of any input/output error
          * @see HygDatabaseLoader
          * @see AsterismLoader
          */
