@@ -27,7 +27,7 @@ public class ShareTest {
 
     private static BufferedWriter writer;
 
-    @BeforeAll
+    /*@BeforeAll
     static void setUp() throws IOException {
         final File file = new File("out.txt");
         if (file.exists()) {
@@ -82,7 +82,7 @@ public class ShareTest {
         for (Asterism asterism : catalogue.asterisms()) {
             writer.write(catalogue.asterismIndices(asterism).toString() + "\n");
         }
-    }
+    }*/
 
     @Test
     void stars() throws IOException {
