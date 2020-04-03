@@ -9,6 +9,7 @@ import ch.epfl.rigel.Preconditions;
 
 public final class Polynomial {
 
+    // array containing the coefficients
     private double[] coefficients;
 
     /**
@@ -25,9 +26,7 @@ public final class Polynomial {
      *
      * @param coefficientN the highest coefficient
      * @param coefficients the rest of coefficients
-     *
      * @return a polynomial
-     *
      * @throws IllegalArgumentException if coefficientN = 0
      */
     public static Polynomial of(double coefficientN, double... coefficients) {
@@ -55,6 +54,25 @@ public final class Polynomial {
         return result;
     }
 
+    /**
+     * @return nothing
+     * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
+     */
+    @Override
+    public final int hashCode() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @param obj the object
+     * @return nothing
+     * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
+     */
+    @Override
+    public final boolean equals(Object obj) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
     @Override
     public String toString() {
         StringBuilder textualRepresentation = new StringBuilder();
@@ -66,7 +84,7 @@ public final class Polynomial {
                     // check if the coefficient is 1 or -1
                     if (Math.abs(coefficients[i]) == 1) {
                         // if it is the case, it just adds the sign
-                        // (if the coefficient is 1, the sign + was already added) see line 77
+                        // (if the coefficient is 1, the sign + was already added) see line 83
                         textualRepresentation.append(coefficients[i] < 0 ? "-" : "");
                     } else {
                         // it adds the coefficient value
@@ -88,25 +106,6 @@ public final class Polynomial {
             }
         }
         return textualRepresentation.toString();
-    }
-
-    /**
-     * @param obj the object
-     * @return nothing
-     * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
-     */
-    @Override
-    public final boolean equals(Object obj) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @return nothing
-     * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
-     */
-    @Override
-    public final int hashCode() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
     }
 
 }

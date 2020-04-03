@@ -50,21 +50,21 @@ public abstract class Interval {
     public abstract boolean contains(double v);
 
     /**
+     * @return nothing
+     * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
+     */
+    @Override
+    public final int hashCode() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * @param obj the object
      * @return nothing
      * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
      */
     @Override
     public final boolean equals(Object obj) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @return nothing
-     * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
-     */
-    @Override
-    public final int hashCode() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 }
