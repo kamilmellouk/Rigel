@@ -53,7 +53,9 @@ public final class StarCatalogue {
      *
      * @return immutable copy of asterisms
      */
-    public Set<Asterism> asterisms() { return asterismMap.keySet(); }
+    public Set<Asterism> asterisms() {
+        return asterismMap.keySet();
+    }
 
     /**
      * Getter for the indices of the stars contained in a given asterism
@@ -155,7 +157,7 @@ public final class StarCatalogue {
          * Loading the stars from a text file (to be redefined)
          *
          * @param inputStream input of the file
-         * @param builder where to add the stars
+         * @param builder     where to add the stars
          * @throws IOException
          * @see HygDatabaseLoader
          * @see AsterismLoader
