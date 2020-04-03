@@ -43,8 +43,8 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
                                 proper, // name
                                 EquatorialCoordinates.of((Double.parseDouble(tabLine[ColumnIndex.RARAD.ordinal()])),    // equatorial coordinates
                                         Double.parseDouble(tabLine[ColumnIndex.DECRAD.ordinal()])),
-                                !tabLine[ColumnIndex.MAG.ordinal()].isBlank() ? (float)Double.parseDouble(tabLine[ColumnIndex.MAG.ordinal()]) : 0f,  // magnitude
-                                !tabLine[ColumnIndex.CI.ordinal()].isBlank() ? (float)Double.parseDouble(tabLine[ColumnIndex.CI.ordinal()]) : 0f // color index
+                                !tabLine[ColumnIndex.MAG.ordinal()].isBlank() ? (float) Double.parseDouble(tabLine[ColumnIndex.MAG.ordinal()]) : 0f,  // magnitude
+                                !tabLine[ColumnIndex.CI.ordinal()].isBlank() ? (float) Double.parseDouble(tabLine[ColumnIndex.CI.ordinal()]) : 0f // color index
                         )
                 );
             }
