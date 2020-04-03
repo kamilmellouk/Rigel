@@ -35,6 +35,8 @@ public final class Star extends CelestialObject {
     }
 
     /**
+     * getter for the hipparcosId
+     *
      * @return the hipparcosId of the star
      */
     public int hipparcosId() {

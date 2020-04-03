@@ -41,6 +41,7 @@ public enum SunModel implements CelestialObjectModel<Sun> {
         // compute the ecliptic coordinates of the sun
         EclipticCoordinates sunEclipticCoordinates = EclipticCoordinates.of(sunGeoEclLon, 0);
 
+        // return the computed sun model
         return new Sun(
                 sunEclipticCoordinates,
                 eclipticToEquatorialConversion.apply(sunEclipticCoordinates),

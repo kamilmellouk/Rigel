@@ -28,6 +28,7 @@ public final class StarCatalogue {
     public StarCatalogue(List<Star> stars, List<Asterism> asterisms) {
         this.stars = List.copyOf(stars);
 
+        // fill in the map with asterisms and their stars (especially their index)
         for (Asterism a : asterisms) {
             List<Integer> indices = new ArrayList<>();
             for (Star s : a.stars()) {

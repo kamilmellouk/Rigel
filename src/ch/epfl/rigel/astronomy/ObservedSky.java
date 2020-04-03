@@ -10,6 +10,7 @@ import java.util.Map;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
+
 public final class ObservedSky {
 
     private final StereographicProjection stereographicProjection;
@@ -26,13 +27,13 @@ public final class ObservedSky {
         posObjectMap.put(
                 stereographicProjection.apply((new EquatorialToHorizontalConversion(obsTime, obsPos)).apply(sun.equatorialPos())),
                 sun
-                );
+        );
 
 
     }
 
     public Sun sun() {
-        return new Sun(sun.eclipticPos(), sun.equatorialPos(), (float)sun.angularSize(), sun.meanAnomaly());
+        return new Sun(sun.eclipticPos(), sun.equatorialPos(), (float) sun.angularSize(), sun.meanAnomaly());
     }
 
     public CartesianCoordinates sunPosition() {

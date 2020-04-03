@@ -13,11 +13,11 @@ public enum MoonModel implements CelestialObjectModel<Moon> {
     MOON();
 
     // Lunar constants for the Epoch J2010
-    private static final double meanLon = Angle.ofDeg(91.929336);
-    private static final double meanLonAtPerigee = Angle.ofDeg(130.143076);
-    private static final double ascendingNodeLon = Angle.ofDeg(291.682547);
-    private static final double orbitInclination = Angle.ofDeg(5.145396);
-    private static final double orbitEccentricity = 0.0549;
+    private static final double MEAN_LON = Angle.ofDeg(91.929336);
+    private static final double MEAN_LON_AT_PERIGEE = Angle.ofDeg(130.143076);
+    private static final double ASCENDING_NODE_LON = Angle.ofDeg(291.682547);
+    private static final double ORBIT_INCLINATION = Angle.ofDeg(5.145396);
+    private static final double ORBIT_ECCENTRICITY = 0.0549;
 
     /**
      * Compute the model of the moon
@@ -34,10 +34,10 @@ public enum MoonModel implements CelestialObjectModel<Moon> {
         double lambdaSun = currentSun.eclipticPos().lon();
 
         // compute the mean orbital longitude
-        double l = Angle.ofDeg(13.1763966) * daysSinceJ2010 + meanLon;
+        double l = Angle.ofDeg(13.1763966) * daysSinceJ2010 + MEAN_LON;
 
         // compute the mean anomaly
-        double Mm = l - Angle.ofDeg(0.1114041) * daysSinceJ2010 - meanLonAtPerigee;
+        double Mm = l - Angle.ofDeg(0.1114041) * daysSinceJ2010 - MEAN_LON_AT_PERIGEE;
 
         // compute the correction terms
         double Ev = Angle.ofDeg(1.2739) * Math.sin(2 * (l - lambdaSun) - Mm);
@@ -61,15 +61,15 @@ public enum MoonModel implements CelestialObjectModel<Moon> {
         double lSecond = lPrime + V;
 
         // compute the mean longitude and the corrected longitude of the ascending node
-        double N = ascendingNodeLon - Angle.ofDeg(0.0529539) * daysSinceJ2010;
+        double N = ASCENDING_NODE_LON - Angle.ofDeg(0.0529539) * daysSinceJ2010;
         double NPrime = N - Angle.ofDeg(0.16) * sinOfMSun;
 
         // compute an intermediate value for performances
         double sin_lSecond_minus_NPrime = Math.sin(lSecond - NPrime);
 
         // compute the ecliptic longitude and latitude of the moon
-        double lambda = Angle.normalizePositive(Math.atan2(sin_lSecond_minus_NPrime * Math.cos(orbitInclination), Math.cos(lSecond - NPrime)) + NPrime);
-        double beta = Math.asin(sin_lSecond_minus_NPrime * Math.sin(orbitInclination));
+        double lambda = Angle.normalizePositive(Math.atan2(sin_lSecond_minus_NPrime * Math.cos(ORBIT_INCLINATION), Math.cos(lSecond - NPrime)) + NPrime);
+        double beta = Math.asin(sin_lSecond_minus_NPrime * Math.sin(ORBIT_INCLINATION));
         // compute the ecliptic coordinates of the moon
         EclipticCoordinates eclipticCoordinates = EclipticCoordinates.of(lambda, beta);
 
@@ -77,7 +77,7 @@ public enum MoonModel implements CelestialObjectModel<Moon> {
         double F = (1 - Math.cos(lSecond - lambdaSun)) / 2;
 
         // compute the distance earth-moon to compute the angular size of the moon
-        double rho = (1 - orbitEccentricity * orbitEccentricity) / (1 + orbitEccentricity * Math.cos(MmPrime + Ec));
+        double rho = (1 - ORBIT_ECCENTRICITY * ORBIT_ECCENTRICITY) / (1 + ORBIT_ECCENTRICITY * Math.cos(MmPrime + Ec));
         double theta = Angle.ofDeg(0.5181) / rho;
 
         // return the computed moon model

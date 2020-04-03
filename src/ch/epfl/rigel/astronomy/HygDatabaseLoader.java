@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
+
 public enum HygDatabaseLoader implements StarCatalogue.Loader {
     INSTANCE();
 
@@ -21,9 +22,7 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
         try (BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
             // skipping the first line (column headers)
             bufferedReader.readLine();
-
             String s;
-
             while ((s = bufferedReader.readLine()) != null) {
 
                 // array containing each element of the line

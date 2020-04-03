@@ -9,6 +9,7 @@ import java.util.Objects;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
+
 public abstract class CelestialObject {
 
     // Attributes used to describe every celestial object

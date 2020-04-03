@@ -46,7 +46,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
     private final double magnitude;
 
     /**
-     * the constructor of a planet
+     * the constructor of a planet model
      *
      * @param name                       the name of the planet
      * @param revolutionPeriod           the revolution period
@@ -124,7 +124,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 
         // compute the geocentric ecliptic longitude of the planet depending on its type
         double lambda;
-        if (name.equals("Mercure") || name.equals("Vénus")) {
+        if (this.ordinal() <= 1) {
             lambda = Math.PI + L + Math.atan2(Math.sin(L - lPrime) * rPrime, R - rPrime * Math.cos(L - lPrime));
         } else {
             lambda = lPrime + Math.atan2(R_sin_lPrime_minus_L, rPrime - R * Math.cos(lPrime - L));
