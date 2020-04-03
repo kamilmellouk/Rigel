@@ -30,21 +30,21 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
 
                 // compute the name of the star depending on given info
                 String proper;
-                if (!tabLine[ColumnIndex.PROPER.ordinal()].isEmpty()) {
+                if (!tabLine[ColumnIndex.PROPER.ordinal()].isBlank()) {
                     proper = tabLine[ColumnIndex.PROPER.ordinal()];
-                } else if (!tabLine[ColumnIndex.BAYER.ordinal()].isEmpty()) {
+                } else if (!tabLine[ColumnIndex.BAYER.ordinal()].isBlank()) {
                     proper = tabLine[ColumnIndex.BAYER.ordinal()] + " " + tabLine[ColumnIndex.CON.ordinal()];
                 } else {
                     proper = "? " + tabLine[ColumnIndex.CON.ordinal()];
                 }
 
                 builder.addStar(new Star(
-                                !tabLine[ColumnIndex.HIP.ordinal()].isEmpty() ? Integer.parseInt(tabLine[ColumnIndex.HIP.ordinal()]) : 0,   // hipparcos number
+                                !tabLine[ColumnIndex.HIP.ordinal()].isBlank() ? Integer.parseInt(tabLine[ColumnIndex.HIP.ordinal()]) : 0,   // hipparcos number
                                 proper, // name
                                 EquatorialCoordinates.of((Double.parseDouble(tabLine[ColumnIndex.RARAD.ordinal()])),    // equatorial coordinates
                                         Double.parseDouble(tabLine[ColumnIndex.DECRAD.ordinal()])),
-                                !tabLine[ColumnIndex.MAG.ordinal()].isEmpty() ? Float.parseFloat(tabLine[ColumnIndex.MAG.ordinal()]) : 0f,  // magnitude
-                                !tabLine[ColumnIndex.CI.ordinal()].isEmpty() ? Float.parseFloat(tabLine[ColumnIndex.CI.ordinal()]) : 0f // color index
+                                !tabLine[ColumnIndex.MAG.ordinal()].isBlank() ? (float)Double.parseDouble(tabLine[ColumnIndex.MAG.ordinal()]) : 0f,  // magnitude
+                                !tabLine[ColumnIndex.CI.ordinal()].isBlank() ? (float)Double.parseDouble(tabLine[ColumnIndex.CI.ordinal()]) : 0f // color index
                         )
                 );
             }

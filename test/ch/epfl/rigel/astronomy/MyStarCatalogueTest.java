@@ -6,10 +6,8 @@ import ch.epfl.test.TestRandomizer;
 import org.junit.jupiter.api.Test;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -169,5 +167,7 @@ public class MyStarCatalogueTest {
             });
         }
     }
+
+
 
 }
