@@ -53,21 +53,21 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
 
 
     /**
+     * @return nothing
+     * @throws UnsupportedOperationException the exception to throw
+     */
+    @Override
+    public final int hashCode() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * @param obj the object
      * @return nothing
      * @throws UnsupportedOperationException the exception to throw
      */
     @Override
     public final boolean equals(Object obj) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @return nothing
-     * @throws UnsupportedOperationException the exception to throw
-     */
-    @Override
-    public final int hashCode() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 }

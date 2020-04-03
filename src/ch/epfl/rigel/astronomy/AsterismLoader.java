@@ -22,15 +22,18 @@ public enum AsterismLoader implements StarCatalogue.Loader {
             String s;
             while ((s = bufferedReader.readLine()) != null) {
 
+                // array containing each element of the line
+                String[] tabLine = s.split(",");
+
                 // the number of stars in the line
-                int lineLength = s.split(",").length;
+                int lineLength = tabLine.length;
 
                 // the list that will contain the stars
                 List<Star> starList = new ArrayList<>(lineLength);
 
                 // add the stars
-                for (int i = 0; i < lineLength; i++) {
-                    int hipparcosId = Integer.parseInt(s.split(",")[i]);
+                for (String value : tabLine) {
+                    int hipparcosId = Integer.parseInt(value);
                     for (Star star : builder.stars()) {
                         if (star.hipparcosId() == hipparcosId) {
                             starList.add(star);

@@ -11,6 +11,7 @@ import java.util.Locale;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
+
 public final class EquatorialCoordinates extends SphericalCoordinates {
 
     /**

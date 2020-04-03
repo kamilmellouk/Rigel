@@ -52,9 +52,13 @@ public final class CartesianCoordinates {
         return this.y;
     }
 
+    /**
+     * @return nothing
+     * @throws UnsupportedOperationException the exception to throw
+     */
     @Override
-    public String toString() {
-        return String.format(Locale.ROOT, "(x=%.4f, y=%.4f)", this.x, this.y);
+    public final int hashCode() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -67,13 +71,9 @@ public final class CartesianCoordinates {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * @return nothing
-     * @throws UnsupportedOperationException the exception to throw
-     */
     @Override
-    public final int hashCode() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
+    public String toString() {
+        return String.format(Locale.ROOT, "(x=%.4f, y=%.4f)", this.x, this.y);
     }
 
 }
