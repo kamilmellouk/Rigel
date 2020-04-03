@@ -10,6 +10,7 @@ import java.util.function.Function;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
+
 public final class EquatorialToHorizontalConversion implements Function<EquatorialCoordinates, HorizontalCoordinates> {
 
     // the sidereal time
@@ -47,21 +48,21 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
     }
 
     /**
+     * @return nothing
+     * @throws UnsupportedOperationException the exception to throw
+     */
+    @Override
+    public final int hashCode() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * @param obj the object
      * @return nothing
      * @throws UnsupportedOperationException the exception to throw
      */
     @Override
     public final boolean equals(Object obj) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @return nothing
-     * @throws UnsupportedOperationException the exception to throw
-     */
-    @Override
-    public final int hashCode() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 }

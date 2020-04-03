@@ -106,9 +106,13 @@ public final class StereographicProjection implements Function<HorizontalCoordin
         );
     }
 
+    /**
+     * @return nothing
+     * @throws UnsupportedOperationException the exception to throw
+     */
     @Override
-    public String toString() {
-        return String.format(Locale.ROOT, "StereographicProjection of center : x=%.4f, y=%.4f", centerAz, center.alt());
+    public final int hashCode() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -121,12 +125,8 @@ public final class StereographicProjection implements Function<HorizontalCoordin
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * @return nothing
-     * @throws UnsupportedOperationException the exception to throw
-     */
     @Override
-    public final int hashCode() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
+    public String toString() {
+        return String.format(Locale.ROOT, "StereographicProjection of center : x=%.4f, y=%.4f", centerAz, center.alt());
     }
 }

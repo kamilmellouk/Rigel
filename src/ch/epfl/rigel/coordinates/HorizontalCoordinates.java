@@ -72,6 +72,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      * @return the octant where the azimuth is
      */
     public String azOctantName(String n, String e, String s, String w) {
+        // compute the index of the direction in the array at line 77
         int index = (int) (az() / (Math.PI / 4)) + ((int) ((az() % (Math.PI / 4)) / (Math.PI / 8)) == 0 ? 0 : 1);
         return new String[]{n, n + e, e, s + e, s, s + w, w, n + w}[index == 8 ? 0 : index];
     }
