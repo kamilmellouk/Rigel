@@ -55,7 +55,7 @@ public final class StarCatalogue {
      * @return immutable copy of asterisms
      */
     public Set<Asterism> asterisms() {
-        return asterismMap.keySet();
+        return Set.copyOf(asterismMap.keySet());
     }
 
     /**
@@ -66,7 +66,7 @@ public final class StarCatalogue {
      */
     public List<Integer> asterismIndices(Asterism ast) {
         Preconditions.checkArgument(this.asterisms().contains(ast));
-        return asterismMap.get(ast);
+        return List.copyOf(asterismMap.get(ast));
     }
 
     /**
