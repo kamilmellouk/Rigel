@@ -7,6 +7,8 @@ import ch.epfl.rigel.math.ClosedInterval;
 import java.util.Locale;
 
 /**
+ * Representation of the Moon
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */

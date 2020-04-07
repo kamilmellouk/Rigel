@@ -12,7 +12,6 @@ import java.util.List;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public enum PlanetModel implements CelestialObjectModel<Planet> {
 
     MERCURY("Mercure", 0.24085, 75.5671, 77.612, 0.205627,

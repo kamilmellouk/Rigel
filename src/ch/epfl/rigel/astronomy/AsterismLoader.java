@@ -8,6 +8,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
+ * Enum designed to load asterism onto a StarCatalogue
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
