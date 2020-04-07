@@ -9,10 +9,10 @@ import ch.epfl.rigel.Preconditions;
 
 public final class Angle {
 
-    // the constant tau
+    // The constant tau
     public static final double TAU = 2 * Math.PI;
 
-    // constants for conversion
+    // Constants for conversion
     private static final double HR_PER_RAD = 24.0 / TAU;
     private static final double RAD_PER_HR = 1 / HR_PER_RAD;
     private static final double RAD_PER_SEC = TAU / (60 * 60 * 360);

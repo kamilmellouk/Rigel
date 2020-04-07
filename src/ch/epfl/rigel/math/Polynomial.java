@@ -9,11 +9,11 @@ import ch.epfl.rigel.Preconditions;
 
 public final class Polynomial {
 
-    // array containing the coefficients
+    // Array containing the coefficients
     private double[] coefficients;
 
     /**
-     * constructor of the polynomial
+     * Constructor of the polynomial
      *
      * @param coefficients the array containing all coefficients
      */
@@ -22,7 +22,7 @@ public final class Polynomial {
     }
 
     /**
-     * returning a polynomial given its coefficients
+     * Return a polynomial given its coefficients
      *
      * @param coefficientN the highest coefficient
      * @param coefficients the rest of coefficients
@@ -43,8 +43,10 @@ public final class Polynomial {
     }
 
     /**
+     * Return the value of the polynomial for the given argument using Horner's formula
+     *
      * @param x the given argument
-     * @return the value of the polynomial for the given argument using Horner's formula
+     * @return the value of the polynomial for the given argument
      */
     public double at(double x) {
         double result = 0;
