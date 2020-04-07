@@ -7,10 +7,14 @@ import java.time.ZonedDateTime;
 import java.util.function.Function;
 
 /**
+ * Conversion from equatorial to horizontal coordinates
+ *
+ * @see EquatorialCoordinates
+ * @see HorizontalCoordinates
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class EquatorialToHorizontalConversion implements Function<EquatorialCoordinates, HorizontalCoordinates> {
 
     // The sidereal time

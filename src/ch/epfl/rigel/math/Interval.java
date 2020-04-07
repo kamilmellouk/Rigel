@@ -1,6 +1,11 @@
 package ch.epfl.rigel.math;
 
 /**
+ * Representation of a mathematical interval
+ *
+ * @see ClosedInterval
+ * @see RightOpenInterval
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */

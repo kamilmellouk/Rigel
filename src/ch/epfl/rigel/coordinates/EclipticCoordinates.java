@@ -8,10 +8,13 @@ import ch.epfl.rigel.math.RightOpenInterval;
 import java.util.Locale;
 
 /**
+ * Representation of a position on a sphere using ecliptic coordinates
+ *
+ * @see EclipticCoordinates
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class EclipticCoordinates extends SphericalCoordinates {
 
     /**

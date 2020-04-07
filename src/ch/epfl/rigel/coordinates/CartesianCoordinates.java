@@ -3,10 +3,11 @@ package ch.epfl.rigel.coordinates;
 import java.util.Locale;
 
 /**
+ * Representation of a position on the x-y plane
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class CartesianCoordinates {
 
     // The cartesian coordinates

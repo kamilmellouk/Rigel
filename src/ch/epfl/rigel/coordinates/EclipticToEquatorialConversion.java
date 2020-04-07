@@ -8,10 +8,14 @@ import java.time.ZonedDateTime;
 import java.util.function.Function;
 
 /**
+ * Conversion from ecliptic to equatorial coordinates
+ *
+ * @see EclipticCoordinates
+ * @see EquatorialCoordinates
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class EclipticToEquatorialConversion implements Function<EclipticCoordinates, EquatorialCoordinates> {
 
     // Polynomial used to compute the ecliptic obliqueness

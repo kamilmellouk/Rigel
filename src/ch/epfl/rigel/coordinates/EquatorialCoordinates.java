@@ -8,10 +8,14 @@ import ch.epfl.rigel.math.RightOpenInterval;
 import java.util.Locale;
 
 /**
+ * Representation of a position on a sphere using equatorial coordinates
+ *
+ * @see EclipticToEquatorialConversion
+ * @see EquatorialCoordinates
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class EquatorialCoordinates extends SphericalCoordinates {
 
     /**

@@ -3,6 +3,8 @@ package ch.epfl.rigel.math;
 import ch.epfl.rigel.Preconditions;
 
 /**
+ * Useful methods to manipulate angles
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */

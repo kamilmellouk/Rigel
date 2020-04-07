@@ -3,6 +3,8 @@ package ch.epfl.rigel.math;
 import ch.epfl.rigel.Preconditions;
 
 /**
+ * Representation of a polynomial formula
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
@@ -10,7 +12,7 @@ import ch.epfl.rigel.Preconditions;
 public final class Polynomial {
 
     // Array containing the coefficients
-    private double[] coefficients;
+    private final double[] coefficients;
 
     /**
      * Constructor of the polynomial

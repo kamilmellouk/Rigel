@@ -5,10 +5,11 @@ import ch.epfl.rigel.Preconditions;
 import java.util.Locale;
 
 /**
+ * Representation of a mathematical right open interval
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class RightOpenInterval extends Interval {
 
     /**

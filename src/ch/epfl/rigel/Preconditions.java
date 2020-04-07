@@ -3,6 +3,8 @@ package ch.epfl.rigel;
 import ch.epfl.rigel.math.Interval;
 
 /**
+ * Useful ways to check some conditions
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
