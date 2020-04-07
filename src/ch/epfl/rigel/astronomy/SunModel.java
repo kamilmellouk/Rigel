@@ -21,7 +21,7 @@ public enum SunModel implements CelestialObjectModel<Sun> {
     // The theta0 angle
     private static final double THETA_0 = Angle.ofDeg(0.533128);
     // The mean earth rotating speed around the sun
-    private static final double EARTH_ROT_SPEED = Angle.TAU / 365.242191;
+    private static final double EARTH_ROTATION_SPEED = Angle.TAU / 365.242191;
 
     /**
      * Compute the model of the sun
@@ -33,7 +33,7 @@ public enum SunModel implements CelestialObjectModel<Sun> {
     @Override
     public Sun at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
         // compute the mean anomaly of the sun
-        double sunMeanAnomaly = EARTH_ROT_SPEED * daysSinceJ2010 + SUN_LON_AT_J2010 - SUN_LON_AT_PERIGEE;
+        double sunMeanAnomaly = EARTH_ROTATION_SPEED * daysSinceJ2010 + SUN_LON_AT_J2010 - SUN_LON_AT_PERIGEE;
         // compute the real anomaly of the sun
         double sunRealAnomaly = sunMeanAnomaly + 2 * SUN_EARTH_ECCENTRICITY * Math.sin(sunMeanAnomaly);
         // compute the geocentric ecliptic longitude of the sun
