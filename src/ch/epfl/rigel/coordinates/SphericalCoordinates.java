@@ -9,12 +9,12 @@ import ch.epfl.rigel.math.Angle;
 
 abstract class SphericalCoordinates {
 
-    /// Longitude and latitude, the spherical coordinates used to represent any position on a sphere
+    // Longitude and latitude, the spherical coordinates used to represent any position on a sphere
     private double longitude;
     private double latitude;
 
     /**
-     * constructor of the spherical coordinates
+     * Constructor of the spherical coordinates
      *
      * @param longitude the longitude
      * @param latitude  the latitude
@@ -25,6 +25,8 @@ abstract class SphericalCoordinates {
     }
 
     /**
+     * Getter for the longitude in rad
+     *
      * @return longitude, in rad
      */
     double lon() {
@@ -32,6 +34,8 @@ abstract class SphericalCoordinates {
     }
 
     /**
+     * Getter for the longitude in deg
+     *
      * @return longitude, in deg
      */
     double lonDeg() {
@@ -39,6 +43,8 @@ abstract class SphericalCoordinates {
     }
 
     /**
+     * Getter for the latitude in rad
+     *
      * @return latitude, in rad
      */
     double lat() {
@@ -46,6 +52,8 @@ abstract class SphericalCoordinates {
     }
 
     /**
+     * Getter for tha latitude in deg
+     *
      * @return latitude, in deg
      */
     double latDeg() {

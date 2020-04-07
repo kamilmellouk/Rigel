@@ -14,20 +14,20 @@ import java.util.function.Function;
 
 public final class EclipticToEquatorialConversion implements Function<EclipticCoordinates, EquatorialCoordinates> {
 
-    // polynomial used to compute the ecliptic obliqueness
+    // Polynomial used to compute the ecliptic obliqueness
     private static final Polynomial OBLIQUENESS_POLYNOMIAL = Polynomial.of(
             Angle.ofArcsec(0.00181),
             -Angle.ofArcsec(0.0006),
             -Angle.ofArcsec(46.815),
             Angle.ofDMS(23, 26, 21.45)
     );
-    // the cosine od the ecliptic obliqueness
+    // The cosine od the ecliptic obliqueness
     private final double cosOfEclipticObliqueness;
-    // the sinus of the ecliptic obliqueness
+    // The sinus of the ecliptic obliqueness
     private final double sinOfEclipticObliqueness;
 
     /**
-     * constructor of the coordinates system change
+     * Constructor of the coordinates system change
      *
      * @param when date-time couple with time zone
      */

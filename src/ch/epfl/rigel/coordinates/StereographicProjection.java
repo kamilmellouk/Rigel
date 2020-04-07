@@ -14,13 +14,13 @@ public final class StereographicProjection implements Function<HorizontalCoordin
 
     // HorizontalCoordinates of the center point of the projection
     private final HorizontalCoordinates center;
-    // Storing values exclusive to the projection center to compute the projection
+    // Store values exclusive to the projection center to compute the projection
     private final double centerAz;
     private final double cosCenterAlt;
     private final double sinCenterAlt;
 
     /**
-     * constructor of the stereographic projection
+     * Constructor of the stereographic projection
      *
      * @param center the center point of the projection
      */

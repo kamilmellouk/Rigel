@@ -15,7 +15,7 @@ import java.util.Locale;
 public final class EquatorialCoordinates extends SphericalCoordinates {
 
     /**
-     * constructor of the equatorial coordinates
+     * Constructor of the equatorial coordinates
      *
      * @param longitude the longitude
      * @param latitude  the latitude
@@ -25,7 +25,7 @@ public final class EquatorialCoordinates extends SphericalCoordinates {
     }
 
     /**
-     * Creating equatorial coordinates from given right ascension and declination in rad
+     * Create equatorial coordinates from given right ascension and declination in rad
      *
      * @param ra  the right ascension in rad
      * @param dec the declination in rad
@@ -40,6 +40,8 @@ public final class EquatorialCoordinates extends SphericalCoordinates {
     }
 
     /**
+     * Getter for the right ascension in rad
+     *
      * @return the right ascension in rad
      */
     public double ra() {
@@ -47,6 +49,8 @@ public final class EquatorialCoordinates extends SphericalCoordinates {
     }
 
     /**
+     * Getter for the right ascension in deg
+     *
      * @return the right ascension in deg
      */
     public double raDeg() {
@@ -54,6 +58,8 @@ public final class EquatorialCoordinates extends SphericalCoordinates {
     }
 
     /**
+     * Getter for the right ascension in hr
+     *
      * @return the right ascension in hr
      */
     public double raHr() {
@@ -61,6 +67,8 @@ public final class EquatorialCoordinates extends SphericalCoordinates {
     }
 
     /**
+     * Getter for the declination in rad
+     *
      * @return the declination in rad
      */
     public double dec() {
@@ -68,6 +76,8 @@ public final class EquatorialCoordinates extends SphericalCoordinates {
     }
 
     /**
+     * Getter for the declination in deg
+     *
      * @return the declination in deg
      */
     public double decDeg() {
