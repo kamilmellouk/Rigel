@@ -5,6 +5,8 @@ import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 import ch.epfl.rigel.math.ClosedInterval;
 
 /**
+ * Representation of a star
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */

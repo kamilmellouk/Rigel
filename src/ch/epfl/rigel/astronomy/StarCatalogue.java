@@ -7,10 +7,11 @@ import java.io.InputStream;
 import java.util.*;
 
 /**
+ * Catalogue designed to store Stars and Asterisms
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class StarCatalogue {
 
     // the list of all stars containing in the catalogue
@@ -69,8 +70,12 @@ public final class StarCatalogue {
         return List.copyOf(asterismMap.get(ast));
     }
 
+
     /**
-     * Builder of a star catalogue
+     * Builder of a StarCatalogue
+     *
+     * @author Bastien Faivre (310929)
+     * @author Kamil Mellouk (312327)
      */
     public static final class Builder {
 
@@ -150,7 +155,13 @@ public final class StarCatalogue {
     }
 
     /**
-     * Loader of a star catalogue
+     * Loader of a StarCatalogue
+     *
+     * @see HygDatabaseLoader
+     * @see AsterismLoader
+     *
+     * @author Bastien Faivre (310929)
+     * @author Kamil Mellouk (312327)
      */
     public interface Loader {
 

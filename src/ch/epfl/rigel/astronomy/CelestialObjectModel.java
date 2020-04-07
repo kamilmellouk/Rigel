@@ -3,6 +3,12 @@ package ch.epfl.rigel.astronomy;
 import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 
 /**
+ * Mathematical model for the position of a CelestialObject
+ *
+ * @see SunModel
+ * @see MoonModel
+ * @see PlanetModel
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */

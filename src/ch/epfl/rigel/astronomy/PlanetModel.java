@@ -7,6 +7,8 @@ import ch.epfl.rigel.math.Angle;
 import java.util.List;
 
 /**
+ * Mathematical model for the position of a planet
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */

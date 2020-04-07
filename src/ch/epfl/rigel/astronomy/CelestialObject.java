@@ -6,10 +6,17 @@ import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 import java.util.Objects;
 
 /**
+ * Characterizing a celestial object
+ *
+ * @see Star
+ * @see Asterism
+ * @see Planet
+ * @see Sun
+ * @see Moon
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public abstract class CelestialObject {
 
     // Attributes used to describe every celestial object

@@ -5,6 +5,8 @@ import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 import ch.epfl.rigel.math.Angle;
 
 /**
+ * Mathematical model for the position of the sun
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */

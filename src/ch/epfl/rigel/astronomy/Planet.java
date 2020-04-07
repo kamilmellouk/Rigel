@@ -3,6 +3,8 @@ package ch.epfl.rigel.astronomy;
 import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 
 /**
+ * Representation of a planet
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */

@@ -8,10 +8,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
+ * Enum designed to loading asterisms onto a StarCatalogue
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public enum AsterismLoader implements StarCatalogue.Loader {
     INSTANCE();
 
@@ -22,17 +23,11 @@ public enum AsterismLoader implements StarCatalogue.Loader {
             String s;
             while ((s = bufferedReader.readLine()) != null) {
 
-                // array containing each element of the line
-                String[] tabLine = s.split(",");
-
-                // the number of stars in the line
-                int lineLength = tabLine.length;
-
-                // the list that will contain the stars
+                String[] line = s.split(",");
+                int lineLength = line.length;
                 List<Star> starList = new ArrayList<>(lineLength);
 
-                // add the stars
-                for (String value : tabLine) {
+                for (String value : line) {
                     int hipparcosId = Integer.parseInt(value);
                     for (Star star : builder.stars()) {
                         if (star.hipparcosId() == hipparcosId) {
@@ -41,7 +36,6 @@ public enum AsterismLoader implements StarCatalogue.Loader {
                     }
                 }
 
-                // add the asterism to the builder
                 builder.addAsterism(new Asterism(starList));
             }
         }
