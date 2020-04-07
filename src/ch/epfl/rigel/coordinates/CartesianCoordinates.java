@@ -9,7 +9,7 @@ import java.util.Locale;
 
 public final class CartesianCoordinates {
 
-    // the cartesian coordinates
+    // The cartesian coordinates
     private final double x, y;
 
     /**
@@ -24,7 +24,7 @@ public final class CartesianCoordinates {
     }
 
     /**
-     * Constructing a new set of cartesian coordinates
+     * Construct a new set of cartesian coordinates
      *
      * @param x x-coordinate
      * @param y y-coordinate

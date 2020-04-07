@@ -15,7 +15,7 @@ import java.util.Locale;
 public final class HorizontalCoordinates extends SphericalCoordinates {
 
     /**
-     * constructor of the horizontal coordinates
+     * Constructor of the horizontal coordinates
      *
      * @param longitude the longitude
      * @param latitude  the latitude
@@ -25,7 +25,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     }
 
     /**
-     * Creating horizontal coordinates from given azimuth and altitude in rad
+     * Create horizontal coordinates from given azimuth and altitude in rad
      *
      * @param az  the azimuth in rad
      * @param alt the altitude in rad
@@ -40,7 +40,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     }
 
     /**
-     * Creating horizontal coordinates from given azimuth and altitude in deg
+     * Create horizontal coordinates from given azimuth and altitude in deg
      *
      * @param azDeg  the azimuth in deg
      * @param altDeg the altitude in deg
@@ -51,6 +51,8 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     }
 
     /**
+     * Getter for the azimuth in rad
+     *
      * @return the azimuth in rad
      */
     public double az() {
@@ -58,6 +60,8 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     }
 
     /**
+     * Getter for the azimuth in deg
+     *
      * @return the azimuth in deg
      */
     public double azDeg() {
@@ -65,6 +69,8 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     }
 
     /**
+     * Return the octant name where the azimuth is
+     *
      * @param n the north
      * @param e the east
      * @param s the south
@@ -78,6 +84,8 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     }
 
     /**
+     * Getter for the altitude in rad
+     *
      * @return the altitude in rad
      */
     public double alt() {
@@ -85,6 +93,8 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     }
 
     /**
+     * Getter for the altitude in deg
+     *
      * @return the altitude in deg
      */
     public double altDeg() {
@@ -92,6 +102,8 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     }
 
     /**
+     * Return the angular distance with the given point
+     *
      * @param that the given point
      * @return the angular distance with the given point
      */

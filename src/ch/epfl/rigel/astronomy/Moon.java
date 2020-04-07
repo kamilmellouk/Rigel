@@ -7,8 +7,6 @@ import ch.epfl.rigel.math.ClosedInterval;
 import java.util.Locale;
 
 /**
- * Representation of a moon
- *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
@@ -29,6 +27,8 @@ public final class Moon extends CelestialObject {
      */
     public Moon(EquatorialCoordinates equatorialPos, float angularSize, float magnitude, float phase) {
         super("Lune", equatorialPos, angularSize, magnitude);
+
+        // check if the argument is valid too
         this.phase = (float) Preconditions.checkInInterval(ClosedInterval.of(0, 1), phase);
     }
 

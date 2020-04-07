@@ -9,11 +9,11 @@ import ch.epfl.rigel.Preconditions;
 
 public final class Polynomial {
 
-    // array containing the coefficients
+    // Array containing the coefficients
     private double[] coefficients;
 
     /**
-     * constructor of the polynomial
+     * Constructor of the polynomial
      *
      * @param coefficients the array containing all coefficients
      */
@@ -22,7 +22,7 @@ public final class Polynomial {
     }
 
     /**
-     * returning a polynomial given its coefficients
+     * Return a polynomial given its coefficients
      *
      * @param coefficientN the highest coefficient
      * @param coefficients the rest of coefficients
@@ -33,18 +33,18 @@ public final class Polynomial {
         // check exception
         Preconditions.checkArgument(coefficientN != 0);
 
-        // create new array used to contain all coefficients
         double[] coefficientsArray = new double[coefficients.length + 1];
-        // place the coefficients in the specific array
         coefficientsArray[0] = coefficientN;
         System.arraycopy(coefficients, 0, coefficientsArray, 1, coefficients.length);
-        // return the related polynomial
+
         return new Polynomial(coefficientsArray);
     }
 
     /**
+     * Return the value of the polynomial for the given argument using Horner's formula
+     *
      * @param x the given argument
-     * @return the value of the polynomial for the given argument using Horner's formula
+     * @return the value of the polynomial for the given argument
      */
     public double at(double x) {
         double result = 0;

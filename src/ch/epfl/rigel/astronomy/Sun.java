@@ -33,13 +33,17 @@ public final class Sun extends CelestialObject {
     }
 
     /**
-     * @return the ecliptic position of the sun
+     * Getter for the ecliptic coordinates
+     *
+     * @return the ecliptic coordinates of the sun
      */
     public EclipticCoordinates eclipticPos() {
         return eclipticPos;
     }
 
     /**
+     * Getter for the mean anomaly
+     *
      * @return the mean anomaly of the sun
      */
     public float meanAnomaly() {

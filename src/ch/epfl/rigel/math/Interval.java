@@ -7,12 +7,12 @@ package ch.epfl.rigel.math;
 
 public abstract class Interval {
 
-    // bounds of the interval
+    // Bounds of the interval
     private final double lowBound;
     private final double highBound;
 
     /**
-     * constructor of the interval
+     * Constructor of the interval
      *
      * @param lowBound  the low bound
      * @param highBound the high bound
@@ -23,6 +23,8 @@ public abstract class Interval {
     }
 
     /**
+     * Getter for the low bound
+     *
      * @return the low bound
      */
     public double low() {
@@ -30,6 +32,8 @@ public abstract class Interval {
     }
 
     /**
+     * Getter for the high bound
+     *
      * @return the high bound
      */
     public double high() {
@@ -37,6 +41,8 @@ public abstract class Interval {
     }
 
     /**
+     * Getter for the size of the interval
+     *
      * @return the size of the interval
      */
     public double size() {
@@ -44,6 +50,8 @@ public abstract class Interval {
     }
 
     /**
+     * Return true if and only if the value belongs to the interval
+     *
      * @param v the value to check
      * @return {@code true} if and only if the value belongs to the interval
      */

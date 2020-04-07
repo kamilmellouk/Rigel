@@ -14,10 +14,10 @@ import java.util.*;
  */
 public final class StarCatalogue {
 
-    // the list of all stars containing in the catalogue
+    // The list of all stars containing in the catalogue
     private final List<Star> stars;
 
-    // map an asterism with its stars
+    // Map of asterisms with their own stars (especially their index)
     private final Map<Asterism, List<Integer>> asterismMap = new HashMap<>();
 
     /**
@@ -42,7 +42,7 @@ public final class StarCatalogue {
     }
 
     /**
-     * Getter for stars
+     * Getter for the stars
      *
      * @return immutable copy of stars
      */
@@ -51,7 +51,7 @@ public final class StarCatalogue {
     }
 
     /**
-     * Getter for asterisms
+     * Getter for the asterisms
      *
      * @return immutable copy of asterisms
      */
@@ -79,9 +79,9 @@ public final class StarCatalogue {
      */
     public static final class Builder {
 
-        // the list of all stars containing in the catalogue
+        // The list of all stars containing in the catalogue
         private final List<Star> stars;
-        // the list of all asterisms containing in the catalogue
+        // The list of all asterisms containing in the catalogue
         private final List<Asterism> asterisms;
 
         /**
@@ -104,7 +104,7 @@ public final class StarCatalogue {
         }
 
         /**
-         * Getter for stars
+         * Getter for the stars
          *
          * @return unmodifiable but mutable view of stars
          */
@@ -124,7 +124,7 @@ public final class StarCatalogue {
         }
 
         /**
-         * Getter for asterisms
+         * Getter for the asterisms
          *
          * @return unmodifiable but mutable view of asterisms
          */

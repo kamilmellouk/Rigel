@@ -13,14 +13,14 @@ import java.util.function.Function;
 
 public final class EquatorialToHorizontalConversion implements Function<EquatorialCoordinates, HorizontalCoordinates> {
 
-    // the sidereal time
+    // The sidereal time
     private final double siderealTime;
-    // the observer
+    // The observer
     private final double observerSinLat;
     private final double observerCosLat;
 
     /**
-     * constructor of the coordinates system change
+     * Constructor of the coordinates system change
      *
      * @param when  date-time couple with time zone
      * @param where the geographic coordinates of the place
@@ -32,18 +32,19 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
     }
 
     /**
+     * Return the horizontal coordinates corresponding to the given equatorial coordinates
+     *
      * @param equ the given equatorial coordinates
      * @return the horizontal coordinates corresponding to the given equatorial coordinates
      */
     @Override
     public HorizontalCoordinates apply(EquatorialCoordinates equ) {
-        // compute the hour angle
         double hourAngle = siderealTime - equ.ra();
-        // compute the altitude
-        double h = Math.asin(Math.sin(equ.dec()) * observerSinLat + Math.cos(equ.dec()) * observerCosLat * Math.cos(hourAngle));
+
+        double altitude = Math.asin(Math.sin(equ.dec()) * observerSinLat + Math.cos(equ.dec()) * observerCosLat * Math.cos(hourAngle));
         return HorizontalCoordinates.of(
-                Angle.normalizePositive(Math.atan2(-Math.cos(equ.dec()) * observerCosLat * Math.sin(hourAngle), Math.sin(equ.dec()) - observerSinLat * Math.sin(h))),
-                h
+                Angle.normalizePositive(Math.atan2(-Math.cos(equ.dec()) * observerCosLat * Math.sin(hourAngle), Math.sin(equ.dec()) - observerSinLat * Math.sin(altitude))),
+                altitude
         );
     }
 

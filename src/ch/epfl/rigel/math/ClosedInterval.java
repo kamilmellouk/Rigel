@@ -51,6 +51,8 @@ public final class ClosedInterval extends Interval {
     }
 
     /**
+     * Return true if and only if the value belongs to the closed interval
+     *
      * @param v the value to check
      * @return {@code true} if and only if the value belongs to the closed interval
      */

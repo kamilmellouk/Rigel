@@ -22,7 +22,7 @@ public final class RightOpenInterval extends Interval {
     }
 
     /**
-     * Returning a right open interval given its bounds
+     * Return a right open interval given its bounds
      *
      * @param lowBound  the low bound
      * @param highBound the high bound
@@ -37,7 +37,7 @@ public final class RightOpenInterval extends Interval {
     }
 
     /**
-     * Returning a right open interval of a given size, centered around 0
+     * Return a right open interval of a given size, centered around 0
      *
      * @param size the size of the interval
      * @return a right open interval of the specified size, centered around 0
@@ -56,7 +56,7 @@ public final class RightOpenInterval extends Interval {
     }
 
     /**
-     * Reducing a given value to a given interval
+     * Reduce a given value to a given interval
      *
      * @param v the value to reduce
      * @return the reduced value, which is v mod the interval

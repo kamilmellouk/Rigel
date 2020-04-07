@@ -16,7 +16,7 @@ public final class Preconditions {
      * Throwing an IllegalArgumentException if a condition is not satisfied
      *
      * @param isTrue the condition to check
-     * @throws IllegalArgumentException if isTrue is false
+     * @throws IllegalArgumentException if the condition to check is false
      */
     public static void checkArgument(boolean isTrue) {
         if (!isTrue) {

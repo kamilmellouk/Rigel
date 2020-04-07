@@ -15,7 +15,7 @@ import java.util.Locale;
 public final class GeographicCoordinates extends SphericalCoordinates {
 
     /**
-     * constructor of the geographic coordinates
+     * Constructor of the geographic coordinates
      *
      * @param longitude the longitude
      * @param latitude  the latitude
@@ -25,7 +25,7 @@ public final class GeographicCoordinates extends SphericalCoordinates {
     }
 
     /**
-     * Creating geographic coordinates from given longitude and latitude in deg
+     * Create geographic coordinates from given longitude and latitude in deg
      *
      * @param lonDeg the longitude in deg
      * @param latDeg the latitude in deg
@@ -41,7 +41,7 @@ public final class GeographicCoordinates extends SphericalCoordinates {
     }
 
     /**
-     * Checks if lonDeg is contained in [-180, 180[
+     * Check if lonDeg is contained in [-180, 180[
      *
      * @param lonDeg longitude in deg to check
      * @return {@code true} if and only if the longitude is contained in [-180, 180[
@@ -51,7 +51,7 @@ public final class GeographicCoordinates extends SphericalCoordinates {
     }
 
     /**
-     * Checks if latDeg is contained in [-90, 90]
+     * Check if latDeg is contained in [-90, 90]
      *
      * @param latDeg latitude in deg to check
      * @return {@code true} if and only if the longitude is contained in [-90, 90]

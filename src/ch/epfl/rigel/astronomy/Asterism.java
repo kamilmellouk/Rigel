@@ -28,6 +28,8 @@ public final class Asterism {
     }
 
     /**
+     * Getter for the list of stars
+     *
      * @return a copy of the list of stars
      */
     public List<Star> stars() {
