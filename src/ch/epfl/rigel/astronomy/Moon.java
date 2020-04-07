@@ -28,7 +28,7 @@ public final class Moon extends CelestialObject {
     public Moon(EquatorialCoordinates equatorialPos, float angularSize, float magnitude, float phase) {
         super("Lune", equatorialPos, angularSize, magnitude);
 
-        //checking if valid arguments
+        // check if the argument is valid too
         this.phase = (float) Preconditions.checkInInterval(ClosedInterval.of(0, 1), phase);
     }
 

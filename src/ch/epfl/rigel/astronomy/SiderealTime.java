@@ -37,7 +37,6 @@ public final class SiderealTime {
      * @return sidereal time (in rad) of this point of observation, with respect to greenwich and J2000
      */
     public static double greenwich(ZonedDateTime when) {
-        // Express the  given time in greenwich (UTC) time zone
         ZonedDateTime whenInUTC = when.withZoneSameInstant(ZoneOffset.UTC);
 
         // Compute the number of julian centuries between J2000 and the given time expressed in UTC

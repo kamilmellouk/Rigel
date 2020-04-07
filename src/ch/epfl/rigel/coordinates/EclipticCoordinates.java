@@ -15,7 +15,7 @@ import java.util.Locale;
 public final class EclipticCoordinates extends SphericalCoordinates {
 
     /**
-     * constructor of the ecliptic coordinates
+     * Constructor of the ecliptic coordinates
      *
      * @param longitude the longitude
      * @param latitude  the latitude

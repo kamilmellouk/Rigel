@@ -32,9 +32,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
      * @param when date-time couple with time zone
      */
     public EclipticToEquatorialConversion(ZonedDateTime when) {
-        // compute the ecliptic obliqueness
         double eclipticObliqueness = OBLIQUENESS_POLYNOMIAL.at(Epoch.J2000.julianCenturiesUntil(when));
-        // compute the cosine and sinus of the ecliptic obliqueness
         cosOfEclipticObliqueness = Math.cos(eclipticObliqueness);
         sinOfEclipticObliqueness = Math.sin(eclipticObliqueness);
     }

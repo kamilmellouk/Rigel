@@ -33,12 +33,10 @@ public final class Polynomial {
         // check exception
         Preconditions.checkArgument(coefficientN != 0);
 
-        // create new array used to contain all coefficients
         double[] coefficientsArray = new double[coefficients.length + 1];
-        // place the coefficients in the specific array
         coefficientsArray[0] = coefficientN;
         System.arraycopy(coefficients, 0, coefficientsArray, 1, coefficients.length);
-        // return the related polynomial
+
         return new Polynomial(coefficientsArray);
     }
 

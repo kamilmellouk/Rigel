@@ -69,18 +69,16 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      */
     @Override
     public CartesianCoordinates apply(HorizontalCoordinates azAlt) {
-        // compute the sinus and cosine of the altitude of the given point
-        double azAltSin = Math.sin(azAlt.alt());
-        double azAltCos = Math.cos(azAlt.alt());
+        double altitudeSinus = Math.sin(azAlt.alt());
+        double altitudeCosine = Math.cos(azAlt.alt());
 
-        // compute the delta azimuth value, its cosine and the d value
-        double deltaAz = azAlt.az() - centerAz;
-        double cosDeltaAz = Math.cos(deltaAz);
-        double d = 1d / (1 + azAltSin * sinCenterAlt + azAltCos * cosCenterAlt * cosDeltaAz);
+        double azimuthDifference = azAlt.az() - centerAz;
+        double azimuthDifferenceCosine = Math.cos(azimuthDifference);
+        double d = 1d / (1 + altitudeSinus * sinCenterAlt + altitudeCosine * cosCenterAlt * azimuthDifferenceCosine);
 
         return CartesianCoordinates.of(
-                d * azAltCos * Math.sin(deltaAz),
-                d * (azAltSin * cosCenterAlt - azAltCos * sinCenterAlt * cosDeltaAz)
+                d * altitudeCosine * Math.sin(azimuthDifference),
+                d * (altitudeSinus * cosCenterAlt - altitudeCosine * sinCenterAlt * azimuthDifferenceCosine)
         );
     }
 
@@ -91,18 +89,17 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @return HorizontalCoordinates resulting from the inverse projection
      */
     public HorizontalCoordinates inverseApply(CartesianCoordinates xy) {
-        // get the value of the given cartesian coordinates
         double x = xy.x();
         double y = xy.y();
 
         // compute the rho value, the sinus and cosine of the implicit angle c
-        double p = Math.sqrt(x * x + y * y);
-        double sinC = (2 * p) / (p * p + 1);
-        double cosC = (1 - p * p) / (p * p + 1);
+        double rho = Math.sqrt(x * x + y * y);
+        double sinC = (2 * rho) / (rho * rho + 1);
+        double cosC = (1 - rho * rho) / (rho * rho + 1);
 
         return HorizontalCoordinates.of(
-                Angle.normalizePositive(Math.atan2(x * sinC, p * cosCenterAlt * cosC - y * sinCenterAlt * sinC) + centerAz),
-                Math.asin(cosC * sinCenterAlt + (y * sinC * cosCenterAlt) / p)
+                Angle.normalizePositive(Math.atan2(x * sinC, rho * cosCenterAlt * cosC - y * sinCenterAlt * sinC) + centerAz),
+                Math.asin(cosC * sinCenterAlt + (y * sinC * cosCenterAlt) / rho)
         );
     }
 

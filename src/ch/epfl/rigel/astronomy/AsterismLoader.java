@@ -24,8 +24,6 @@ public enum AsterismLoader implements StarCatalogue.Loader {
 
                 // array containing each element of the line
                 String[] tabLine = s.split(",");
-
-                // the number of stars in the line
                 int lineLength = tabLine.length;
 
                 // the list that will contain the stars
@@ -41,7 +39,6 @@ public enum AsterismLoader implements StarCatalogue.Loader {
                     }
                 }
 
-                // add the asterism to the builder
                 builder.addAsterism(new Asterism(starList));
             }
         }

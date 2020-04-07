@@ -81,14 +81,6 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
      */
     @Override
     public Planet at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
-        /*
-        compute :
-            mean anomaly
-            real anomaly
-            distance to sun
-            heliocentric longitude
-         of the planet
-         */
         double meanAnomaly = Angle.TAU / 365.242191 * (daysSinceJ2010 / revolutionPeriod) + lonAtJ2010 - lonAtPerigee;
         double realAnomaly = meanAnomaly + 2 * orbitEccentricity * Math.sin(meanAnomaly);
         double distanceToSun = (halfAxisOrbit * (1 - orbitEccentricity * orbitEccentricity)) / (1 + orbitEccentricity * Math.cos(realAnomaly));
@@ -97,23 +89,13 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
         // compute an intermediate value for the performances
         double firstIntermediateValue = Math.sin(heliocentricLon - ascendingNodeLon);
 
-        // compute the heliocentric ecliptic latitude
         double heliocentricEclipticLat = Math.asin(firstIntermediateValue * Math.sin(orbitInclinationAtEcliptic));
         // compute an intermediate value for performances
         double cosHelEclLat = Math.cos(heliocentricEclipticLat);
 
-        // project the radius and the longitude on the ecliptic plan
         double projectedRadiusOnEcliptic = distanceToSun * cosHelEclLat;
         double heliocentricEclipticLon = Math.atan2(firstIntermediateValue * Math.cos(orbitInclinationAtEcliptic), Math.cos(heliocentricLon - ascendingNodeLon)) + ascendingNodeLon;
 
-        /*
-        compute :
-            mean anomaly
-            real anomaly
-            distance to sun
-            heliocentric longitude
-         of the earth
-         */
         double earthMeanAnomaly = (Angle.TAU / 365.242191) * (daysSinceJ2010 / PlanetModel.EARTH.revolutionPeriod) + PlanetModel.EARTH.lonAtJ2010 - PlanetModel.EARTH.lonAtPerigee;
         double earthRealAnomaly = earthMeanAnomaly + 2 * PlanetModel.EARTH.orbitEccentricity * Math.sin(earthMeanAnomaly);
         double distanceEarthSun = (PlanetModel.EARTH.halfAxisOrbit * (1 - PlanetModel.EARTH.orbitEccentricity * PlanetModel.EARTH.orbitEccentricity)) / (1 + PlanetModel.EARTH.orbitEccentricity * Math.cos(earthRealAnomaly));
@@ -129,22 +111,15 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
         } else {
             geocentricEclipticLon = heliocentricEclipticLon + Math.atan2(secondIntermediateValue, projectedRadiusOnEcliptic - distanceEarthSun * Math.cos(heliocentricEclipticLon - earthHeliocentricLon));
         }
-        // compute the geocentric ecliptic latitude of the planet
+
         double geocentricEclipticLat = Math.atan((projectedRadiusOnEcliptic * Math.tan(heliocentricEclipticLat) * Math.sin(geocentricEclipticLon - heliocentricEclipticLon)) / secondIntermediateValue);
-        // compute the geocentric ecliptic coordinates of the planet
         EclipticCoordinates geocentricEclipticCoordinates = EclipticCoordinates.of(Angle.normalizePositive(geocentricEclipticLon), geocentricEclipticLat);
 
-        // compute the distance between the planet and the earth
         double distanceEarthPlanet = Math.sqrt(distanceEarthSun * distanceEarthSun + distanceToSun * distanceToSun - 2 * distanceToSun * distanceEarthSun * Math.cos(heliocentricLon - earthHeliocentricLon) * cosHelEclLat);
-        // compute the angular size of the planet
         double angularSize = angularSizeAtOneAU / distanceEarthPlanet;
-
-        // compute the phase of the planet
         double phase = (1 + Math.cos(geocentricEclipticLon - heliocentricLon)) / 2;
-        // compute the magnitude of the planet
         double magnitude = magnitudeAtOneAU + 5 * Math.log10(distanceToSun * distanceEarthPlanet / Math.sqrt(phase));
 
-        // return the computed planet model
         return new Planet(
                 name,
                 eclipticToEquatorialConversion.apply(geocentricEclipticCoordinates),

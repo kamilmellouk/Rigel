@@ -16,7 +16,7 @@ public final class StarCatalogue {
     // The list of all stars containing in the catalogue
     private final List<Star> stars;
 
-    // Map of asterisms with their own stars
+    // Map of asterisms with their own stars (especially their index)
     private final Map<Asterism, List<Integer>> asterismMap = new HashMap<>();
 
     /**
