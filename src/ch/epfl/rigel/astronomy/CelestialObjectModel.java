@@ -12,7 +12,6 @@ import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public interface CelestialObjectModel<O> {
 
     /**

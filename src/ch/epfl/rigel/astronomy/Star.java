@@ -10,7 +10,6 @@ import ch.epfl.rigel.math.ClosedInterval;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class Star extends CelestialObject {
 
     // Attributes used to identify a Star, in additions to the ones used for a CelestialObject

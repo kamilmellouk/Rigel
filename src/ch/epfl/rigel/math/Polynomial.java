@@ -8,7 +8,6 @@ import ch.epfl.rigel.Preconditions;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class Polynomial {
 
     // Array containing the coefficients

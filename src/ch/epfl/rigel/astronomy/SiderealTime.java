@@ -16,7 +16,6 @@ import static java.time.temporal.ChronoUnit.MILLIS;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class SiderealTime {
 
     // Polynomials used to compute the sidereal time

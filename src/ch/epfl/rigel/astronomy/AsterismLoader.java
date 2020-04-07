@@ -13,7 +13,6 @@ import java.util.*;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public enum AsterismLoader implements StarCatalogue.Loader {
     INSTANCE();
 

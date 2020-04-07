@@ -11,7 +11,6 @@ import java.util.Objects;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class Sun extends CelestialObject {
 
     // Attributes specific to the Sun

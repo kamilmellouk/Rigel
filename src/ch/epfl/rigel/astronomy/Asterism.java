@@ -10,7 +10,6 @@ import java.util.List;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class Asterism {
 
     // List of the stars contained in an asterism (we consider it as final, as id shouldn't change in the next years)
