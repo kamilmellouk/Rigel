@@ -24,8 +24,8 @@ public final class SiderealTime {
     private static final double MILLISECONDS_PER_HOUR = 3_600_000;
 
     /**
-     * private default constructor
-     * the class is not instantiable
+     * Private default constructor
+     * The class is not instantiable
      */
     private SiderealTime() {
     }

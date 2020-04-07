@@ -46,7 +46,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
     private final double magnitude;
 
     /**
-     * the constructor of a planet model
+     * Constructor of a planet model
      *
      * @param name                       the name of the planet
      * @param revolutionPeriod           the revolution period

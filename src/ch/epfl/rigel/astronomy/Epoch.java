@@ -20,11 +20,11 @@ public enum Epoch {
             LocalTime.of(0, 0),
             ZoneOffset.UTC));
 
-    // the specific date
+    // The specific date
     private ZonedDateTime date;
 
     /**
-     * constructor of epoch
+     * Constructor of epoch
      *
      * @param date the specific date
      */

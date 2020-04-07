@@ -53,7 +53,7 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
 
 
     /**
-     * enum composed of all column members of the HYG data base
+     * Enum composed of all column members of the HYG data base
      */
     private enum ColumnIndex {
         ID, HIP, HD, HR, GL, BF, PROPER, RA, DEC, DIST, PMRA, PMDEC,

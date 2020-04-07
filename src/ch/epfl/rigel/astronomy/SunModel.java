@@ -12,15 +12,15 @@ import ch.epfl.rigel.math.Angle;
 public enum SunModel implements CelestialObjectModel<Sun> {
     SUN();
 
-    // the longitude of the sun at J2010
+    // The longitude of the sun at J2010
     private static final double SUN_LON_AT_J2010 = Angle.ofDeg(279.557208);
-    // the longitude of the sun at perigee
+    // The longitude of the sun at perigee
     private static final double SUN_LON_AT_PERIGEE = Angle.ofDeg(283.112438);
-    // the eccentricity of the orbit sun-earth
+    // The eccentricity of the orbit sun-earth
     private static final double SUN_EARTH_ECCENTRICITY = 0.016705;
-    // the theta0 angle
+    // The theta0 angle
     private static final double THETA_0 = Angle.ofDeg(0.533128);
-    // the mean earth rotating speed around the sun
+    // The mean earth rotating speed around the sun
     private static final double EARTH_ROT_SPEED = Angle.TAU / 365.242191;
 
     /**
