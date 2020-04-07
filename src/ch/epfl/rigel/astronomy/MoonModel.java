@@ -30,62 +30,62 @@ public enum MoonModel implements CelestialObjectModel<Moon> {
     public Moon at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
         // get the mean anomaly (especially its sinus) and the geocentric ecliptic longitude of the current sun
         Sun currentSun = SunModel.SUN.at(daysSinceJ2010, eclipticToEquatorialConversion);
-        double sinOfMSun = Math.sin(currentSun.meanAnomaly());
-        double lambdaSun = currentSun.eclipticPos().lon();
+        double sinOfSunMeanAnomaly = Math.sin(currentSun.meanAnomaly());
+        double sunGeoEclLon = currentSun.eclipticPos().lon();
 
         // compute the mean orbital longitude
-        double l = Angle.ofDeg(13.1763966) * daysSinceJ2010 + MEAN_LON;
+        double meanOrbitalLon = Angle.ofDeg(13.1763966) * daysSinceJ2010 + MEAN_LON;
 
         // compute the mean anomaly
-        double Mm = l - Angle.ofDeg(0.1114041) * daysSinceJ2010 - MEAN_LON_AT_PERIGEE;
+        double meanAnomaly = meanOrbitalLon - Angle.ofDeg(0.1114041) * daysSinceJ2010 - MEAN_LON_AT_PERIGEE;
 
         // compute the correction terms
-        double Ev = Angle.ofDeg(1.2739) * Math.sin(2 * (l - lambdaSun) - Mm);
-        double Ae = Angle.ofDeg(0.1858) * sinOfMSun;
-        double A3 = Angle.ofDeg(0.37) * sinOfMSun;
+        double evection = Angle.ofDeg(1.2739) * Math.sin(2 * (meanOrbitalLon - sunGeoEclLon) - meanAnomaly);
+        double annualEquationCorrection = Angle.ofDeg(0.1858) * sinOfSunMeanAnomaly;
+        double correction3 = Angle.ofDeg(0.37) * sinOfSunMeanAnomaly;
 
         // compute the corrected anomaly
-        double MmPrime = Mm + Ev - Ae - A3;
+        double correctedAnomaly = meanAnomaly + evection - annualEquationCorrection - correction3;
 
         // compute 2 another correction terms
-        double Ec = Angle.ofDeg(6.2886) * Math.sin(MmPrime);
-        double A4 = Angle.ofDeg(0.214) * Math.sin(2 * MmPrime);
+        double centralEquationCorrection = Angle.ofDeg(6.2886) * Math.sin(correctedAnomaly);
+        double correction4 = Angle.ofDeg(0.214) * Math.sin(2 * correctedAnomaly);
 
         // compute the corrected orbital longitude
-        double lPrime = l + Ev + Ec - Ae + A4;
+        double correctedOrbitalLon = meanOrbitalLon + evection + centralEquationCorrection - annualEquationCorrection + correction4;
 
         // compute the variation
-        double V = Angle.ofDeg(0.6583) * Math.sin(2 * (lPrime - lambdaSun));
+        double variation = Angle.ofDeg(0.6583) * Math.sin(2 * (correctedOrbitalLon - sunGeoEclLon));
 
         // compute the real orbital longitude
-        double lSecond = lPrime + V;
+        double realOrbitalLon = correctedOrbitalLon + variation;
 
         // compute the mean longitude and the corrected longitude of the ascending node
-        double N = ASCENDING_NODE_LON - Angle.ofDeg(0.0529539) * daysSinceJ2010;
-        double NPrime = N - Angle.ofDeg(0.16) * sinOfMSun;
+        double ascendingNodeMeanLon = ASCENDING_NODE_LON - Angle.ofDeg(0.0529539) * daysSinceJ2010;
+        double ascendingNodeCorrectedLon = ascendingNodeMeanLon - Angle.ofDeg(0.16) * sinOfSunMeanAnomaly;
 
         // compute an intermediate value for performances
-        double sin_lSecond_minus_NPrime = Math.sin(lSecond - NPrime);
+        double intermediateValue = Math.sin(realOrbitalLon - ascendingNodeCorrectedLon);
 
         // compute the ecliptic longitude and latitude of the moon
-        double lambda = Angle.normalizePositive(Math.atan2(sin_lSecond_minus_NPrime * Math.cos(ORBIT_INCLINATION), Math.cos(lSecond - NPrime)) + NPrime);
-        double beta = Math.asin(sin_lSecond_minus_NPrime * Math.sin(ORBIT_INCLINATION));
+        double eclipticLon = Angle.normalizePositive(Math.atan2(intermediateValue * Math.cos(ORBIT_INCLINATION), Math.cos(realOrbitalLon - ascendingNodeCorrectedLon)) + ascendingNodeCorrectedLon);
+        double eclipticLat = Math.asin(intermediateValue * Math.sin(ORBIT_INCLINATION));
         // compute the ecliptic coordinates of the moon
-        EclipticCoordinates eclipticCoordinates = EclipticCoordinates.of(lambda, beta);
+        EclipticCoordinates eclipticCoordinates = EclipticCoordinates.of(eclipticLon, eclipticLat);
 
         // compute the phase of the moon
-        double F = (1 - Math.cos(lSecond - lambdaSun)) / 2;
+        double phase = (1 - Math.cos(realOrbitalLon - sunGeoEclLon)) / 2;
 
         // compute the distance earth-moon to compute the angular size of the moon
-        double rho = (1 - ORBIT_ECCENTRICITY * ORBIT_ECCENTRICITY) / (1 + ORBIT_ECCENTRICITY * Math.cos(MmPrime + Ec));
-        double theta = Angle.ofDeg(0.5181) / rho;
+        double distanceEarthMoon = (1 - ORBIT_ECCENTRICITY * ORBIT_ECCENTRICITY) / (1 + ORBIT_ECCENTRICITY * Math.cos(correctedAnomaly + centralEquationCorrection));
+        double angularSize = Angle.ofDeg(0.5181) / distanceEarthMoon;
 
         // return the computed moon model
         return new Moon(
                 eclipticToEquatorialConversion.apply(eclipticCoordinates),
-                (float) theta,
+                (float) angularSize,
                 0,
-                (float) F
+                (float) phase
         );
 
     }
