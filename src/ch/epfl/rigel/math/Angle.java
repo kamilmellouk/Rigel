@@ -13,7 +13,7 @@ public final class Angle {
     // The constant tau
     public static final double TAU = 2 * Math.PI;
 
-    // Constants for conversion
+    // Constants for conversion (could be declared public, but only used locally so left private)
     private static final double HR_PER_RAD = 24.0 / TAU;
     private static final double RAD_PER_HR = 1 / HR_PER_RAD;
     private static final double RAD_PER_SEC = TAU / (60 * 60 * 360);

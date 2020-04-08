@@ -34,7 +34,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
     // List containing the model of all planets
     public static List<PlanetModel> ALL = List.copyOf(List.of(PlanetModel.values()));
 
-    // Attributes of a planet
+    // Attributes of a planet (could be declared public, but only used locally so left private)
     private final String name;
     private final double revolutionPeriod;
     private final double lonAtJ2010;

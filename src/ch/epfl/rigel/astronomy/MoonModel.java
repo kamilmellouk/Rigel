@@ -13,7 +13,7 @@ import ch.epfl.rigel.math.Angle;
 public enum MoonModel implements CelestialObjectModel<Moon> {
     MOON();
 
-    // Lunar constants for the Epoch J2010
+    // Lunar constants relative to the Epoch J2010 (could be declared public, but only used locally so left private)
     private static final double MEAN_LON = Angle.ofDeg(91.929336);
     private static final double MEAN_LON_AT_PERIGEE = Angle.ofDeg(130.143076);
     private static final double ASCENDING_NODE_LON = Angle.ofDeg(291.682547);

@@ -26,26 +26,26 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
             String s;
             while ((s = bufferedReader.readLine()) != null) {
 
-                // array containing each element of the line
-                String[] tabLine = s.split(",");
+                // Splitting the line into an array containing its different columns
+                String[] col = s.split(",");
 
-                // compute the name of the star depending on given info
+                // get the name of the star, or a substitute if it is not specified
                 String proper;
-                if (!tabLine[ColumnIndex.PROPER.ordinal()].isBlank()) {
-                    proper = tabLine[ColumnIndex.PROPER.ordinal()];
-                } else if (!tabLine[ColumnIndex.BAYER.ordinal()].isBlank()) {
-                    proper = tabLine[ColumnIndex.BAYER.ordinal()] + " " + tabLine[ColumnIndex.CON.ordinal()];
+                if (!col[ColumnIndex.PROPER.ordinal()].isBlank()) {
+                    proper = col[ColumnIndex.PROPER.ordinal()];
+                } else if (!col[ColumnIndex.BAYER.ordinal()].isBlank()) {
+                    proper = col[ColumnIndex.BAYER.ordinal()] + " " + col[ColumnIndex.CON.ordinal()];
                 } else {
-                    proper = "? " + tabLine[ColumnIndex.CON.ordinal()];
+                    proper = "? " + col[ColumnIndex.CON.ordinal()];
                 }
 
                 builder.addStar(new Star(
-                                !tabLine[ColumnIndex.HIP.ordinal()].isBlank() ? Integer.parseInt(tabLine[ColumnIndex.HIP.ordinal()]) : 0,   // hipparcos number
+                                !col[ColumnIndex.HIP.ordinal()].isBlank() ? Integer.parseInt(col[ColumnIndex.HIP.ordinal()]) : 0,   // hipparcos number
                                 proper, // name
-                                EquatorialCoordinates.of((Double.parseDouble(tabLine[ColumnIndex.RARAD.ordinal()])),    // equatorial coordinates
-                                        Double.parseDouble(tabLine[ColumnIndex.DECRAD.ordinal()])),
-                                !tabLine[ColumnIndex.MAG.ordinal()].isBlank() ? (float) Double.parseDouble(tabLine[ColumnIndex.MAG.ordinal()]) : 0f,  // magnitude
-                                !tabLine[ColumnIndex.CI.ordinal()].isBlank() ? (float) Double.parseDouble(tabLine[ColumnIndex.CI.ordinal()]) : 0f // color index
+                                EquatorialCoordinates.of((Double.parseDouble(col[ColumnIndex.RARAD.ordinal()])),    // equatorial coordinates
+                                        Double.parseDouble(col[ColumnIndex.DECRAD.ordinal()])),
+                                !col[ColumnIndex.MAG.ordinal()].isBlank() ? (float) Double.parseDouble(col[ColumnIndex.MAG.ordinal()]) : 0f,  // magnitude
+                                !col[ColumnIndex.CI.ordinal()].isBlank() ? (float) Double.parseDouble(col[ColumnIndex.CI.ordinal()]) : 0f // color index
                         )
                 );
             }
