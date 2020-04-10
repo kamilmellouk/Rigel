@@ -45,6 +45,7 @@ public final class ObservedSky {
         List<Planet> mutablePlanetsList = new ArrayList<>();
         int index = 0;
         for (PlanetModel planet : PlanetModel.values()) {
+            // the earth is skipped
             if (!planet.equals(PlanetModel.EARTH)) {
                 Planet planetModel = planet.at(Epoch.J2010.daysUntil(observationTime), new EclipticToEquatorialConversion(observationTime));
                 mutablePlanetsList.add(planetModel);
@@ -152,6 +153,7 @@ public final class ObservedSky {
     public Optional<CelestialObject> objectClosestTo(CartesianCoordinates coordinates, double maxDistance) {
         double minDistance = maxDistance;
         CelestialObject closestObject = null;
+        // find the closest celestial object
         for (CelestialObject celestialObject : objectsWithCoordinates.keySet()) {
             double distance = distanceBetween(objectsWithCoordinates.get(celestialObject), coordinates);
             if (distance < maxDistance && distance < minDistance) {
