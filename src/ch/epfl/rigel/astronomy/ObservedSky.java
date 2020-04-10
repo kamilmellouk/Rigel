@@ -19,22 +19,33 @@ public final class ObservedSky {
     private final Moon moon;
     private final List<Planet> planets;
 
+    private final StereographicProjection stereoProj;
+
+    private final Map<CelestialObject, CartesianCoordinates> objectPosMap = new HashMap<>();
+
     /**
      * Constructor of the observed sky
      *
-     * @param observationTime         the observation zoned date time
-     * @param observationPosition     the observation position
-     * @param stereographicProjection the stereographic projection
-     * @param starCatalogue           the catalogue of stars
+     * @param when          the observation zoned date time
+     * @param where         the observation position
+     * @param stereoProj    the stereographic projection
+     * @param starCatalogue the catalogue of stars
      */
-    public ObservedSky(ZonedDateTime observationTime, GeographicCoordinates observationPosition, StereographicProjection stereographicProjection, StarCatalogue starCatalogue) {
-        sun = SunModel.SUN.at(Epoch.J2010.daysUntil(observationTime), new EclipticToEquatorialConversion(observationTime));
-        moon = MoonModel.MOON.at(Epoch.J2010.daysUntil(observationTime), new EclipticToEquatorialConversion(observationTime));
-        List<Planet> mutablePlanetsList = new ArrayList<>();
+    public ObservedSky(ZonedDateTime when, GeographicCoordinates where, StereographicProjection stereoProj, StarCatalogue starCatalogue) {
+
+        sun = SunModel.SUN.at(Epoch.J2010.daysUntil(when), new EclipticToEquatorialConversion(when));
+        moon = MoonModel.MOON.at(Epoch.J2010.daysUntil(when), new EclipticToEquatorialConversion(when));
+        List<Planet> planets = new ArrayList<>();
         for (PlanetModel planet : PlanetModel.values()) {
-            mutablePlanetsList.add(planet.at(Epoch.J2010.daysUntil(observationTime), new EclipticToEquatorialConversion(observationTime)));
+            if (!planet.equals(PlanetModel.EARTH))
+                planets.add(planet.at(Epoch.J2010.daysUntil(when), new EclipticToEquatorialConversion(when)));
         }
-        planets = List.copyOf(mutablePlanetsList);
+        this.planets = List.copyOf(planets);
+
+        this.stereoProj = stereoProj;
+
+        objectPosMap.put(moon, stereoProj.apply(new EquatorialToHorizontalConversion(when, where).apply(moon.equatorialPos())));
+
     }
 
     /**
@@ -45,6 +56,11 @@ public final class ObservedSky {
     public Sun sun() {
         return sun;
     }
+
+    public CartesianCoordinates sunPosition() {
+        return stereoProj.apply()
+    }
+
 
     /**
      * Getter for the moon

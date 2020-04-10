@@ -40,12 +40,12 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader {
                 }
 
                 builder.addStar(new Star(
-                                !col[ColumnIndex.HIP.ordinal()].isBlank() ? Integer.parseInt(col[ColumnIndex.HIP.ordinal()]) : 0,   // hipparcos number
-                                proper, // name
-                                EquatorialCoordinates.of((Double.parseDouble(col[ColumnIndex.RARAD.ordinal()])),    // equatorial coordinates
+                                !col[ColumnIndex.HIP.ordinal()].isBlank() ? Integer.parseInt(col[ColumnIndex.HIP.ordinal()]) : 0,
+                                proper,
+                                EquatorialCoordinates.of((Double.parseDouble(col[ColumnIndex.RARAD.ordinal()])),
                                         Double.parseDouble(col[ColumnIndex.DECRAD.ordinal()])),
-                                !col[ColumnIndex.MAG.ordinal()].isBlank() ? (float) Double.parseDouble(col[ColumnIndex.MAG.ordinal()]) : 0f,  // magnitude
-                                !col[ColumnIndex.CI.ordinal()].isBlank() ? (float) Double.parseDouble(col[ColumnIndex.CI.ordinal()]) : 0f // color index
+                                !col[ColumnIndex.MAG.ordinal()].isBlank() ? (float) Double.parseDouble(col[ColumnIndex.MAG.ordinal()]) : 0f,  // parseDouble instead of parseFloat for precision purposes
+                                !col[ColumnIndex.CI.ordinal()].isBlank() ? (float) Double.parseDouble(col[ColumnIndex.CI.ordinal()]) : 0f // parseDouble instead of parseFloat for precision purposes
                         )
                 );
             }
