@@ -124,6 +124,15 @@ public final class ObservedSky {
     }
 
     /**
+     * Getter for the list of stars of the star catalogue used
+     *
+     * @return the list of stars of the star catalogue used
+     */
+    public List<Star> stars() {
+        return starCatalogue.stars();
+    }
+
+    /**
      * Getter for the set of asterism of the star catalogue used
      *
      * @return the set of asterism of the star catalogue used
@@ -167,13 +176,13 @@ public final class ObservedSky {
     /**
      * Compute the distance between the two given points
      *
-     * @param point1 the first point
-     * @param point2 the second point
+     * @param p1 the first point
+     * @param p2 the second point
      * @return the distance between the two given points
      */
-    private double distanceBetween(CartesianCoordinates point1, CartesianCoordinates point2) {
-        return Math.sqrt((point1.x() - point2.x()) * (point1.x() - point2.x()) +
-                (point1.y() - point2.y()) * (point1.y() - point2.y()));
+    private double distanceBetween(CartesianCoordinates p1, CartesianCoordinates p2) {
+        return Math.sqrt((p1.x() - p2.x()) * (p1.x() - p2.x()) +
+                         (p1.y() - p2.y()) * (p1.y() - p2.y()));
     }
 
 }
