@@ -77,6 +77,10 @@ public final class ObservedSky {
 
     }
 
+    public CartesianCoordinates getPosition(CelestialObject o) {
+        return objectsWithCoordinates.get(o);
+    }
+
     /**
      * Getter for the sun
      *
