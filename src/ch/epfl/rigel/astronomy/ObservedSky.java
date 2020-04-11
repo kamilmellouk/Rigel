@@ -22,7 +22,9 @@ public final class ObservedSky {
     private final List<Planet> planets;
     private final double[] planetPositions = new double[14];
 
-    private final StarCatalogue starCatalogue;
+    private final StarCatalogue catalogue;
+
+    private final double[] starPositions;
 
     /**
      * Constructor of the observed sky
@@ -44,7 +46,7 @@ public final class ObservedSky {
         objectsWithCoordinates.put(moon, moonPosition);
 
         List<Planet> mutablePlanetsList = new ArrayList<>();
-        int index = 0;
+        int pIndex = 0;
         for (PlanetModel planet : PlanetModel.values()) {
             // the earth is skipped
             if (!planet.equals(PlanetModel.EARTH)) {
@@ -52,19 +54,24 @@ public final class ObservedSky {
                 mutablePlanetsList.add(planetModel);
 
                 CartesianCoordinates position = stereographicProjection.apply(conversionSystem.apply(planetModel.equatorialPos()));
-                planetPositions[index] = position.x();
-                planetPositions[index + 1] = position.y();
-                index += 2;
+                planetPositions[pIndex] = position.x();
+                planetPositions[pIndex + 1] = position.y();
+                pIndex += 2;
 
                 objectsWithCoordinates.put(planetModel, position);
             }
         }
         planets = List.copyOf(mutablePlanetsList);
 
-        this.starCatalogue = starCatalogue;
-
+        this.catalogue = starCatalogue;
+        int sIndex = 0;
+        starPositions = new double[catalogue.stars().size()*2];
         for (Star star : starCatalogue.stars()) {
             CartesianCoordinates starPosition = stereographicProjection.apply(conversionSystem.apply(star.equatorialPos()));
+            starPositions[sIndex] = starPosition.x();
+            starPositions[sIndex + 1] = starPosition.x();
+            sIndex +=2;
+
             objectsWithCoordinates.put(star, starPosition);
         }
 
@@ -130,7 +137,16 @@ public final class ObservedSky {
      * @return the list of stars of the star catalogue used
      */
     public List<Star> stars() {
-        return starCatalogue.stars();
+        return catalogue.stars();
+    }
+
+    /**
+     * Getter for the coordinates of the stars
+     *
+     * @return the array containing the coordinates of the stars
+     */
+    public double[] starPositions() {
+        return starPositions;
     }
 
     /**
@@ -139,7 +155,7 @@ public final class ObservedSky {
      * @return the set of asterism of the star catalogue used
      */
     public Set<Asterism> asterisms() {
-        return starCatalogue.asterisms();
+        return catalogue.asterisms();
     }
 
     /**
@@ -149,7 +165,7 @@ public final class ObservedSky {
      * @return the the list of the stars indices containing in the given asterism
      */
     public List<Integer> asterismIndices(Asterism asterism) {
-        return starCatalogue.asterismIndices(asterism);
+        return catalogue.asterismIndices(asterism);
     }
 
     /**

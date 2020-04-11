@@ -37,11 +37,11 @@ public final class DrawSky extends Application {
             StarCatalogue catalogue = new StarCatalogue.Builder()
                     .loadFrom(hs, HygDatabaseLoader.INSTANCE)
                     .build();
-
             ZonedDateTime when = ZonedDateTime.parse("2020-02-17T20:15:00+01:00");
             GeographicCoordinates where = GeographicCoordinates.ofDeg(6.57, 46.52);
             HorizontalCoordinates projCenter = HorizontalCoordinates.ofDeg(180, 45);
             StereographicProjection projection = new StereographicProjection(projCenter);
+
             ObservedSky sky = new ObservedSky(when, where, projection, catalogue);
 
             Canvas canvas = new Canvas(800, 600);
