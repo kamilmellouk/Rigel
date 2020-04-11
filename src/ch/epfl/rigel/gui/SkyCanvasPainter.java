@@ -29,7 +29,7 @@ public class SkyCanvasPainter {
 
     public void drawStars(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
 
-        for(Star s : sky.stars()) {
+        for (Star s : sky.stars()) {
 
         }
     }
@@ -50,10 +50,16 @@ public class SkyCanvasPainter {
 
     }
 
-    public double magBasedSize(double magnitude) {
+    /**
+     * Computing the on-screen diameter of a CelestialObject with its given magnitude
+     *
+     * @param magnitude of the object to draw
+     * @return diameter of the object's on-screen representation
+     */
+    private double magBasedSize(double magnitude) {
         double m = ClosedInterval.of(-2, 5).clip(magnitude);
-        double sizeFactor = (99 - 17*m) / 140;
-        return sizeFactor * 2 * Math.tan(Angle.ofDeg(0.5)/4);
+        double sizeFactor = (99 - 17 * m) / 140;
+        return sizeFactor * 2 * Math.tan(Angle.ofDeg(0.5) / 4);
     }
 
 }
