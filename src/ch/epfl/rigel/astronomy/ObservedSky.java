@@ -11,6 +11,7 @@ import java.util.*;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
+
 public final class ObservedSky {
 
     private final Map<CelestialObject, CartesianCoordinates> objectsWithCoordinates = new HashMap<>();
