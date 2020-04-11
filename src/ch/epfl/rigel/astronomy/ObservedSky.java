@@ -6,11 +6,11 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
+ * Representation of the sky at a given time and place
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
-// TODO: 07/04/2020 final class?
 public final class ObservedSky {
 
     private final Map<CelestialObject, CartesianCoordinates> objectsWithCoordinates = new HashMap<>();
@@ -26,19 +26,19 @@ public final class ObservedSky {
     /**
      * Constructor of the observed sky
      *
-     * @param observationTime         the observation zoned date time
-     * @param observationPosition     the observation position
+     * @param when                    the observation zoned date time
+     * @param where                   the observation position
      * @param stereographicProjection the stereographic projection
      * @param starCatalogue           the catalogue of stars
      */
-    public ObservedSky(ZonedDateTime observationTime, GeographicCoordinates observationPosition, StereographicProjection stereographicProjection, StarCatalogue starCatalogue) {
-        EquatorialToHorizontalConversion conversionSystem = new EquatorialToHorizontalConversion(observationTime, observationPosition);
+    public ObservedSky(ZonedDateTime when, GeographicCoordinates where, StereographicProjection stereographicProjection, StarCatalogue starCatalogue) {
+        EquatorialToHorizontalConversion conversionSystem = new EquatorialToHorizontalConversion(when, where);
 
-        sun = SunModel.SUN.at(Epoch.J2010.daysUntil(observationTime), new EclipticToEquatorialConversion(observationTime));
+        sun = SunModel.SUN.at(Epoch.J2010.daysUntil(when), new EclipticToEquatorialConversion(when));
         CartesianCoordinates sunPosition = stereographicProjection.apply(conversionSystem.apply(sun.equatorialPos()));
         objectsWithCoordinates.put(sun, sunPosition);
 
-        moon = MoonModel.MOON.at(Epoch.J2010.daysUntil(observationTime), new EclipticToEquatorialConversion(observationTime));
+        moon = MoonModel.MOON.at(Epoch.J2010.daysUntil(when), new EclipticToEquatorialConversion(when));
         CartesianCoordinates moonPosition = stereographicProjection.apply(conversionSystem.apply(moon.equatorialPos()));
         objectsWithCoordinates.put(moon, moonPosition);
 
@@ -47,7 +47,7 @@ public final class ObservedSky {
         for (PlanetModel planet : PlanetModel.values()) {
             // the earth is skipped
             if (!planet.equals(PlanetModel.EARTH)) {
-                Planet planetModel = planet.at(Epoch.J2010.daysUntil(observationTime), new EclipticToEquatorialConversion(observationTime));
+                Planet planetModel = planet.at(Epoch.J2010.daysUntil(when), new EclipticToEquatorialConversion(when));
                 mutablePlanetsList.add(planetModel);
 
                 CartesianCoordinates position = stereographicProjection.apply(conversionSystem.apply(planetModel.equatorialPos()));
