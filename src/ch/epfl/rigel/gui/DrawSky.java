@@ -1,5 +1,6 @@
 package ch.epfl.rigel.gui;
 
+import ch.epfl.rigel.astronomy.AsterismLoader;
 import ch.epfl.rigel.astronomy.HygDatabaseLoader;
 import ch.epfl.rigel.astronomy.ObservedSky;
 import ch.epfl.rigel.astronomy.StarCatalogue;
@@ -33,11 +34,13 @@ public final class DrawSky extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        InputStream as = getClass().getResourceAsStream("/asterisms.txt");
         try (InputStream hs = resourceStream("/hygdata_v3.csv")){
             StarCatalogue catalogue = new StarCatalogue.Builder()
                     .loadFrom(hs, HygDatabaseLoader.INSTANCE)
+                    .loadFrom(as, AsterismLoader.INSTANCE)
                     .build();
-            ZonedDateTime when = ZonedDateTime.parse("2020-02-17T20:15:00+01:00");
+            ZonedDateTime when = ZonedDateTime.parse("2020-02-20T13:00:00+01:00");
             GeographicCoordinates where = GeographicCoordinates.ofDeg(6.57, 46.52);
             HorizontalCoordinates projCenter = HorizontalCoordinates.ofDeg(180, 45);
             StereographicProjection projection = new StereographicProjection(projCenter);
@@ -49,8 +52,11 @@ public final class DrawSky extends Application {
             SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
 
             painter.clear();
-            //painter.drawStars(sky, projection, planeToCanvas);
             painter.drawAsterisms(sky, projection, planeToCanvas);
+            painter.drawStars(sky, projection, planeToCanvas);
+            painter.drawPlanets(sky, projection, planeToCanvas);
+            painter.drawSun(sky, projection, planeToCanvas);
+            painter.drawMoon(sky, projection, planeToCanvas);
 
             WritableImage fxImage = canvas.snapshot(null, null);
             BufferedImage swingImage = SwingFXUtils.fromFXImage(fxImage, null);
@@ -58,4 +64,5 @@ public final class DrawSky extends Application {
         }
         Platform.exit();
     }
+
 }
