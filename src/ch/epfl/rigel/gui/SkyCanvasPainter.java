@@ -73,8 +73,13 @@ public class SkyCanvasPainter {
             Point2D startPos = planeToCanvas.transform(sky.getPosition(a.stars().get(0)).x(), sky.getPosition(a.stars().get(0)).y());
             ctx.moveTo(startPos.getX(), startPos.getY());
 
+            boolean outOfBounds = false;
             for (int i = 1; i < a.stars().size(); i++) {
                 Point2D nextPos = planeToCanvas.transform(sky.getPosition(a.stars().get(i)).x(), sky.getPosition(a.stars().get(i)).y());
+                if(outOfBounds && !canvas.getBoundsInLocal().contains(nextPos))
+                    break;
+                if(!canvas.getBoundsInLocal().contains(nextPos))
+                    outOfBounds = true;
                 ctx.lineTo(nextPos.getX(), nextPos.getY());
             }
             ctx.stroke();
@@ -150,7 +155,7 @@ public class SkyCanvasPainter {
 
         ctx.setStroke(Color.RED);
         ctx.setLineWidth(2);
-        ctx.strokeOval(center.x(), center.y(), radius, radius);
+        ctx.strokeOval(center.x() - radius, center.y() - radius, radius, radius);
     }
 
     /**
