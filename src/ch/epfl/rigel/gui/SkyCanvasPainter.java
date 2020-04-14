@@ -13,16 +13,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Transform;
 
 /**
- * @author Mohamed Kamil MELLOUK
- * 11.04.20
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk (312327)
  */
+
 public class SkyCanvasPainter {
 
-    private Canvas canvas;
-    private GraphicsContext ctx;
+    private final Canvas canvas;
+    private final GraphicsContext ctx;
 
     /**
-     * Constructing a Painter with a given canvas
+     * Constructor of a Painter with a given canvas
      *
      * @param canvas the given canvas
      */
@@ -32,7 +33,7 @@ public class SkyCanvasPainter {
     }
 
     /**
-     * Emptying the canvas then filling it in black
+     * Clear the canvas then filling it in black
      */
     public void clear() {
         ctx.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -41,45 +42,38 @@ public class SkyCanvasPainter {
     }
 
     /**
-     * Representing stars on the canvas
+     * Represent the stars on the canvas
      *
      * @param sky           to represent
      * @param projection    used
      * @param planeToCanvas transformation
      */
     public void drawStars(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
-        for (Star s : sky.stars()) {
-            Point2D pos = planeToCanvas.transform(sky.getPosition(s).x(), sky.getPosition(s).y());
-            double diameter = transformedDiameter(s.magnitude(), projection, planeToCanvas);
-
-            ctx.setFill(BlackBodyColor.colorForTemperature(s.colorTemperature()));
-            ctx.fillOval(pos.getX(), pos.getY(), diameter, diameter);
+        for (Star star : sky.stars()) {
+            Point2D position = planeToCanvas.transform(sky.getPosition(star).x(), sky.getPosition(star).y());
+            double diameter = transformedDiameter(star.magnitude(), projection, planeToCanvas);
+            ctx.setFill(BlackBodyColor.colorForTemperature(star.colorTemperature()));
+            ctx.fillOval(position.getX(), position.getY(), diameter, diameter);
         }
     }
 
     /**
-     * Representing asterisms by linking their stars on the canvas
+     * Represent the asterisms by linking their stars on the canvas
      *
      * @param sky           to represent
-     * @param projection    used
      * @param planeToCanvas transformation
      */
-    public void drawAsterisms(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
+    public void drawAsterisms(ObservedSky sky, Transform planeToCanvas) {
         ctx.setStroke(Color.BLUE);
         ctx.setLineWidth(1);
 
-        for (Asterism a : sky.asterisms()) {
+        for (Asterism asterism : sky.asterisms()) {
             ctx.beginPath();
-            Point2D startPos = planeToCanvas.transform(sky.getPosition(a.stars().get(0)).x(), sky.getPosition(a.stars().get(0)).y());
-            ctx.moveTo(startPos.getX(), startPos.getY());
+            Point2D startingPosition = planeToCanvas.transform(sky.getPosition(asterism.stars().get(0)).x(), sky.getPosition(asterism.stars().get(0)).y());
+            ctx.moveTo(startingPosition.getX(), startingPosition.getY());
 
-            boolean outOfBounds = false;
-            for (int i = 1; i < a.stars().size(); i++) {
-                Point2D nextPos = planeToCanvas.transform(sky.getPosition(a.stars().get(i)).x(), sky.getPosition(a.stars().get(i)).y());
-                if(outOfBounds && !canvas.getBoundsInLocal().contains(nextPos))
-                    break;
-                if(!canvas.getBoundsInLocal().contains(nextPos))
-                    outOfBounds = true;
+            for (int i = 1; i < asterism.stars().size(); i++) {
+                Point2D nextPos = planeToCanvas.transform(sky.getPosition(asterism.stars().get(i)).x(), sky.getPosition(asterism.stars().get(i)).y());
                 ctx.lineTo(nextPos.getX(), nextPos.getY());
             }
             ctx.stroke();
@@ -87,7 +81,7 @@ public class SkyCanvasPainter {
     }
 
     /**
-     * Representing planets on the canvas
+     * Represent the planets on the canvas
      *
      * @param sky           to represent
      * @param projection    used
@@ -95,25 +89,23 @@ public class SkyCanvasPainter {
      */
     public void drawPlanets(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
         ctx.setFill(Color.LIGHTGRAY);
-        for (Planet p : sky.planets()) {
-            Point2D pos = planeToCanvas.transform(sky.getPosition(p).x(), sky.getPosition(p).y());
-            double diameter = transformedDiameter(p.magnitude(), projection, planeToCanvas);
-
+        for (Planet planet : sky.planets()) {
+            Point2D pos = planeToCanvas.transform(sky.getPosition(planet).x(), sky.getPosition(planet).y());
+            double diameter = transformedDiameter(planet.magnitude(), projection, planeToCanvas);
             ctx.fillOval(pos.getX(), pos.getY(), diameter, diameter);
         }
     }
 
     /**
-     * Representing the Sun (if visible) on the canvas
+     * Represent the Sun (if visible) on the canvas
      *
      * @param sky           to represent
      * @param projection    used
      * @param planeToCanvas transformation
      */
     public void drawSun(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
-        Sun s = sky.sun();
         Point2D pos = planeToCanvas.transform(sky.sunPosition().x(), sky.sunPosition().y());
-        double diameter = transformedDiameter(s.magnitude(), projection, planeToCanvas);
+        double diameter = transformedDiameter(sky.sun().magnitude(), projection, planeToCanvas);
 
         // yellow halo around the sun
         ctx.setFill(Color.YELLOW.deriveColor(0, 0, 1, 0.25));
@@ -127,51 +119,47 @@ public class SkyCanvasPainter {
     }
 
     /**
-     * Representing the Moon (if visible) on the canvas
+     * Represent the Moon (if visible) on the canvas
      *
      * @param sky           to represent
      * @param projection    used
      * @param planeToCanvas transformation
      */
     public void drawMoon(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
-        Moon m = sky.moon();
         Point2D pos = planeToCanvas.transform(sky.moonPosition().x(), sky.moonPosition().y());
-        double diameter = transformedDiameter(m.magnitude(), projection, planeToCanvas);
-
+        double diameter = transformedDiameter(sky.moon().magnitude(), projection, planeToCanvas);
         ctx.setFill(Color.WHITE);
         ctx.fillOval(pos.getX(), pos.getY(), diameter, diameter);
     }
 
     /**
-     * Representing the horizon (if visible) on the canvas
+     * Represent the horizon (if visible) on the canvas
      *
-     * @param sky           to represent
-     * @param projection    used
-     * @param planeToCanvas transformation
+     * @param sky        to represent
+     * @param projection used
      */
-    public void drawHorizon(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
+    public void drawHorizon(ObservedSky sky, StereographicProjection projection) {
         CartesianCoordinates center = projection.circleCenterForParallel(HorizontalCoordinates.of(0, 0));
         double radius = projection.circleRadiusForParallel(HorizontalCoordinates.of(0, 0));
-
         ctx.setStroke(Color.RED);
         ctx.setLineWidth(2);
-        ctx.strokeOval(center.x() - radius, center.y() - radius, radius, radius);
+        ctx.strokeOval(center.x(), center.y(), radius, radius);
     }
 
     /**
-     * Computing the on-screen diameter of a CelestialObject
+     * Compute the on-screen diameter of a CelestialObject
      *
      * @param magnitude  of the CelestialObject
      * @param projection used
      * @param transform  to apply
-     * @return
+     * @return the on-screen diameter of a CelestialObject
      */
     private static double transformedDiameter(double magnitude, StereographicProjection projection, Transform transform) {
-        double clippedM = ClosedInterval.of(-2, 5).clip(magnitude);
-        double factor = (99 - 17 * clippedM) / 140;
-        double m = factor * projection.applyToAngle(Angle.ofDeg(0.5));
-        Point2D size = transform.deltaTransform(m, m);
-        return Math.abs(size.getX());
+        double clippedMagnitude = ClosedInterval.of(-2, 5).clip(magnitude);
+        double factor = (99 - 17 * clippedMagnitude) / 140d;
+        double diameter = factor * projection.applyToAngle(Angle.ofDeg(0.5));
+        Point2D size = transform.deltaTransform(diameter, diameter);
+        return size.getX();
     }
 
 }
