@@ -126,10 +126,8 @@ public class SkyCanvasPainter {
      * @param planeToCanvas transformation
      */
     public void drawMoon(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
-        Moon m = sky.moon();
         Point2D pos = planeToCanvas.transform(sky.moonPosition().x(), sky.moonPosition().y());
-        double diameter = transformedDiameter(m.magnitude(), projection, planeToCanvas);
-
+        double diameter = transformedDiameter(sky.moon().magnitude(), projection, planeToCanvas);
         ctx.setFill(Color.WHITE);
         ctx.fillOval(pos.getX(), pos.getY(), diameter, diameter);
     }
@@ -137,14 +135,12 @@ public class SkyCanvasPainter {
     /**
      * Represent the horizon (if visible) on the canvas
      *
-     * @param sky           to represent
-     * @param projection    used
-     * @param planeToCanvas transformation
+     * @param sky        to represent
+     * @param projection used
      */
-    public void drawHorizon(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
+    public void drawHorizon(ObservedSky sky, StereographicProjection projection) {
         CartesianCoordinates center = projection.circleCenterForParallel(HorizontalCoordinates.of(0, 0));
         double radius = projection.circleRadiusForParallel(HorizontalCoordinates.of(0, 0));
-
         ctx.setStroke(Color.RED);
         ctx.setLineWidth(2);
         ctx.strokeOval(center.x(), center.y(), radius, radius);

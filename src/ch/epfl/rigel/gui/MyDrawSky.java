@@ -52,11 +52,12 @@ public final class MyDrawSky extends Application {
             SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
 
             painter.clear();
-            //painter.drawStars(sky, projection, planeToCanvas);
-            //painter.drawPlanets(sky, projection, planeToCanvas);
-            //painter.drawSun(sky, projection, planeToCanvas);
-            //painter.drawMoon(sky, projection, planeToCanvas);
-            //painter.drawAsterisms(sky, planeToCanvas);
+            painter.drawStars(sky, projection, planeToCanvas);
+            painter.drawPlanets(sky, projection, planeToCanvas);
+            painter.drawSun(sky, projection, planeToCanvas);
+            painter.drawMoon(sky, projection, planeToCanvas);
+            painter.drawAsterisms(sky, planeToCanvas);
+            painter.drawHorizon(sky, projection);
 
             WritableImage fxImage = canvas.snapshot(null, null);
             BufferedImage swingImage = SwingFXUtils.fromFXImage(fxImage, null);
