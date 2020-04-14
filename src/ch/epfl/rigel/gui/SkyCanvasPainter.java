@@ -1,6 +1,8 @@
 package ch.epfl.rigel.gui;
 
 import ch.epfl.rigel.astronomy.*;
+import ch.epfl.rigel.coordinates.CartesianCoordinates;
+import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.coordinates.StereographicProjection;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
@@ -143,7 +145,12 @@ public class SkyCanvasPainter {
      * @param planeToCanvas transformation
      */
     public void drawHorizon(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
+        CartesianCoordinates center = projection.circleCenterForParallel(HorizontalCoordinates.of(0, 0));
+        double radius = projection.circleRadiusForParallel(HorizontalCoordinates.of(0, 0));
 
+        ctx.setStroke(Color.RED);
+        ctx.setLineWidth(2);
+        ctx.strokeOval(center.x(), center.y(), radius, radius);
     }
 
     /**
