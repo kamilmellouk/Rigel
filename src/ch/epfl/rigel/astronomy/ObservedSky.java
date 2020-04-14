@@ -24,8 +24,6 @@ public final class ObservedSky {
 
     private final StarCatalogue catalogue;
 
-    private final double[] starPositions;
-
     /**
      * Constructor of the observed sky
      *
@@ -64,14 +62,8 @@ public final class ObservedSky {
         planets = List.copyOf(mutablePlanetsList);
 
         this.catalogue = starCatalogue;
-        int sIndex = 0;
-        starPositions = new double[catalogue.stars().size()*2];
         for (Star star : starCatalogue.stars()) {
             CartesianCoordinates starPosition = stereographicProjection.apply(conversionSystem.apply(star.equatorialPos()));
-            starPositions[sIndex] = starPosition.x();
-            starPositions[sIndex + 1] = starPosition.x();
-            sIndex +=2;
-
             objectsWithCoordinates.put(star, starPosition);
         }
 
@@ -145,15 +137,6 @@ public final class ObservedSky {
     }
 
     /**
-     * Getter for the coordinates of the stars
-     *
-     * @return the array containing the coordinates of the stars
-     */
-    public double[] starPositions() {
-        return starPositions;
-    }
-
-    /**
      * Getter for the set of asterism of the star catalogue used
      *
      * @return the set of asterism of the star catalogue used
@@ -203,7 +186,7 @@ public final class ObservedSky {
      */
     private double distanceBetween(CartesianCoordinates p1, CartesianCoordinates p2) {
         return Math.sqrt((p1.x() - p2.x()) * (p1.x() - p2.x()) +
-                         (p1.y() - p2.y()) * (p1.y() - p2.y()));
+                (p1.y() - p2.y()) * (p1.y() - p2.y()));
     }
 
 }

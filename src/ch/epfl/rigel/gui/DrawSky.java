@@ -22,11 +22,14 @@ import java.io.InputStream;
 import java.time.ZonedDateTime;
 
 /**
- * @author Mohamed Kamil MELLOUK
- * 12.04.20
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk (312327)
  */
+
 public final class DrawSky extends Application {
-    public static void main(String[] args) { launch(args); }
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     private InputStream resourceStream(String resourceName) {
         return getClass().getResourceAsStream(resourceName);
@@ -34,7 +37,7 @@ public final class DrawSky extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        try (InputStream hs = resourceStream("/hygdata_v3.csv")){
+        try (InputStream hs = resourceStream("/hygdata_v3.csv")) {
             StarCatalogue catalogue = new StarCatalogue.Builder()
                     .loadFrom(hs, HygDatabaseLoader.INSTANCE)
                     .build();
