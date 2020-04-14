@@ -13,16 +13,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Transform;
 
 /**
- * @author Mohamed Kamil MELLOUK
- * 11.04.20
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk (312327)
  */
+
 public class SkyCanvasPainter {
 
-    private Canvas canvas;
-    private GraphicsContext ctx;
+    private final Canvas canvas;
+    private final GraphicsContext ctx;
 
     /**
-     * Constructing a Painter with a given canvas
+     * Constructor of a Painter with a given canvas
      *
      * @param canvas the given canvas
      */
@@ -32,7 +33,7 @@ public class SkyCanvasPainter {
     }
 
     /**
-     * Emptying the canvas then filling it in black
+     * Clear the canvas then filling it in black
      */
     public void clear() {
         ctx.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -41,7 +42,7 @@ public class SkyCanvasPainter {
     }
 
     /**
-     * Representing stars on the canvas
+     * Represent the stars on the canvas
      *
      * @param sky           to represent
      * @param projection    used
@@ -58,7 +59,7 @@ public class SkyCanvasPainter {
     }
 
     /**
-     * Representing asterisms by linking their stars on the canvas
+     * Represent the asterisms by linking their stars on the canvas
      *
      * @param sky           to represent
      * @param projection    used
@@ -82,7 +83,7 @@ public class SkyCanvasPainter {
     }
 
     /**
-     * Representing planets on the canvas
+     * Represent the planets on the canvas
      *
      * @param sky           to represent
      * @param projection    used
@@ -99,7 +100,7 @@ public class SkyCanvasPainter {
     }
 
     /**
-     * Representing the Sun (if visible) on the canvas
+     * Represent the Sun (if visible) on the canvas
      *
      * @param sky           to represent
      * @param projection    used
@@ -122,7 +123,7 @@ public class SkyCanvasPainter {
     }
 
     /**
-     * Representing the Moon (if visible) on the canvas
+     * Represent the Moon (if visible) on the canvas
      *
      * @param sky           to represent
      * @param projection    used
@@ -138,7 +139,7 @@ public class SkyCanvasPainter {
     }
 
     /**
-     * Representing the horizon (if visible) on the canvas
+     * Represent the horizon (if visible) on the canvas
      *
      * @param sky           to represent
      * @param projection    used
@@ -154,12 +155,12 @@ public class SkyCanvasPainter {
     }
 
     /**
-     * Computing the on-screen diameter of a CelestialObject
+     * Compute the on-screen diameter of a CelestialObject
      *
      * @param magnitude  of the CelestialObject
      * @param projection used
      * @param transform  to apply
-     * @return
+     * @return the on-screen diameter of a CelestialObject
      */
     private static double transformedDiameter(double magnitude, StereographicProjection projection, Transform transform) {
         double clippedM = ClosedInterval.of(-2, 5).clip(magnitude);
