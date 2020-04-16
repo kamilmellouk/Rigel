@@ -26,7 +26,9 @@ import java.time.ZonedDateTime;
  * 11.04.20
  */
 public final class MyDrawSky extends Application {
-    public static void main(String[] args) { launch(args); }
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     private InputStream resourceStream(String resourceName) {
         return getClass().getResourceAsStream(resourceName);
@@ -35,14 +37,14 @@ public final class MyDrawSky extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         InputStream as = getClass().getResourceAsStream("/asterisms.txt");
-        try (InputStream hs = resourceStream("/hygdata_v3.csv")){
+        try (InputStream hs = resourceStream("/hygdata_v3.csv")) {
             StarCatalogue catalogue = new StarCatalogue.Builder()
                     .loadFrom(hs, HygDatabaseLoader.INSTANCE)
                     .loadFrom(as, AsterismLoader.INSTANCE)
                     .build();
-            ZonedDateTime when = ZonedDateTime.parse("2020-03-05T20:38:00+01:00");
+            ZonedDateTime when = ZonedDateTime.parse("2020-02-17T20:15:00+01:00");
             GeographicCoordinates where = GeographicCoordinates.ofDeg(6.57, 46.52);
-            HorizontalCoordinates projCenter = HorizontalCoordinates.ofDeg(0, 23);
+            HorizontalCoordinates projCenter = HorizontalCoordinates.ofDeg(180, 20);
             StereographicProjection projection = new StereographicProjection(projCenter);
 
             ObservedSky sky = new ObservedSky(when, where, projection, catalogue);
@@ -52,12 +54,12 @@ public final class MyDrawSky extends Application {
             SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
 
             painter.clear();
-            painter.drawAsterisms(sky, projection, planeToCanvas);
-            painter.drawHorizon(sky, projection, planeToCanvas);
-            painter.drawStars(sky, projection, planeToCanvas);
-            painter.drawPlanets(sky, projection, planeToCanvas);
-            painter.drawSun(sky, projection, planeToCanvas);
-            painter.drawMoon(sky, projection, planeToCanvas);
+            //painter.drawAsterisms(sky, planeToCanvas);
+            painter.drawHorizon(projection, planeToCanvas);
+            //painter.drawStars(sky, projection, planeToCanvas);
+            //painter.drawPlanets(sky, projection, planeToCanvas);
+            //painter.drawSun(sky, projection, planeToCanvas);
+            //painter.drawMoon(sky, projection, planeToCanvas);
 
             WritableImage fxImage = canvas.snapshot(null, null);
             BufferedImage swingImage = SwingFXUtils.fromFXImage(fxImage, null);

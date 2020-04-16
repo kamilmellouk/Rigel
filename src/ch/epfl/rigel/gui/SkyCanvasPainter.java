@@ -53,7 +53,7 @@ public class SkyCanvasPainter {
             Point2D position = planeToCanvas.transform(sky.getPosition(star).x(), sky.getPosition(star).y());
             double diameter = transformedDiameter(star.magnitude(), projection, planeToCanvas);
             ctx.setFill(BlackBodyColor.colorForTemperature(star.colorTemperature()));
-            ctx.fillOval(position.getX(), position.getY(), diameter, diameter);
+            ctx.fillOval(position.getX() - diameter / 2d, position.getY() - diameter / 2d, diameter, diameter);
         }
     }
 
@@ -69,15 +69,29 @@ public class SkyCanvasPainter {
 
         for (Asterism asterism : sky.asterisms()) {
             ctx.beginPath();
-            Point2D startingPosition = planeToCanvas.transform(sky.getPosition(asterism.stars().get(0)).x(), sky.getPosition(asterism.stars().get(0)).y());
-            ctx.moveTo(startingPosition.getX(), startingPosition.getY());
+            Point2D currentPos = planeToCanvas.transform(sky.getPosition(asterism.stars().get(0)).x(), sky.getPosition(asterism.stars().get(0)).y());
+            ctx.moveTo(currentPos.getX(), currentPos.getY());
+            Point2D nextPos;
 
-            for (int i = 1; i < asterism.stars().size(); i++) {
-                Point2D nextPos = planeToCanvas.transform(sky.getPosition(asterism.stars().get(i)).x(), sky.getPosition(asterism.stars().get(i)).y());
-                ctx.lineTo(nextPos.getX(), nextPos.getY());
+            for (Star star : asterism.stars()) {
+                nextPos = planeToCanvas.transform(sky.getPosition(star).x(), sky.getPosition(star).y());
+                if (isOnScreen(currentPos) || isOnScreen(nextPos)) {
+                    ctx.lineTo(nextPos.getX(), nextPos.getY());
+                    currentPos = nextPos;
+                }
             }
             ctx.stroke();
         }
+    }
+
+    /**
+     * Return true if the point is on the screen
+     *
+     * @param point the given point
+     * @return {@code true} if the point is visible
+     */
+    private boolean isOnScreen(Point2D point) {
+        return !(point.getX() < 0 || point.getX() > canvas.getWidth() || point.getY() < 0 || point.getY() > canvas.getHeight());
     }
 
     /**
@@ -89,10 +103,13 @@ public class SkyCanvasPainter {
      */
     public void drawPlanets(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
         ctx.setFill(Color.LIGHTGRAY);
+        double[] planetPositions = new double[14];
+        planeToCanvas.transform2DPoints(sky.planetPositions(), 0, planetPositions, 0, 7);
+        int index = 0;
         for (Planet planet : sky.planets()) {
-            Point2D pos = planeToCanvas.transform(sky.getPosition(planet).x(), sky.getPosition(planet).y());
             double diameter = transformedDiameter(planet.magnitude(), projection, planeToCanvas);
-            ctx.fillOval(pos.getX(), pos.getY(), diameter, diameter);
+            ctx.fillOval(planetPositions[index], planetPositions[index + 1], diameter, diameter);
+            index += 2;
         }
     }
 
@@ -108,8 +125,9 @@ public class SkyCanvasPainter {
         double diameter = transformedDiameter(sky.sun().magnitude(), projection, planeToCanvas);
 
         // yellow halo around the sun
+        double positionDifference = (2.2 * diameter - diameter) / 2d;
         ctx.setFill(Color.YELLOW.deriveColor(0, 0, 1, 0.25));
-        ctx.fillOval(pos.getX() - 3.4, pos.getY() - 3.4, 2.2 * diameter, 2.2 * diameter);
+        ctx.fillOval(pos.getX() - positionDifference, pos.getY() - positionDifference, 2.2 * diameter, 2.2 * diameter);
 
         ctx.setFill(Color.YELLOW);
         ctx.fillOval(pos.getX() - 1, pos.getY() - 1, diameter + 2, diameter + 2);
@@ -135,15 +153,16 @@ public class SkyCanvasPainter {
     /**
      * Represent the horizon (if visible) on the canvas
      *
-     * @param sky        to represent
      * @param projection used
      */
-    public void drawHorizon(ObservedSky sky, StereographicProjection projection) {
+    public void drawHorizon(StereographicProjection projection, Transform planeToCanvas) {
         CartesianCoordinates center = projection.circleCenterForParallel(HorizontalCoordinates.of(0, 0));
+        Point2D pos = planeToCanvas.transform(center.x(), center.y());
         double radius = projection.circleRadiusForParallel(HorizontalCoordinates.of(0, 0));
+        double transformedRadius = planeToCanvas.deltaTransform(radius, 0).getX();
         ctx.setStroke(Color.RED);
         ctx.setLineWidth(2);
-        ctx.strokeOval(center.x(), center.y(), radius, radius);
+        ctx.strokeOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius, transformedRadius * 2, transformedRadius * 2);
     }
 
     /**

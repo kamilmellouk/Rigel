@@ -164,13 +164,14 @@ public final class ObservedSky {
      * or Optional.empty() if there isn't any celestial object in the specific range
      */
     public Optional<CelestialObject> objectClosestTo(CartesianCoordinates coordinates, double maxDistance) {
-        double minDistance = maxDistance;
+        double maxDistanceSquared = maxDistance * maxDistance;
+        double minDistanceSquared = maxDistanceSquared;
         CelestialObject closestObject = null;
         // find the closest celestial object
         for (CelestialObject celestialObject : objectsWithCoordinates.keySet()) {
-            double distance = distanceBetween(objectsWithCoordinates.get(celestialObject), coordinates);
-            if (distance < maxDistance && distance < minDistance) {
-                minDistance = distance;
+            double distanceSquared = distanceBetweenSquared(objectsWithCoordinates.get(celestialObject), coordinates);
+            if (distanceSquared < maxDistanceSquared && distanceSquared < minDistanceSquared) {
+                minDistanceSquared = distanceSquared;
                 closestObject = celestialObject;
             }
         }
@@ -184,9 +185,9 @@ public final class ObservedSky {
      * @param p2 the second point
      * @return the distance between the two given points
      */
-    private double distanceBetween(CartesianCoordinates p1, CartesianCoordinates p2) {
-        return Math.sqrt((p1.x() - p2.x()) * (p1.x() - p2.x()) +
-                (p1.y() - p2.y()) * (p1.y() - p2.y()));
+    private double distanceBetweenSquared(CartesianCoordinates p1, CartesianCoordinates p2) {
+        return (p1.x() - p2.x()) * (p1.x() - p2.x()) +
+                (p1.y() - p2.y()) * (p1.y() - p2.y());
     }
 
 }
