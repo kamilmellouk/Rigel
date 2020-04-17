@@ -75,23 +75,14 @@ public class SkyCanvasPainter {
 
             for (Star star : asterism.stars()) {
                 nextPos = planeToCanvas.transform(sky.getPosition(star).x(), sky.getPosition(star).y());
-                if (isOnScreen(currentPos) || isOnScreen(nextPos)) {
+                // skip the line between two stars that are invisible on screen
+                if (canvas.getBoundsInLocal().contains(currentPos) || canvas.getBoundsInLocal().contains(nextPos)) {
                     ctx.lineTo(nextPos.getX(), nextPos.getY());
                     currentPos = nextPos;
                 }
             }
             ctx.stroke();
         }
-    }
-
-    /**
-     * Return true if the point is on the screen
-     *
-     * @param point the given point
-     * @return {@code true} if the point is visible
-     */
-    private boolean isOnScreen(Point2D point) {
-        return !(point.getX() < 0 || point.getX() > canvas.getWidth() || point.getY() < 0 || point.getY() > canvas.getHeight());
     }
 
     /**
@@ -103,8 +94,10 @@ public class SkyCanvasPainter {
      */
     public void drawPlanets(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
         ctx.setFill(Color.LIGHTGRAY);
+
         double[] planetPositions = new double[14];
         planeToCanvas.transform2DPoints(sky.planetPositions(), 0, planetPositions, 0, 7);
+
         int index = 0;
         for (Planet planet : sky.planets()) {
             double diameter = transformedDiameter(planet.magnitude(), projection, planeToCanvas);
@@ -144,9 +137,9 @@ public class SkyCanvasPainter {
      * @param planeToCanvas transformation
      */
     public void drawMoon(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
+        ctx.setFill(Color.WHITE);
         Point2D pos = planeToCanvas.transform(sky.moonPosition().x(), sky.moonPosition().y());
         double diameter = transformedDiameter(sky.moon().magnitude(), projection, planeToCanvas);
-        ctx.setFill(Color.WHITE);
         ctx.fillOval(pos.getX(), pos.getY(), diameter, diameter);
     }
 
@@ -156,13 +149,26 @@ public class SkyCanvasPainter {
      * @param projection used
      */
     public void drawHorizon(StereographicProjection projection, Transform planeToCanvas) {
+        ctx.setStroke(Color.RED);
+        ctx.setLineWidth(2);
         CartesianCoordinates center = projection.circleCenterForParallel(HorizontalCoordinates.of(0, 0));
         Point2D pos = planeToCanvas.transform(center.x(), center.y());
         double radius = projection.circleRadiusForParallel(HorizontalCoordinates.of(0, 0));
         double transformedRadius = planeToCanvas.deltaTransform(radius, 0).getX();
-        ctx.setStroke(Color.RED);
-        ctx.setLineWidth(2);
+
         ctx.strokeOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius, transformedRadius * 2, transformedRadius * 2);
+    }
+
+    /**
+     * Represent the cardinal and inter cardinal points on the canvas
+     *
+     * @param projection    used
+     * @param planeToCanvas transformation
+     */
+    public void drawCardinalPoints(StereographicProjection projection, Transform planeToCanvas) {
+        ctx.setStroke(Color.RED);
+        ctx.setLineWidth(1);
+
     }
 
     /**

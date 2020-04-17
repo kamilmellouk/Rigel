@@ -42,7 +42,7 @@ public final class MyDrawSky extends Application {
                     .loadFrom(hs, HygDatabaseLoader.INSTANCE)
                     .loadFrom(as, AsterismLoader.INSTANCE)
                     .build();
-            ZonedDateTime when = ZonedDateTime.parse("2020-02-17T20:15:00+01:00");
+            ZonedDateTime when = ZonedDateTime.parse("2020-02-17T14:15:00+01:00");
             GeographicCoordinates where = GeographicCoordinates.ofDeg(6.57, 46.52);
             HorizontalCoordinates projCenter = HorizontalCoordinates.ofDeg(180, 20);
             StereographicProjection projection = new StereographicProjection(projCenter);
@@ -54,12 +54,13 @@ public final class MyDrawSky extends Application {
             SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
 
             painter.clear();
-            //painter.drawAsterisms(sky, planeToCanvas);
+            painter.drawAsterisms(sky, planeToCanvas);
+            painter.drawStars(sky, projection, planeToCanvas);
+            painter.drawPlanets(sky, projection, planeToCanvas);
+            painter.drawSun(sky, projection, planeToCanvas);
+            painter.drawMoon(sky, projection, planeToCanvas);
             painter.drawHorizon(projection, planeToCanvas);
-            //painter.drawStars(sky, projection, planeToCanvas);
-            //painter.drawPlanets(sky, projection, planeToCanvas);
-            //painter.drawSun(sky, projection, planeToCanvas);
-            //painter.drawMoon(sky, projection, planeToCanvas);
+            painter.drawCardinalPoints(projection, planeToCanvas);
 
             WritableImage fxImage = canvas.snapshot(null, null);
             BufferedImage swingImage = SwingFXUtils.fromFXImage(fxImage, null);

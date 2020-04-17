@@ -22,7 +22,8 @@ public final class BlackBodyColor {
     /**
      * Private constructor to ensure that the class isn't instantiable
      */
-    private BlackBodyColor() {}
+    private BlackBodyColor() {
+    }
 
     /**
      * Return the color corresponding to the given temperature
