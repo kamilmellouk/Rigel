@@ -35,14 +35,17 @@ public final class ObservedSky {
     public ObservedSky(ZonedDateTime when, GeographicCoordinates where, StereographicProjection stereographicProjection, StarCatalogue starCatalogue) {
         EquatorialToHorizontalConversion conversionSystem = new EquatorialToHorizontalConversion(when, where);
 
+        // add sun
         sun = SunModel.SUN.at(Epoch.J2010.daysUntil(when), new EclipticToEquatorialConversion(when));
         CartesianCoordinates sunPosition = stereographicProjection.apply(conversionSystem.apply(sun.equatorialPos()));
         objectsWithCoordinates.put(sun, sunPosition);
 
+        // add moon
         moon = MoonModel.MOON.at(Epoch.J2010.daysUntil(when), new EclipticToEquatorialConversion(when));
         CartesianCoordinates moonPosition = stereographicProjection.apply(conversionSystem.apply(moon.equatorialPos()));
         objectsWithCoordinates.put(moon, moonPosition);
 
+        // add planets
         List<Planet> mutablePlanetsList = new ArrayList<>();
         int pIndex = 0;
         for (PlanetModel planet : PlanetModel.values()) {
@@ -61,6 +64,7 @@ public final class ObservedSky {
         }
         planets = List.copyOf(mutablePlanetsList);
 
+        // add stars
         this.catalogue = starCatalogue;
         for (Star star : starCatalogue.stars()) {
             CartesianCoordinates starPosition = stereographicProjection.apply(conversionSystem.apply(star.equatorialPos()));
@@ -164,6 +168,7 @@ public final class ObservedSky {
      * or Optional.empty() if there isn't any celestial object in the specific range
      */
     public Optional<CelestialObject> objectClosestTo(CartesianCoordinates coordinates, double maxDistance) {
+        // we work with the square of distances for performances
         double maxDistanceSquared = maxDistance * maxDistance;
         double minDistanceSquared = maxDistanceSquared;
         CelestialObject closestObject = null;
