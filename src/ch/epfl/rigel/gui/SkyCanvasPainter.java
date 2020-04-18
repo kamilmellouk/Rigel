@@ -1,12 +1,17 @@
 package ch.epfl.rigel.gui;
 
-import ch.epfl.rigel.astronomy.*;
+import ch.epfl.rigel.Preconditions;
+import ch.epfl.rigel.astronomy.Asterism;
+import ch.epfl.rigel.astronomy.ObservedSky;
+import ch.epfl.rigel.astronomy.Planet;
+import ch.epfl.rigel.astronomy.Star;
 import ch.epfl.rigel.coordinates.CartesianCoordinates;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.coordinates.StereographicProjection;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 import javafx.geometry.Point2D;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -168,23 +173,93 @@ public class SkyCanvasPainter {
     public void drawCardinalPoints(StereographicProjection projection, Transform planeToCanvas) {
         ctx.setStroke(Color.RED);
         ctx.setLineWidth(1);
+        ctx.setTextBaseline(VPos.TOP);
+
+        Point2D transformedN = transformedCardPoint("N", projection, planeToCanvas);
+        ctx.strokeText("N", transformedN.getX(), transformedN.getY());
+
+        Point2D transformedNE = transformedCardPoint("NE", projection, planeToCanvas);
+        ctx.strokeText("NE", transformedNE.getX(), transformedNE.getY());
+
+        Point2D transformedE = transformedCardPoint("E", projection, planeToCanvas);
+        ctx.strokeText("E", transformedE.getX(), transformedE.getY());
+
+        Point2D transformedSE = transformedCardPoint("SE", projection, planeToCanvas);
+        ctx.strokeText("SE", transformedSE.getX(), transformedSE.getY());
+
+        Point2D transformedS = transformedCardPoint("S", projection, planeToCanvas);
+        ctx.strokeText("S", transformedS.getX(), transformedS.getY());
+
+        Point2D transformedSO = transformedCardPoint("SO", projection, planeToCanvas);
+        ctx.strokeText("SO", transformedSO.getX(), transformedSO.getY());
+
+        Point2D transformedO = transformedCardPoint("O", projection, planeToCanvas);
+        ctx.strokeText("O", transformedO.getX(), transformedO.getY());
+
+        Point2D transformedNO = transformedCardPoint("NO", projection, planeToCanvas);
+        ctx.strokeText("NO", transformedNO.getX(), transformedNO.getY());
+
 
     }
 
     /**
-     * Compute the on-screen diameter of a CelestialObject
+     * Computes the on-screen diameter of a CelestialObject
      *
-     * @param magnitude  of the CelestialObject
-     * @param projection used
-     * @param transform  to apply
-     * @return the on-screen diameter of a CelestialObject
+     * @param magnitude     of the CelestialObject
+     * @param projection    used
+     * @param planeToCanvas transformation to apply
+     * @return the on-screen diameter of the CelestialObject
      */
-    private static double transformedDiameter(double magnitude, StereographicProjection projection, Transform transform) {
+    private static double transformedDiameter(double magnitude, StereographicProjection projection, Transform planeToCanvas) {
         double clippedMagnitude = ClosedInterval.of(-2, 5).clip(magnitude);
         double factor = (99 - 17 * clippedMagnitude) / 140d;
         double diameter = factor * projection.applyToAngle(Angle.ofDeg(0.5));
-        Point2D size = transform.deltaTransform(diameter, diameter);
+        Point2D size = planeToCanvas.deltaTransform(diameter, diameter);
         return size.getX();
+    }
+
+    /**
+     * Computes the on-screen position of a cardinal point
+     *
+     * @param cardPoint     string representation of the cardinal point (N, NE, E, SE, S, SO, O or NO)
+     * @param projection    used
+     * @param planeToCanvas transformation to apply
+     * @return the on-screen position of the cardinal point
+     */
+    private static Point2D transformedCardPoint(String cardPoint, StereographicProjection projection, Transform planeToCanvas) {
+        double az = 0;
+        switch (cardPoint) {
+            case "N":
+                az = 0;
+                break;
+            case "NE":
+                az = 45;
+                break;
+            case "E":
+                az = 90;
+                break;
+            case "SE":
+                az = 135;
+                break;
+            case "S":
+                az = 180;
+                break;
+            case "SO":
+                az = 225;
+                break;
+            case "O":
+                az = 270;
+                break;
+            case "NO":
+                az = 315;
+                break;
+            default:
+                Preconditions.checkArgument(false);
+        }
+
+        CartesianCoordinates card = projection.apply(HorizontalCoordinates.of(Angle.ofDeg(az), Angle.ofDeg(-0.5)));
+        return planeToCanvas.transform(card.x(), card.y());
+
     }
 
 }
