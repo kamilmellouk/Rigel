@@ -214,15 +214,31 @@ public class SkyCanvasPainter {
         private final String name;
         private final int az;
 
+        /**
+         * Constructor
+         *
+         * @param name the abbreviation of the french name
+         * @param az   the azimuth of the cardinal point
+         */
         CardinalPoint(String name, int az) {
             this.name = name;
             this.az = az;
         }
 
+        /**
+         * Getter for the name
+         *
+         * @return the name
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * Getter for the azimuth
+         *
+         * @return the azimuth
+         */
         public int getAz() {
             return az;
         }
