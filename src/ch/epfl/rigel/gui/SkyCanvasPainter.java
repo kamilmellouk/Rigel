@@ -1,6 +1,5 @@
 package ch.epfl.rigel.gui;
 
-import ch.epfl.rigel.Preconditions;
 import ch.epfl.rigel.astronomy.Asterism;
 import ch.epfl.rigel.astronomy.ObservedSky;
 import ch.epfl.rigel.astronomy.Planet;
