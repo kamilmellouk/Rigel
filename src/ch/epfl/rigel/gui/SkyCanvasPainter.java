@@ -175,31 +175,11 @@ public class SkyCanvasPainter {
         ctx.setLineWidth(1);
         ctx.setTextBaseline(VPos.TOP);
 
-        Point2D transformedN = transformedCardPoint("N", projection, planeToCanvas);
-        ctx.strokeText("N", transformedN.getX(), transformedN.getY());
-
-        Point2D transformedNE = transformedCardPoint("NE", projection, planeToCanvas);
-        ctx.strokeText("NE", transformedNE.getX(), transformedNE.getY());
-
-        Point2D transformedE = transformedCardPoint("E", projection, planeToCanvas);
-        ctx.strokeText("E", transformedE.getX(), transformedE.getY());
-
-        Point2D transformedSE = transformedCardPoint("SE", projection, planeToCanvas);
-        ctx.strokeText("SE", transformedSE.getX(), transformedSE.getY());
-
-        Point2D transformedS = transformedCardPoint("S", projection, planeToCanvas);
-        ctx.strokeText("S", transformedS.getX(), transformedS.getY());
-
-        Point2D transformedSO = transformedCardPoint("SO", projection, planeToCanvas);
-        ctx.strokeText("SO", transformedSO.getX(), transformedSO.getY());
-
-        Point2D transformedO = transformedCardPoint("O", projection, planeToCanvas);
-        ctx.strokeText("O", transformedO.getX(), transformedO.getY());
-
-        Point2D transformedNO = transformedCardPoint("NO", projection, planeToCanvas);
-        ctx.strokeText("NO", transformedNO.getX(), transformedNO.getY());
-
-
+        for (CardinalPoint cardinal : CardinalPoint.values()) {
+            CartesianCoordinates card = projection.apply(HorizontalCoordinates.ofDeg(cardinal.getAz(), -0.5));
+            Point2D position = planeToCanvas.transform(card.x(), card.y());
+            ctx.strokeText(cardinal.getName(), position.getX(), position.getY());
+        }
     }
 
     /**
@@ -219,46 +199,33 @@ public class SkyCanvasPainter {
     }
 
     /**
-     * Computes the on-screen position of a cardinal point
-     *
-     * @param cardPoint     string representation of the cardinal point (N, NE, E, SE, S, SO, O or NO)
-     * @param projection    used
-     * @param planeToCanvas transformation to apply
-     * @return the on-screen position of the cardinal point
+     * Enum of cardinal points
      */
-    private static Point2D transformedCardPoint(String cardPoint, StereographicProjection projection, Transform planeToCanvas) {
-        double az = 0;
-        switch (cardPoint) {
-            case "N":
-                az = 0;
-                break;
-            case "NE":
-                az = 45;
-                break;
-            case "E":
-                az = 90;
-                break;
-            case "SE":
-                az = 135;
-                break;
-            case "S":
-                az = 180;
-                break;
-            case "SO":
-                az = 225;
-                break;
-            case "O":
-                az = 270;
-                break;
-            case "NO":
-                az = 315;
-                break;
-            default:
-                Preconditions.checkArgument(false);
+    private enum CardinalPoint {
+        N("N", 0),
+        NE("NE", 45),
+        E("E", 90),
+        SE("SE", 135),
+        S("S", 180),
+        SO("SO", 225),
+        O("O", 270),
+        NO("NO", 315);
+
+        private final String name;
+        private final int az;
+
+        CardinalPoint(String name, int az) {
+            this.name = name;
+            this.az = az;
         }
 
-        CartesianCoordinates card = projection.apply(HorizontalCoordinates.of(Angle.ofDeg(az), Angle.ofDeg(-0.5)));
-        return planeToCanvas.transform(card.x(), card.y());
+        public String getName() {
+            return name;
+        }
+
+        public int getAz() {
+            return az;
+        }
 
     }
 
