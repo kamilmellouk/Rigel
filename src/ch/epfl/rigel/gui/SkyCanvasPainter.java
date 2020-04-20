@@ -54,7 +54,7 @@ public class SkyCanvasPainter {
      */
     public void drawStars(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
         double[] transformedStarPositions = new double[sky.starPositions().length];
-        planeToCanvas.transform2DPoints(sky.starPositions(), 0, transformedStarPositions, 0, sky.starPositions().length/2);
+        planeToCanvas.transform2DPoints(sky.starPositions(), 0, transformedStarPositions, 0, sky.stars().size());
 
         int index = 0;
         for (Star star : sky.stars()) {
