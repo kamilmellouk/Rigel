@@ -3,9 +3,10 @@ package ch.epfl.rigel.gui;
 import java.time.Duration;
 
 /**
- * @author Bastien Faivre
- * 20/04/2020
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk (312327)
  */
+
 public enum NamedTimeAccelerator {
     TIMES_1("1x", TimeAccelerator.continuous(1)),
     TIMES_30("30x", TimeAccelerator.continuous(30)),
