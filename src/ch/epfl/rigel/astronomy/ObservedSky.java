@@ -191,24 +191,24 @@ public final class ObservedSky {
         CelestialObject closestObject = null;
 
         double sunDistanceSquared = distanceBetweenSquared(coordinates, sunPosition());
-        if(sunDistanceSquared < minDistanceSquared) closestObject = sun;
+        if (sunDistanceSquared < minDistanceSquared) closestObject = sun;
 
         double moonDistanceSquared = distanceBetweenSquared(coordinates, moonPosition());
-        if(moonDistanceSquared < minDistanceSquared) closestObject = moon;
+        if (moonDistanceSquared < minDistanceSquared) closestObject = moon;
 
-        for(int i = 0; i < planetPositions().length; i+=2) {
-            double distanceSquared = distanceBetweenSquared(CartesianCoordinates.of(planetPositions()[i], planetPositions()[i+1]), coordinates);
+        for (int i = 0; i < planetPositions().length; i += 2) {
+            double distanceSquared = distanceBetweenSquared(CartesianCoordinates.of(planetPositions()[i], planetPositions()[i + 1]), coordinates);
             if (distanceSquared < minDistanceSquared) {
                 minDistanceSquared = distanceSquared;
-                closestObject = planets().get(i/2);
+                closestObject = planets().get(i / 2);
             }
         }
 
-        for(int i = 0; i < starPositions().length; i+=2) {
-            double distanceSquared = distanceBetweenSquared(CartesianCoordinates.of(starPositions()[i], starPositions()[i+1]), coordinates);
+        for (int i = 0; i < starPositions().length; i += 2) {
+            double distanceSquared = distanceBetweenSquared(CartesianCoordinates.of(starPositions()[i], starPositions()[i + 1]), coordinates);
             if (distanceSquared < minDistanceSquared) {
                 minDistanceSquared = distanceSquared;
-                closestObject = stars().get(i/2);
+                closestObject = stars().get(i / 2);
             }
         }
 

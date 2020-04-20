@@ -13,7 +13,7 @@ import java.time.temporal.ChronoUnit;
 public interface TimeAccelerator {
 
     static TimeAccelerator continuous(int acceleratingFactor) {
-        return (initialSimulatedTime, elapsedRealTime) -> initialSimulatedTime.plus(elapsedRealTime*acceleratingFactor, ChronoUnit.NANOS);
+        return (initialSimulatedTime, elapsedRealTime) -> initialSimulatedTime.plus(elapsedRealTime * acceleratingFactor, ChronoUnit.NANOS);
     }
 
     static TimeAccelerator discrete(int advancementFrequency, Duration step) {

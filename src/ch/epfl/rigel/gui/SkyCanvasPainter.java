@@ -54,7 +54,7 @@ public class SkyCanvasPainter {
      */
     public void drawStars(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
         double[] transformedStarPositions = new double[sky.starPositions().length];
-        planeToCanvas.transform2DPoints(sky.starPositions(), 0, transformedStarPositions, 0, sky.starPositions().length/2);
+        planeToCanvas.transform2DPoints(sky.starPositions(), 0, transformedStarPositions, 0, sky.starPositions().length / 2);
 
         int index = 0;
         for (Star star : sky.stars()) {
@@ -76,14 +76,14 @@ public class SkyCanvasPainter {
         ctx.setLineWidth(1);
 
         double[] transformedStarPositions = new double[sky.starPositions().length];
-        planeToCanvas.transform2DPoints(sky.starPositions(), 0, transformedStarPositions, 0, sky.starPositions().length/2);
+        planeToCanvas.transform2DPoints(sky.starPositions(), 0, transformedStarPositions, 0, sky.starPositions().length / 2);
 
         for (Asterism asterism : sky.asterisms()) {
             ctx.beginPath();
 
             Point2D currentPos = new Point2D(
-                    transformedStarPositions[sky.asterismIndices(asterism).get(0)*2],
-                    transformedStarPositions[sky.asterismIndices(asterism).get(0)*2 + 1]
+                    transformedStarPositions[sky.asterismIndices(asterism).get(0) * 2],
+                    transformedStarPositions[sky.asterismIndices(asterism).get(0) * 2 + 1]
             );
 
             Point2D nextPos;
@@ -92,8 +92,8 @@ public class SkyCanvasPainter {
 
             for (Star star : asterism.stars()) {
                 nextPos = new Point2D(
-                        transformedStarPositions[sky.stars().indexOf(star)*2],
-                        transformedStarPositions[sky.stars().indexOf(star)*2 + 1]
+                        transformedStarPositions[sky.stars().indexOf(star) * 2],
+                        transformedStarPositions[sky.stars().indexOf(star) * 2 + 1]
                 );
                 // skip the line between two stars that are invisible on screen
                 if (canvas.getBoundsInLocal().contains(currentPos) || canvas.getBoundsInLocal().contains(nextPos)) {
