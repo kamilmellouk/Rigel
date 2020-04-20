@@ -8,11 +8,10 @@ import java.util.function.Function;
 /**
  * Projecting a point on a sphere (in horizontal coordinates) on a plane (using cartesian coordinates)
  *
- * @see HorizontalCoordinates
- * @see CartesianCoordinates
- *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
+ * @see HorizontalCoordinates
+ * @see CartesianCoordinates
  */
 public final class StereographicProjection implements Function<HorizontalCoordinates, CartesianCoordinates> {
 
@@ -20,6 +19,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     private final HorizontalCoordinates center;
     // Store values exclusive to the projection center to compute the projection
     private final double centerAz;
+    private final double centerAlt;
     private final double cosCenterAlt;
     private final double sinCenterAlt;
 
@@ -31,6 +31,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     public StereographicProjection(HorizontalCoordinates center) {
         this.center = center;
         this.centerAz = center.az();
+        this.centerAlt = center.alt();
         this.cosCenterAlt = Math.cos(center.alt());
         this.sinCenterAlt = Math.sin(center.alt());
     }
@@ -101,10 +102,15 @@ public final class StereographicProjection implements Function<HorizontalCoordin
         double sinC = (2 * rho) / (rho * rho + 1);
         double cosC = (1 - rho * rho) / (rho * rho + 1);
 
-        return HorizontalCoordinates.of(
-                Angle.normalizePositive(Math.atan2(x * sinC, rho * cosCenterAlt * cosC - y * sinCenterAlt * sinC) + centerAz),
-                Math.asin(cosC * sinCenterAlt + (y * sinC * cosCenterAlt) / rho)
-        );
+        return x == 0 && y == 0 ?
+                HorizontalCoordinates.of(
+                        Angle.normalizePositive(centerAz),
+                        centerAlt
+                ) :
+                HorizontalCoordinates.of(
+                        Angle.normalizePositive(Math.atan2(x * sinC, rho * cosCenterAlt * cosC - y * sinCenterAlt * sinC) + centerAz),
+                        Math.asin(cosC * sinCenterAlt + (y * sinC * cosCenterAlt) / rho)
+                );
     }
 
     /**
