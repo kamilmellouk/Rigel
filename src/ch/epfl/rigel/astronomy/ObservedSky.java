@@ -72,6 +72,8 @@ public final class ObservedSky {
             CartesianCoordinates position = stereographicProjection.apply(conversionSystem.apply(star.equatorialPos()));
             starPositions[sIndex] = position.x();
             starPositions[sIndex + 1] = position.y();
+
+            sIndex += 2;
         }
         objectPosMap.put(ObservedCelestialObjects.STARS, starPositions);
 
