@@ -47,18 +47,17 @@ public final class ObservedSky {
         // add planets
         List<Planet> tempPlanetList = new ArrayList<>();
         double[] planetPositions = new double[14];
-        int pIndex = 0;
-        for (PlanetModel p : PlanetModel.values()) {
+        int planetIndex = 0;
+        for (PlanetModel planetModel : PlanetModel.values()) {
             // the earth is skipped
-            if (!p.equals(PlanetModel.EARTH)) {
-                Planet planet = p.at(Epoch.J2010.daysUntil(when), new EclipticToEquatorialConversion(when));
+            if (!planetModel.equals(PlanetModel.EARTH)) {
+                Planet planet = planetModel.at(Epoch.J2010.daysUntil(when), new EclipticToEquatorialConversion(when));
                 tempPlanetList.add(planet);
 
-
                 CartesianCoordinates position = stereographicProjection.apply(conversionSystem.apply(planet.equatorialPos()));
-                planetPositions[pIndex] = position.x();
-                planetPositions[pIndex + 1] = position.y();
-                pIndex += 2;
+                planetPositions[planetIndex] = position.x();
+                planetPositions[planetIndex + 1] = position.y();
+                planetIndex += 2;
             }
         }
         objectPosMap.put(ObservedCelestialObjects.PLANETS, planetPositions);
@@ -67,13 +66,12 @@ public final class ObservedSky {
         // add stars
         this.catalogue = catalogue;
         double[] starPositions = new double[catalogue.stars().size() * 2];
-        int sIndex = 0;
+        int starIndex = 0;
         for (Star star : catalogue.stars()) {
             CartesianCoordinates position = stereographicProjection.apply(conversionSystem.apply(star.equatorialPos()));
-            starPositions[sIndex] = position.x();
-            starPositions[sIndex + 1] = position.y();
-
-            sIndex += 2;
+            starPositions[starIndex] = position.x();
+            starPositions[starIndex + 1] = position.y();
+            starIndex += 2;
         }
         objectPosMap.put(ObservedCelestialObjects.STARS, starPositions);
 
@@ -228,7 +226,7 @@ public final class ObservedSky {
     }
 
     private enum ObservedCelestialObjects {
-        SUN, MOON, PLANETS, STARS;
+        SUN, MOON, PLANETS, STARS
     }
 
 }
