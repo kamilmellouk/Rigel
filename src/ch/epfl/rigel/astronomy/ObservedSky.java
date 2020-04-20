@@ -185,8 +185,7 @@ public final class ObservedSky {
      */
     public Optional<CelestialObject> objectClosestTo(CartesianCoordinates coordinates, double maxDistance) {
         // we work with the square of distances for performances
-        double maxDistanceSquared = maxDistance * maxDistance;
-        double minDistanceSquared = maxDistanceSquared;
+        double minDistanceSquared = maxDistance * maxDistance;
         CelestialObject closestObject = null;
 
         double sunDistanceSquared = distanceBetweenSquared(coordinates, sunPosition());
