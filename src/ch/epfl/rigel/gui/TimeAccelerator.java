@@ -2,6 +2,7 @@ package ch.epfl.rigel.gui;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 
 /**
  * @author Bastien Faivre (310929)
@@ -11,15 +12,13 @@ import java.time.ZonedDateTime;
 @FunctionalInterface
 public interface TimeAccelerator {
 
-    // TODO: 20/04/2020 express these two methods with lambdas 
-    /*
     static TimeAccelerator continuous(int acceleratingFactor) {
-        
+        return (initialSimulatedTime, elapsedRealTime) -> initialSimulatedTime.plus(elapsedRealTime*acceleratingFactor, ChronoUnit.NANOS);
     }
 
     static TimeAccelerator discrete(int advancementFrequency, Duration step) {
-
-    }*/
+        return (initialSimulatedTime, elapsedRealTime) -> initialSimulatedTime.plus(12, ChronoUnit.NANOS);
+    }
 
     /**
      * Compute the simulated time
