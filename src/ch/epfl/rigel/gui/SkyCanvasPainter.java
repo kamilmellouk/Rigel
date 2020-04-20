@@ -229,7 +229,7 @@ public class SkyCanvasPainter {
          *
          * @return the name
          */
-        public String getName() {
+        private String getName() {
             return name;
         }
 
@@ -238,10 +238,8 @@ public class SkyCanvasPainter {
          *
          * @return the azimuth
          */
-        public int getAz() {
+        private int getAz() {
             return az;
         }
-
     }
-
 }
