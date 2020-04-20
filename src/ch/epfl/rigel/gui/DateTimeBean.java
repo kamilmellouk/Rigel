@@ -1,6 +1,7 @@
 package ch.epfl.rigel.gui;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -14,9 +15,9 @@ import java.time.ZonedDateTime;
 
 public final class DateTimeBean {
 
-    private ObjectProperty<LocalDate> date;
-    private ObjectProperty<LocalTime> time;
-    private ObjectProperty<ZoneId> zone;
+    private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(null);
+    private final ObjectProperty<LocalTime> time = new SimpleObjectProperty<>(null);
+    private final ObjectProperty<ZoneId> zone = new SimpleObjectProperty<>(null);
 
     /**
      * Getter for the property local date

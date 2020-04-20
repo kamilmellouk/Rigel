@@ -3,8 +3,7 @@ package ch.epfl.rigel.gui;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-
-import java.time.ZonedDateTime;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * @author Bastien Faivre (310929)
@@ -13,10 +12,10 @@ import java.time.ZonedDateTime;
 
 public final class TimeAnimator extends AnimationTimer {
 
-    private DateTimeBean observationTime;
-    private ObjectProperty<TimeAccelerator> accelerator = null;
-    private SimpleBooleanProperty running;
-    private long startingNanos;
+    private final DateTimeBean observationTime;
+    private final ObjectProperty<TimeAccelerator> accelerator = new SimpleObjectProperty<>(null);
+    private final SimpleBooleanProperty running = new SimpleBooleanProperty(false);
+    private long lastNanos;
     private boolean firstHandle;
 
     /**
@@ -72,9 +71,10 @@ public final class TimeAnimator extends AnimationTimer {
     @Override
     public void handle(long now) {
         if (!firstHandle) {
-            startingNanos = now;
+            lastNanos = now;
             firstHandle = true;
         }
-        observationTime.setZonedDateTime(accelerator.get().adjust(observationTime.getZonedDateTime(), startingNanos - now));
+        observationTime.setZonedDateTime(accelerator.get().adjust(observationTime.getZonedDateTime(), now - lastNanos));
+        lastNanos = now;
     }
 }
