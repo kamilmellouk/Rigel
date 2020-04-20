@@ -28,9 +28,9 @@ public final class DateTimeBean {
     }
 
     /**
-     * Getter for the property local date
+     * Getter for the local date
      *
-     * @return the property local date
+     * @return the local date
      */
     public LocalDate getDate() {
         return date.get();
@@ -55,9 +55,9 @@ public final class DateTimeBean {
     }
 
     /**
-     * Getter for the property local time
+     * Getter for the local time
      *
-     * @return the property local time
+     * @return the local time
      */
     public LocalTime getTime() {
         return time.get();
@@ -82,9 +82,9 @@ public final class DateTimeBean {
     }
 
     /**
-     * Getter for the property zone
+     * Getter for the zone
      *
-     * @return the property zone
+     * @return the zone
      */
     public ZoneId getZone() {
         return zone.get();
