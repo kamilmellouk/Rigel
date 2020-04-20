@@ -49,6 +49,7 @@ public final class Angle {
      */
     public static double ofDMS(int deg, int min, double sec) {
         // check exceptions
+        Preconditions.checkArgument(Math.abs(deg)==deg);
         Preconditions.checkInInterval(RightOpenInterval.of(0, 60), min);
         Preconditions.checkInInterval(RightOpenInterval.of(0, 60), sec);
 
