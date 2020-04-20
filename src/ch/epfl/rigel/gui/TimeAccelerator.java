@@ -17,7 +17,7 @@ public interface TimeAccelerator {
     }
 
     static TimeAccelerator discrete(int advancementFrequency, Duration step) {
-        return (initialSimulatedTime, elapsedRealTime) -> initialSimulatedTime.plus(12, ChronoUnit.NANOS);
+        return (initialSimulatedTime, elapsedRealTime) -> initialSimulatedTime.plus((long) Math.floor(advancementFrequency * elapsedRealTime) * step.get(ChronoUnit.NANOS), ChronoUnit.NANOS);
     }
 
     /**
