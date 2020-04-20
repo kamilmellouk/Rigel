@@ -53,11 +53,15 @@ public class SkyCanvasPainter {
      * @param planeToCanvas transformation
      */
     public void drawStars(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
+        double[] transformedStarPositions = new double[sky.starPositions().length];
+        planeToCanvas.transform2DPoints(sky.starPositions(), 0, transformedStarPositions, 0, sky.starPositions().length/2);
+
+        int index = 0;
         for (Star star : sky.stars()) {
-            Point2D position = planeToCanvas.transform(sky.getPosition(star).x(), sky.getPosition(star).y());
             double diameter = transformedDiameter(star.magnitude(), projection, planeToCanvas);
             ctx.setFill(BlackBodyColor.colorForTemperature(star.colorTemperature()));
-            ctx.fillOval(position.getX() - diameter / 2d, position.getY() - diameter / 2d, diameter, diameter);
+            ctx.fillOval(transformedStarPositions[index], transformedStarPositions[index + 1], diameter, diameter);
+            index += 2;
         }
     }
 
@@ -71,19 +75,33 @@ public class SkyCanvasPainter {
         ctx.setStroke(Color.BLUE);
         ctx.setLineWidth(1);
 
+        double[] transformedStarPositions = new double[sky.starPositions().length];
+        planeToCanvas.transform2DPoints(sky.starPositions(), 0, transformedStarPositions, 0, sky.starPositions().length/2);
+
         for (Asterism asterism : sky.asterisms()) {
             ctx.beginPath();
-            Point2D currentPos = planeToCanvas.transform(sky.getPosition(asterism.stars().get(0)).x(), sky.getPosition(asterism.stars().get(0)).y());
-            ctx.moveTo(currentPos.getX(), currentPos.getY());
+
+            Point2D currentPos = new Point2D(
+                    transformedStarPositions[sky.asterismIndices(asterism).get(0)*2],
+                    transformedStarPositions[sky.asterismIndices(asterism).get(0)*2 + 1]
+            );
+
             Point2D nextPos;
 
+            ctx.moveTo(currentPos.getX(), currentPos.getY());
+
             for (Star star : asterism.stars()) {
-                nextPos = planeToCanvas.transform(sky.getPosition(star).x(), sky.getPosition(star).y());
+                nextPos = new Point2D(
+                        transformedStarPositions[sky.stars().indexOf(star)*2],
+                        transformedStarPositions[sky.stars().indexOf(star)*2 + 1]
+                );
                 // skip the line between two stars that are invisible on screen
                 if (canvas.getBoundsInLocal().contains(currentPos) || canvas.getBoundsInLocal().contains(nextPos)) {
                     ctx.lineTo(nextPos.getX(), nextPos.getY());
-                    currentPos = nextPos;
+                } else {
+                    ctx.moveTo(nextPos.getX(), nextPos.getY());
                 }
+                currentPos = nextPos;
             }
             ctx.stroke();
         }
@@ -99,13 +117,13 @@ public class SkyCanvasPainter {
     public void drawPlanets(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
         ctx.setFill(Color.LIGHTGRAY);
 
-        double[] planetPositions = new double[14];
-        planeToCanvas.transform2DPoints(sky.planetPositions(), 0, planetPositions, 0, 7);
+        double[] transformedPlanetPositions = new double[14];
+        planeToCanvas.transform2DPoints(sky.planetPositions(), 0, transformedPlanetPositions, 0, 7);
 
         int index = 0;
         for (Planet planet : sky.planets()) {
             double diameter = transformedDiameter(planet.magnitude(), projection, planeToCanvas);
-            ctx.fillOval(planetPositions[index], planetPositions[index + 1], diameter, diameter);
+            ctx.fillOval(transformedPlanetPositions[index], transformedPlanetPositions[index + 1], diameter, diameter);
             index += 2;
         }
     }
