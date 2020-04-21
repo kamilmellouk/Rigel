@@ -60,7 +60,7 @@ public class SkyCanvasPainter {
         for (Star star : sky.stars()) {
             double diameter = transformedDiameter(star.magnitude(), projection, planeToCanvas);
             ctx.setFill(BlackBodyColor.colorForTemperature(star.colorTemperature()));
-            ctx.fillOval(transformedStarPositions[index], transformedStarPositions[index + 1], diameter, diameter);
+            ctx.fillOval(transformedStarPositions[index] - diameter/2, transformedStarPositions[index + 1] - diameter/2, diameter, diameter);
             index += 2;
         }
     }
@@ -120,7 +120,7 @@ public class SkyCanvasPainter {
         int index = 0;
         for (Planet planet : sky.planets()) {
             double diameter = transformedDiameter(planet.magnitude(), projection, planeToCanvas);
-            ctx.fillOval(transformedPlanetPositions[index], transformedPlanetPositions[index + 1], diameter, diameter);
+            ctx.fillOval(transformedPlanetPositions[index] - diameter/2, transformedPlanetPositions[index + 1] - diameter/2, diameter, diameter);
             index += 2;
         }
     }
@@ -139,13 +139,13 @@ public class SkyCanvasPainter {
         // yellow halo around the sun
         double positionDifference = (2.2 * diameter - diameter) / 2d;
         ctx.setFill(Color.YELLOW.deriveColor(0, 0, 1, 0.25));
-        ctx.fillOval(pos.getX() - positionDifference, pos.getY() - positionDifference, 2.2 * diameter, 2.2 * diameter);
+        ctx.fillOval(pos.getX() - positionDifference - diameter/2, pos.getY() - positionDifference - diameter/2, 2.2 * diameter, 2.2 * diameter);
 
         ctx.setFill(Color.YELLOW);
-        ctx.fillOval(pos.getX() - 1, pos.getY() - 1, diameter + 2, diameter + 2);
+        ctx.fillOval(pos.getX() - 1 - diameter/2, pos.getY() - 1 - diameter/2, diameter + 2, diameter + 2);
 
         ctx.setFill(Color.WHITE);
-        ctx.fillOval(pos.getX(), pos.getY(), diameter, diameter);
+        ctx.fillOval(pos.getX() - diameter/2, pos.getY() - diameter/2, diameter, diameter);
     }
 
     /**
@@ -159,7 +159,7 @@ public class SkyCanvasPainter {
         ctx.setFill(Color.WHITE);
         Point2D pos = planeToCanvas.transform(sky.moonPosition().x(), sky.moonPosition().y());
         double diameter = transformedDiameter(sky.moon().magnitude(), projection, planeToCanvas);
-        ctx.fillOval(pos.getX(), pos.getY(), diameter, diameter);
+        ctx.fillOval(pos.getX() - diameter/2, pos.getY() - diameter/2, diameter, diameter);
     }
 
     /**
