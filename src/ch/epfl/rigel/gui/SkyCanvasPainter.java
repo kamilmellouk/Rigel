@@ -140,7 +140,7 @@ public class SkyCanvasPainter {
         double radius = diameter/2;
 
         // yellow halo around the sun
-        double positionDifference = (2.2 * diameter - diameter) / 2d;
+        double positionDifference = (1.2 * diameter) / 2d;
         ctx.setFill(Color.YELLOW.deriveColor(0, 0, 1, 0.25));
         ctx.fillOval(pos.getX() - positionDifference - radius, pos.getY() - positionDifference - radius, 2.2 * diameter, 2.2 * diameter);
 
@@ -177,7 +177,7 @@ public class SkyCanvasPainter {
         CartesianCoordinates center = projection.circleCenterForParallel(HorizontalCoordinates.of(0, 0));
         Point2D pos = planeToCanvas.transform(center.x(), center.y());
         double radius = projection.circleRadiusForParallel(HorizontalCoordinates.of(0, 0));
-        double transformedRadius = planeToCanvas.deltaTransform(radius, 0).getX();
+        double transformedRadius = planeToCanvas.deltaTransform(radius, 0).magnitude();
 
         ctx.strokeOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius, transformedRadius * 2, transformedRadius * 2);
     }
@@ -194,8 +194,8 @@ public class SkyCanvasPainter {
         ctx.setTextBaseline(VPos.TOP);
 
         for (CardinalPoint cardinal : CardinalPoint.values()) {
-            CartesianCoordinates card = projection.apply(HorizontalCoordinates.ofDeg(cardinal.getAz(), -0.5));
-            Point2D position = planeToCanvas.transform(card.x(), card.y());
+            CartesianCoordinates cardPos = projection.apply(HorizontalCoordinates.ofDeg(cardinal.getAz(), -0.5));
+            Point2D position = planeToCanvas.transform(cardPos.x(), cardPos.y());
             ctx.strokeText(cardinal.getName(), position.getX(), position.getY());
         }
     }
