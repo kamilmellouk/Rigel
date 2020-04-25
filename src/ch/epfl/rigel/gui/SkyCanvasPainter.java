@@ -26,6 +26,11 @@ public class SkyCanvasPainter {
     private final Canvas canvas;
     private final GraphicsContext ctx;
 
+    // Constants used to compute the on-screen diameter of an object
+    private final static ClosedInterval MAG_INTERVAL = ClosedInterval.of(-2, 5);
+    private final static double PARTIAL_FACTOR = 99 / 140d;
+    private final static double ZERO_FIVE_DEG_TO_RAD = Angle.ofDeg(0.5);
+
     /**
      * Constructor of a Painter with a given canvas
      *
@@ -208,10 +213,11 @@ public class SkyCanvasPainter {
      * @param planeToCanvas transformation to apply
      * @return the on-screen diameter of the CelestialObject
      */
+    //TODO Performances
     private static double transformedDiameter(double magnitude, StereographicProjection projection, Transform planeToCanvas) {
-        double clippedMagnitude = ClosedInterval.of(-2, 5).clip(magnitude);
-        double factor = (99 - 17 * clippedMagnitude) / 140d;
-        double diameter = factor * projection.applyToAngle(Angle.ofDeg(0.5));
+        double clippedMagnitude = MAG_INTERVAL.clip(magnitude);
+        double factor = PARTIAL_FACTOR - 17*clippedMagnitude / 140d;
+        double diameter = factor * projection.applyToAngle(ZERO_FIVE_DEG_TO_RAD);
         Point2D size = planeToCanvas.deltaTransform(diameter, diameter);
         return size.getX();
     }
