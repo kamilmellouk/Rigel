@@ -26,6 +26,11 @@ public class SkyCanvasPainter {
     private final Canvas canvas;
     private final GraphicsContext ctx;
 
+    // Constants used to compute the on-screen diameter of an object
+    private final static ClosedInterval MAG_INTERVAL = ClosedInterval.of(-2, 5);
+    private final static double PARTIAL_FACTOR = 99 / 140d;
+    private final static double ZERO_FIVE_DEG_TO_RAD = Angle.ofDeg(0.5);
+
     /**
      * Constructor of a Painter with a given canvas
      *
@@ -140,7 +145,7 @@ public class SkyCanvasPainter {
         double radius = diameter/2;
 
         // yellow halo around the sun
-        double positionDifference = (2.2 * diameter - diameter) / 2d;
+        double positionDifference = (1.2 * diameter) / 2d;
         ctx.setFill(Color.YELLOW.deriveColor(0, 0, 1, 0.25));
         ctx.fillOval(pos.getX() - positionDifference - radius, pos.getY() - positionDifference - radius, 2.2 * diameter, 2.2 * diameter);
 
@@ -177,7 +182,7 @@ public class SkyCanvasPainter {
         CartesianCoordinates center = projection.circleCenterForParallel(HorizontalCoordinates.of(0, 0));
         Point2D pos = planeToCanvas.transform(center.x(), center.y());
         double radius = projection.circleRadiusForParallel(HorizontalCoordinates.of(0, 0));
-        double transformedRadius = planeToCanvas.deltaTransform(radius, 0).getX();
+        double transformedRadius = planeToCanvas.deltaTransform(radius, 0).magnitude();
 
         ctx.strokeOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius, transformedRadius * 2, transformedRadius * 2);
     }
@@ -194,8 +199,8 @@ public class SkyCanvasPainter {
         ctx.setTextBaseline(VPos.TOP);
 
         for (CardinalPoint cardinal : CardinalPoint.values()) {
-            CartesianCoordinates card = projection.apply(HorizontalCoordinates.ofDeg(cardinal.getAz(), -0.5));
-            Point2D position = planeToCanvas.transform(card.x(), card.y());
+            CartesianCoordinates cardPos = projection.apply(HorizontalCoordinates.ofDeg(cardinal.getAz(), -0.5));
+            Point2D position = planeToCanvas.transform(cardPos.x(), cardPos.y());
             ctx.strokeText(cardinal.getName(), position.getX(), position.getY());
         }
     }
@@ -208,10 +213,11 @@ public class SkyCanvasPainter {
      * @param planeToCanvas transformation to apply
      * @return the on-screen diameter of the CelestialObject
      */
+    //TODO Performances
     private static double transformedDiameter(double magnitude, StereographicProjection projection, Transform planeToCanvas) {
-        double clippedMagnitude = ClosedInterval.of(-2, 5).clip(magnitude);
-        double factor = (99 - 17 * clippedMagnitude) / 140d;
-        double diameter = factor * projection.applyToAngle(Angle.ofDeg(0.5));
+        double clippedMagnitude = MAG_INTERVAL.clip(magnitude);
+        double factor = PARTIAL_FACTOR - 17*clippedMagnitude / 140d;
+        double diameter = factor * projection.applyToAngle(ZERO_FIVE_DEG_TO_RAD);
         Point2D size = planeToCanvas.deltaTransform(diameter, diameter);
         return size.getX();
     }

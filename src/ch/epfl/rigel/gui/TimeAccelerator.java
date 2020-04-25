@@ -19,7 +19,8 @@ public interface TimeAccelerator {
      * @return a continuous time accelerator
      */
     static TimeAccelerator continuous(int acceleratingFactor) {
-        return (initialSimulatedTime, elapsedRealTime) -> initialSimulatedTime.plus(elapsedRealTime * acceleratingFactor, ChronoUnit.NANOS);
+        return (initialSimulatedTime, elapsedRealTime) ->
+                initialSimulatedTime.plus(elapsedRealTime * acceleratingFactor, ChronoUnit.NANOS);
     }
 
     /**
@@ -30,7 +31,8 @@ public interface TimeAccelerator {
      * @return a discrete time accelerator
      */
     static TimeAccelerator discrete(int advancementFrequency, Duration step) {
-        return (initialSimulatedTime, elapsedRealTime) -> initialSimulatedTime.plus((long) Math.floor(advancementFrequency * elapsedRealTime) * step.get(ChronoUnit.NANOS), ChronoUnit.NANOS);
+        return (initialSimulatedTime, elapsedRealTime) ->
+                initialSimulatedTime.plus((long) Math.floor(advancementFrequency * elapsedRealTime) * step.get(ChronoUnit.NANOS), ChronoUnit.NANOS);
     }
 
     /**
