@@ -16,6 +16,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Transform;
 
+import java.util.List;
+
 /**
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
@@ -81,22 +83,23 @@ public class SkyCanvasPainter {
         ctx.setStroke(Color.BLUE);
         ctx.setLineWidth(1);
 
-        double[] transformedStarPositions = new double[sky.starPositions().length];
-        planeToCanvas.transform2DPoints(sky.starPositions(), 0, transformedStarPositions, 0, sky.stars().size());
+        double[] transformedPos = new double[sky.starPositions().length];
+        planeToCanvas.transform2DPoints(sky.starPositions(), 0, transformedPos, 0, sky.stars().size());
 
         for (Asterism asterism : sky.asterisms()) {
             ctx.beginPath();
+            List<Integer> indices = sky.asterismIndices(asterism);
             Point2D currentPos = new Point2D(
-                    transformedStarPositions[sky.asterismIndices(asterism).get(0)*2],
-                    transformedStarPositions[sky.asterismIndices(asterism).get(0)*2 + 1]
+                    transformedPos[indices.get(0)*2],
+                    transformedPos[indices.get(0)*2 + 1]
             );
             ctx.moveTo(currentPos.getX(), currentPos.getY());
 
             Point2D nextPos;
-            for (Star star : asterism.stars()) {
+            for (int i = 1; i < indices.size(); i++) {
                 nextPos = new Point2D(
-                        transformedStarPositions[sky.stars().indexOf(star)*2],
-                        transformedStarPositions[sky.stars().indexOf(star)*2 + 1]
+                        transformedPos[indices.get(i)*2],
+                        transformedPos[indices.get(i)*2 + 1]
                 );
                 // skip the line between two stars that are invisible on screen
                 if (canvas.getBoundsInLocal().contains(currentPos) || canvas.getBoundsInLocal().contains(nextPos)) {
@@ -198,11 +201,13 @@ public class SkyCanvasPainter {
         ctx.setLineWidth(1);
         ctx.setTextBaseline(VPos.TOP);
 
-        for (CardinalPoint cardinal : CardinalPoint.values()) {
-            CartesianCoordinates cardPos = projection.apply(HorizontalCoordinates.ofDeg(cardinal.getAz(), -0.5));
-            Point2D position = planeToCanvas.transform(cardPos.x(), cardPos.y());
-            ctx.strokeText(cardinal.getName(), position.getX(), position.getY());
+        for (int az = 0; az < 360; az += 45) {
+            HorizontalCoordinates azAlt = HorizontalCoordinates.ofDeg(az, -0.5);
+            CartesianCoordinates cardPos = projection.apply(azAlt);
+            Point2D screenPos = planeToCanvas.transform(cardPos.x(), cardPos.y());
+            ctx.strokeText(azAlt.azOctantName("N", "E", "S", "O"), screenPos.getX(), screenPos.getY());
         }
+
     }
 
     /**
@@ -222,49 +227,5 @@ public class SkyCanvasPainter {
         return size.getX();
     }
 
-    /**
-     * Enum of cardinal points
-     */
-    private enum CardinalPoint {
-        N("N", 0),
-        NE("NE", 45),
-        E("E", 90),
-        SE("SE", 135),
-        S("S", 180),
-        SO("SO", 225),
-        O("O", 270),
-        NO("NO", 315);
 
-        private final String name;
-        private final int az;
-
-        /**
-         * Constructor
-         *
-         * @param name the abbreviation of the french name
-         * @param az   the azimuth of the cardinal point
-         */
-        CardinalPoint(String name, int az) {
-            this.name = name;
-            this.az = az;
-        }
-
-        /**
-         * Getter for the name
-         *
-         * @return the name
-         */
-        private String getName() {
-            return name;
-        }
-
-        /**
-         * Getter for the azimuth
-         *
-         * @return the azimuth
-         */
-        private int getAz() {
-            return az;
-        }
-    }
 }

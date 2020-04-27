@@ -42,9 +42,9 @@ public final class MyDrawSky extends Application {
                     .loadFrom(hs, HygDatabaseLoader.INSTANCE)
                     .loadFrom(as, AsterismLoader.INSTANCE)
                     .build();
-            ZonedDateTime when = ZonedDateTime.parse("2020-02-17T20:15:00+01:00");
-            GeographicCoordinates where = GeographicCoordinates.ofDeg(6.57, 46.52);
-            HorizontalCoordinates projCenter = HorizontalCoordinates.ofDeg(0, 23);
+            ZonedDateTime when = ZonedDateTime.parse("2001-04-05T07:15:00+01:00");
+            GeographicCoordinates where = GeographicCoordinates.ofDeg(33.5, -7.6);
+            HorizontalCoordinates projCenter = HorizontalCoordinates.ofDeg(45,  10);
             StereographicProjection projection = new StereographicProjection(projCenter);
 
             ObservedSky sky = new ObservedSky(when, where, projection, catalogue);
