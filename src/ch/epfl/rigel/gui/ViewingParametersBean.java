@@ -39,7 +39,7 @@ public class ViewingParametersBean {
      * @param fieldOfViewDeg the new field of view in deg
      */
     public void setFieldOfViewDeg(double fieldOfViewDeg) {
-        this.fieldOfViewDeg.set(fieldOfViewDeg);
+        this.fieldOfViewDeg.setValue(fieldOfViewDeg);
     }
 
     /**
