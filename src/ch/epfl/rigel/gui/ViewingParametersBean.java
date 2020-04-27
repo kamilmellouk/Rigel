@@ -1,6 +1,7 @@
 package ch.epfl.rigel.gui;
 
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -12,7 +13,7 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public class ViewingParametersBean {
 
-    private final SimpleDoubleProperty fieldOfViewDeg = new SimpleDoubleProperty();
+    private final DoubleProperty fieldOfViewDeg = new SimpleDoubleProperty();
     private final ObjectProperty<HorizontalCoordinates> center = new SimpleObjectProperty<>(null);
 
     /**
@@ -20,7 +21,7 @@ public class ViewingParametersBean {
      *
      * @return the property field of view in deg
      */
-    public SimpleDoubleProperty fieldOfViewDegProperty() {
+    public DoubleProperty fieldOfViewDegProperty() {
         return fieldOfViewDeg;
     }
 
