@@ -13,10 +13,8 @@ import javafx.beans.value.ObservableValue;
 
 public class ObserverLocationBean {
 
-    // TODO: 27/04/2020 bidirectional binding?
     private final SimpleDoubleProperty lonDeg = new SimpleDoubleProperty();
     private final SimpleDoubleProperty latDeg = new SimpleDoubleProperty();
-    // TODO: 27/04/2020 write getter and setter for coordinates too?
     private final ObservableValue<GeographicCoordinates> coordinates = Bindings.createObjectBinding(
             () -> GeographicCoordinates.ofDeg(lonDeg.get(), latDeg.get()),
             lonDeg, latDeg);
@@ -73,6 +71,34 @@ public class ObserverLocationBean {
      */
     public void setLatDeg(double latDeg) {
         this.latDeg.setValue(latDeg);
+    }
+
+    /**
+     * Getter for the property coordinates
+     *
+     * @return the property coordinates
+     */
+    public ObservableValue<GeographicCoordinates> coordinatesProperty() {
+        return coordinates;
+    }
+
+    /**
+     * Getter for the coordinates
+     *
+     * @return the coordinates
+     */
+    public GeographicCoordinates getCoordinates() {
+        return coordinates.getValue();
+    }
+
+    /**
+     * Setter for the property coordinates
+     *
+     * @param coordinates the new coordinates
+     */
+    public void setCoordinates(GeographicCoordinates coordinates) {
+        lonDeg.set(coordinates.lonDeg());
+        latDeg.set(coordinates.latDeg());
     }
 
 }
