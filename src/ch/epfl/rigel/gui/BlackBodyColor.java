@@ -54,6 +54,12 @@ public final class BlackBodyColor {
 
             Map<Double, String> loaderMap = new HashMap<>();
 
+            //TODO implement flow coding
+//            bufferedReader.lines()
+//                    .filter(l -> !(l.charAt(0) == '#') && l.startsWith("10deg", 10))
+//                    .map(l -> Double.parseDouble(l.substring(1, 6)))
+//                    .
+
             // add all pairs (temperature, color)
             String s;
             while ((s = bufferedReader.readLine()) != null) {

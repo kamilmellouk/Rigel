@@ -81,6 +81,8 @@ public class SkyCanvasPainter {
         ctx.setStroke(Color.BLUE);
         ctx.setLineWidth(1);
 
+        var bounds = canvas.getBoundsInLocal();
+
         double[] transformedPos = new double[sky.starPositions().length];
         planeToCanvas.transform2DPoints(sky.starPositions(), 0, transformedPos, 0, sky.stars().size());
 
@@ -100,7 +102,7 @@ public class SkyCanvasPainter {
                         transformedPos[indices.get(i) * 2 + 1]
                 );
                 // skip the line between two stars that are invisible on screen
-                if (canvas.getBoundsInLocal().contains(currentPos) || canvas.getBoundsInLocal().contains(nextPos)) {
+                if (bounds.contains(currentPos) || bounds.contains(nextPos)) {
                     ctx.lineTo(nextPos.getX(), nextPos.getY());
                 } else {
                     ctx.moveTo(nextPos.getX(), nextPos.getY());
