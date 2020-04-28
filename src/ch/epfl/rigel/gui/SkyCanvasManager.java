@@ -30,7 +30,7 @@ public class SkyCanvasManager {
     private final ObservableValue<StereographicProjection> projection;
     private final ObservableValue<Transform> planeToCanvas;
     private final ObjectProperty<CartesianCoordinates> mousePosition = new SimpleObjectProperty<>(null);
-    private final ObservableValue<Optional<CelestialObject>> objectUnderMouse;
+    private final ObservableValue<CelestialObject> objectUnderMouse;
     private final ObservableValue<HorizontalCoordinates> mouseHorizontalPosition;
     private final ObservableDoubleValue mouseAzDeg;
     private final ObservableDoubleValue mouseAltDeg;
@@ -50,6 +50,24 @@ public class SkyCanvasManager {
 
         canvas = new Canvas();
         SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
+
+        //-----------------------------------------------------------------------------
+        // Events
+        //-----------------------------------------------------------------------------
+
+        canvas.setOnMouseMoved(
+                e -> mousePosition.setValue(CartesianCoordinates.of(e.getX(), e.getY()))
+        );
+
+        canvas.setOnScroll(
+                e -> viewingParametersBean.setFieldOfViewDeg(
+                        Math.abs(e.getDeltaX()) > Math.abs(e.getDeltaY()) ? e.getDeltaX() : e.getDeltaY()
+                )
+        );
+
+        //-----------------------------------------------------------------------------
+        // Bindings and properties
+        //-----------------------------------------------------------------------------
 
         projection = Bindings.createObjectBinding(
                 () -> new StereographicProjection(viewingParametersBean.getCenter()),
@@ -74,7 +92,7 @@ public class SkyCanvasManager {
 
         // TODO: 28/04/2020 what is 10 units on the canvas ?
         objectUnderMouse = Bindings.createObjectBinding(
-                () -> observedSky.getValue().objectClosestTo(mousePosition.getValue(), 10),
+                () -> observedSky.getValue().objectClosestTo(mousePosition.getValue(), 10).isEmpty() ? null : observedSky.getValue().objectClosestTo(mousePosition.getValue(), 10).get(),
                 observedSky, mousePosition
         );
 
@@ -111,7 +129,8 @@ public class SkyCanvasManager {
         return canvas;
     }
 
-    // TODO: 28/04/2020 Any setter for these 3 properties?
+    // TODO: 28/04/2020 Any setter for these 3 properties ?
+    // TODO: 28/04/2020 Do the other bindings need getter and setter too ?
 
     /**
      * Getter for the property azimuth in deg of the mouse
@@ -155,7 +174,7 @@ public class SkyCanvasManager {
      *
      * @return the property object under mouse
      */
-    public ObservableValue<Optional<CelestialObject>> objectUnderMouseProperty() {
+    public ObservableValue<CelestialObject> objectUnderMouseProperty() {
         return objectUnderMouse;
     }
 
@@ -164,7 +183,7 @@ public class SkyCanvasManager {
      *
      * @return the object under mouse
      */
-    public Optional<CelestialObject> getObjectUnderMouse() {
+    public CelestialObject getObjectUnderMouse() {
         return objectUnderMouse.getValue();
     }
 }
