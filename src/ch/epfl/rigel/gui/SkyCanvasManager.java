@@ -24,6 +24,8 @@ import java.util.Optional;
 
 public class SkyCanvasManager {
 
+    private final Canvas canvas;
+
     private final ObservableValue<ObservedSky> observedSky;
     private final ObservableValue<StereographicProjection> projection;
     private final ObservableValue<Transform> planeToCanvas;
@@ -46,7 +48,7 @@ public class SkyCanvasManager {
                             ObserverLocationBean observerLocationBean,
                             ViewingParametersBean viewingParametersBean) {
 
-        Canvas canvas = new Canvas();
+        canvas = new Canvas();
         SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
 
         projection = Bindings.createObjectBinding(
@@ -98,6 +100,15 @@ public class SkyCanvasManager {
                 mouseHorizontalPosition
         );
 
+    }
+
+    /**
+     * Getter for the canvas
+     *
+     * @return the canvas
+     */
+    public Canvas canvas() {
+        return canvas;
     }
 
     // TODO: 28/04/2020 Any setter for these 3 properties?
