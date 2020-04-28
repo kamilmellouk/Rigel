@@ -32,12 +32,11 @@ public enum AsterismLoader implements StarCatalogue.Loader {
 
                 // add the stars
                 for (String value : tabLine) {
-                    int hipparcosId = Integer.parseInt(value);
-                    for (Star star : builder.stars()) {
-                        if (star.hipparcosId() == hipparcosId) {
+                    int hipId = Integer.parseInt(value);
+                    builder.stars().forEach(star -> {
+                        if(star.hipparcosId() == hipId)
                             starList.add(star);
-                        }
-                    }
+                    });
                 }
 
                 builder.addAsterism(new Asterism(starList));
