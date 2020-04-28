@@ -10,13 +10,15 @@ import java.util.Locale;
 /**
  * Representation of a position on a sphere using equatorial coordinates
  *
- * @see EclipticToEquatorialConversion
- * @see EquatorialCoordinates
- *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
+ * @see EclipticToEquatorialConversion
+ * @see EquatorialCoordinates
  */
 public final class EquatorialCoordinates extends SphericalCoordinates {
+
+    private static final RightOpenInterval RIGHT_OPEN_INTERVAL_ZERO_TO_TAU = RightOpenInterval.of(0, Angle.TAU);
+    private static final ClosedInterval CLOSED_INTERVAL_SYM_PI = ClosedInterval.symmetric(Math.PI);
 
     /**
      * Constructor of the equatorial coordinates
@@ -38,8 +40,8 @@ public final class EquatorialCoordinates extends SphericalCoordinates {
      */
     public static EquatorialCoordinates of(double ra, double dec) {
         return new EquatorialCoordinates(
-                Preconditions.checkInInterval(RightOpenInterval.of(0, Angle.TAU), ra),
-                Preconditions.checkInInterval(ClosedInterval.symmetric(Math.PI), dec)
+                Preconditions.checkInInterval(RIGHT_OPEN_INTERVAL_ZERO_TO_TAU, ra),
+                Preconditions.checkInInterval(CLOSED_INTERVAL_SYM_PI, dec)
         );
     }
 

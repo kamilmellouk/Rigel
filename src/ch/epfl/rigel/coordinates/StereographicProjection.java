@@ -99,8 +99,9 @@ public final class StereographicProjection implements Function<HorizontalCoordin
 
         // compute the rho value, the sinus and cosine of the implicit angle c
         double rho = Math.sqrt(x * x + y * y);
-        double sinC = (2 * rho) / (rho * rho + 1);
-        double cosC = (1 - rho * rho) / (rho * rho + 1);
+        double rhoSquared = rho * rho;
+        double sinC = (2 * rho) / (rhoSquared + 1);
+        double cosC = (1 - rhoSquared) / (rhoSquared + 1);
 
         return x == 0 && y == 0 ?
                 HorizontalCoordinates.of(

@@ -5,19 +5,18 @@ import ch.epfl.rigel.math.Angle;
 /**
  * Abstract representation of a position on a sphere using spherical coordinates
  *
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk (312327)
  * @see EclipticCoordinates
  * @see EquatorialCoordinates
  * @see GeographicCoordinates
  * @see HorizontalCoordinates
- *
- * @author Bastien Faivre (310929)
- * @author Kamil Mellouk (312327)
  */
 abstract class SphericalCoordinates {
 
     // Longitude and latitude, the spherical coordinates used to represent any position on a sphere
-    private double longitude;
-    private double latitude;
+    private final double longitude;
+    private final double latitude;
 
     /**
      * Constructor of the spherical coordinates

@@ -10,11 +10,10 @@ import java.util.function.Function;
 /**
  * Conversion from ecliptic to equatorial coordinates
  *
- * @see EclipticCoordinates
- * @see EquatorialCoordinates
- *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
+ * @see EclipticCoordinates
+ * @see EquatorialCoordinates
  */
 public final class EclipticToEquatorialConversion implements Function<EclipticCoordinates, EquatorialCoordinates> {
 
@@ -47,9 +46,12 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
      */
     @Override
     public EquatorialCoordinates apply(EclipticCoordinates ecl) {
+        double eclLon = ecl.lon();
+        double eclLat = ecl.lat();
+        double sinEclLon = Math.sin(eclLon);
         return EquatorialCoordinates.of(
-                Angle.normalizePositive(Math.atan2(Math.sin(ecl.lon()) * cosOfEclipticObliqueness - Math.tan(ecl.lat()) * sinOfEclipticObliqueness, Math.cos(ecl.lon()))),
-                Math.asin(Math.sin(ecl.lat()) * cosOfEclipticObliqueness + Math.cos(ecl.lat()) * sinOfEclipticObliqueness * Math.sin(ecl.lon()))
+                Angle.normalizePositive(Math.atan2(sinEclLon * cosOfEclipticObliqueness - Math.tan(eclLat) * sinOfEclipticObliqueness, Math.cos(eclLon))),
+                Math.asin(Math.sin(eclLat) * cosOfEclipticObliqueness + Math.cos(eclLat) * sinOfEclipticObliqueness * sinEclLon)
         );
     }
 
@@ -59,7 +61,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
      * @throws UnsupportedOperationException the exception to throw
      */
     @Override
-    public final int hashCode() throws UnsupportedOperationException {
+    public final int hashCode() {
         throw new UnsupportedOperationException();
     }
 
@@ -69,7 +71,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
      * @throws UnsupportedOperationException the exception to throw
      */
     @Override
-    public final boolean equals(Object obj) throws UnsupportedOperationException {
+    public final boolean equals(Object obj) {
         throw new UnsupportedOperationException();
     }
 }

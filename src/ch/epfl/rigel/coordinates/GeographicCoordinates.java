@@ -15,6 +15,9 @@ import java.util.Locale;
  */
 public final class GeographicCoordinates extends SphericalCoordinates {
 
+    private static final RightOpenInterval RIGHT_OPEN_INTERVAL_SYM_360 = RightOpenInterval.symmetric(360);
+    private static final ClosedInterval CLOSED_INTERVAL_SYM_180 = ClosedInterval.symmetric(180);
+
     /**
      * Constructor of the geographic coordinates
      *
@@ -48,7 +51,7 @@ public final class GeographicCoordinates extends SphericalCoordinates {
      * @return {@code true} if and only if the longitude is contained in [-180, 180[
      */
     public static boolean isValidLonDeg(double lonDeg) {
-        return RightOpenInterval.symmetric(360).contains(lonDeg);
+        return RIGHT_OPEN_INTERVAL_SYM_360.contains(lonDeg);
     }
 
     /**
@@ -58,7 +61,7 @@ public final class GeographicCoordinates extends SphericalCoordinates {
      * @return {@code true} if and only if the longitude is contained in [-90, 90]
      */
     public static boolean isValidLatDeg(double latDeg) {
-        return ClosedInterval.symmetric(180).contains(latDeg);
+        return CLOSED_INTERVAL_SYM_180.contains(latDeg);
     }
 
     @Override

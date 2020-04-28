@@ -9,11 +9,10 @@ import java.util.function.Function;
 /**
  * Conversion from equatorial to horizontal coordinates
  *
- * @see EquatorialCoordinates
- * @see HorizontalCoordinates
- *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
+ * @see EquatorialCoordinates
+ * @see HorizontalCoordinates
  */
 public final class EquatorialToHorizontalConversion implements Function<EquatorialCoordinates, HorizontalCoordinates> {
 
@@ -30,7 +29,7 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      * @param where the geographic coordinates of the place
      */
     public EquatorialToHorizontalConversion(ZonedDateTime when, GeographicCoordinates where) {
-        this.siderealTime = SiderealTime.local(when, where);
+        siderealTime = SiderealTime.local(when, where);
         observerSinLat = Math.sin(where.lat());
         observerCosLat = Math.cos(where.lat());
     }
@@ -43,11 +42,15 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      */
     @Override
     public HorizontalCoordinates apply(EquatorialCoordinates equ) {
-        double hourAngle = siderealTime - equ.ra();
+        double equRa = equ.ra();
+        double equDec = equ.dec();
+        double hourAngle = siderealTime - equRa;
+        double sinEquDec = Math.sin(equDec);
+        double cosEquDec = Math.cos(equDec);
+        double altitude = Math.asin(sinEquDec * observerSinLat + cosEquDec * observerCosLat * Math.cos(hourAngle));
 
-        double altitude = Math.asin(Math.sin(equ.dec()) * observerSinLat + Math.cos(equ.dec()) * observerCosLat * Math.cos(hourAngle));
         return HorizontalCoordinates.of(
-                Angle.normalizePositive(Math.atan2(-Math.cos(equ.dec()) * observerCosLat * Math.sin(hourAngle), Math.sin(equ.dec()) - observerSinLat * Math.sin(altitude))),
+                Angle.normalizePositive(Math.atan2(-cosEquDec * observerCosLat * Math.sin(hourAngle), sinEquDec - observerSinLat * Math.sin(altitude))),
                 altitude
         );
     }
@@ -57,7 +60,7 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      * @throws UnsupportedOperationException the exception to throw
      */
     @Override
-    public final int hashCode() throws UnsupportedOperationException {
+    public final int hashCode() {
         throw new UnsupportedOperationException();
     }
 
@@ -67,7 +70,7 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      * @throws UnsupportedOperationException the exception to throw
      */
     @Override
-    public final boolean equals(Object obj) throws UnsupportedOperationException {
+    public final boolean equals(Object obj) {
         throw new UnsupportedOperationException();
     }
 }

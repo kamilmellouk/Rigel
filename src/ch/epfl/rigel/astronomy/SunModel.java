@@ -19,6 +19,7 @@ public enum SunModel implements CelestialObjectModel<Sun> {
     private static final double SUN_LON_AT_PERIGEE = Angle.ofDeg(283.112438);
     // The eccentricity of the orbit sun-earth (could be declared public, but only used locally so left private)
     private static final double SUN_EARTH_ECCENTRICITY = 0.016705;
+    private static final double SUN_EARTH_ECCENTRICITY_SQUARED = SUN_EARTH_ECCENTRICITY * SUN_EARTH_ECCENTRICITY;
     // The theta0 angle (could be declared public, but only used locally so left private)
     private static final double THETA_0 = Angle.ofDeg(0.533128);
     // The mean earth rotating speed around the sun (could be declared public, but only used locally so left private)
@@ -41,7 +42,7 @@ public enum SunModel implements CelestialObjectModel<Sun> {
         return new Sun(
                 sunEclipticCoordinates,
                 eclipticToEquatorialConversion.apply(sunEclipticCoordinates),
-                (float) (THETA_0 * ((1 + SUN_EARTH_ECCENTRICITY * Math.cos(sunRealAnomaly)) / (1 - SUN_EARTH_ECCENTRICITY * SUN_EARTH_ECCENTRICITY))),
+                (float) (THETA_0 * ((1 + SUN_EARTH_ECCENTRICITY * Math.cos(sunRealAnomaly)) / (1 - SUN_EARTH_ECCENTRICITY_SQUARED))),
                 (float) sunMeanAnomaly
         );
     }

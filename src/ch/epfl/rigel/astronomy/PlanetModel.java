@@ -32,7 +32,9 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
             30.1985, 1.7673, 131.879, 62.20, -6.87);
 
     // List containing the model of all planets
-    public static List<PlanetModel> ALL = List.copyOf(List.of(PlanetModel.values()));
+    public static final List<PlanetModel> ALL = List.of(PlanetModel.values());
+
+    private static final double TAU_OVER_DAYS_PER_YEAR = Angle.TAU / 365.242191;
 
     // Attributes of a planet (could be declared public, but only used locally so left private)
     private final String name;
@@ -82,7 +84,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
      */
     @Override
     public Planet at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
-        double meanAnomaly = Angle.TAU / 365.242191 * (daysSinceJ2010 / revolutionPeriod) + lonAtJ2010 - lonAtPerigee;
+        double meanAnomaly = TAU_OVER_DAYS_PER_YEAR * (daysSinceJ2010 / revolutionPeriod) + lonAtJ2010 - lonAtPerigee;
         double realAnomaly = meanAnomaly + 2 * orbitEccentricity * Math.sin(meanAnomaly);
         double distanceToSun = (halfAxisOrbit * (1 - orbitEccentricity * orbitEccentricity)) / (1 + orbitEccentricity * Math.cos(realAnomaly));
         double heliocentricLon = realAnomaly + lonAtPerigee;

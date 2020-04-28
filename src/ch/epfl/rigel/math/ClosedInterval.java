@@ -59,7 +59,7 @@ public final class ClosedInterval extends Interval {
      */
     @Override
     public boolean contains(double v) {
-        return v >= low() && v <= high();
+        return low() <= v && v <= high();
     }
 
     /**

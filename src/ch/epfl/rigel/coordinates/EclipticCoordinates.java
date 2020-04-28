@@ -17,6 +17,9 @@ import java.util.Locale;
  */
 public final class EclipticCoordinates extends SphericalCoordinates {
 
+    private static final RightOpenInterval RIGHT_OPEN_INTERVAL_ZERO_TO_TAU = RightOpenInterval.of(0, Angle.TAU);
+    private static final ClosedInterval CLOSED_INTERVAL_SYM_PI = ClosedInterval.symmetric(Math.PI);
+
     /**
      * Constructor of the ecliptic coordinates
      *
@@ -37,8 +40,8 @@ public final class EclipticCoordinates extends SphericalCoordinates {
      */
     public static EclipticCoordinates of(double lon, double lat) {
         return new EclipticCoordinates(
-                Preconditions.checkInInterval(RightOpenInterval.of(0, Angle.TAU), lon),
-                Preconditions.checkInInterval(ClosedInterval.symmetric(Math.PI), lat)
+                Preconditions.checkInInterval(RIGHT_OPEN_INTERVAL_ZERO_TO_TAU, lon),
+                Preconditions.checkInInterval(CLOSED_INTERVAL_SYM_PI, lat)
         );
     }
 

@@ -28,7 +28,8 @@ public final class SiderealTime {
      * Private default constructor
      * The class is not instantiable
      */
-    private SiderealTime() {}
+    private SiderealTime() {
+    }
 
     /**
      * Compute the sidereal time with respect to greenwich and J2000
@@ -38,9 +39,10 @@ public final class SiderealTime {
      */
     public static double greenwich(ZonedDateTime when) {
         ZonedDateTime whenInUTC = when.withZoneSameInstant(ZoneOffset.UTC);
+        ZonedDateTime whenInUTCTruncatedToDays = whenInUTC.truncatedTo(DAYS);
 
-        double T = Epoch.J2000.julianCenturiesUntil(whenInUTC.truncatedTo(DAYS));
-        double t = whenInUTC.truncatedTo(DAYS).until(whenInUTC, MILLIS) / MILLISECONDS_PER_HOUR;
+        double T = Epoch.J2000.julianCenturiesUntil(whenInUTCTruncatedToDays);
+        double t = whenInUTCTruncatedToDays.until(whenInUTC, MILLIS) / MILLISECONDS_PER_HOUR;
         double s0 = S0_POLYNOMIAL.at(T);
         double s1 = S1_POLYNOMIAL.at(t);
 

@@ -3,11 +3,10 @@ package ch.epfl.rigel.math;
 /**
  * Representation of a mathematical interval
  *
- * @see ClosedInterval
- * @see RightOpenInterval
- *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
+ * @see ClosedInterval
+ * @see RightOpenInterval
  */
 public abstract class Interval {
 
@@ -66,7 +65,7 @@ public abstract class Interval {
      * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
      */
     @Override
-    public final int hashCode() throws UnsupportedOperationException {
+    public final int hashCode() {
         throw new UnsupportedOperationException();
     }
 
@@ -76,7 +75,7 @@ public abstract class Interval {
      * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
      */
     @Override
-    public final boolean equals(Object obj) throws UnsupportedOperationException {
+    public final boolean equals(Object obj) {
         throw new UnsupportedOperationException();
     }
 }

@@ -10,12 +10,14 @@ import java.util.Locale;
 /**
  * Representation of a position on a sphere using horizontal coordinates
  *
- * @see EquatorialToHorizontalConversion
- *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
+ * @see EquatorialToHorizontalConversion
  */
 public final class HorizontalCoordinates extends SphericalCoordinates {
+
+    private static final RightOpenInterval RIGHT_OPEN_INTERVAL_ZERO_TO_TAU = RightOpenInterval.of(0, Angle.TAU);
+    private static final ClosedInterval CLOSED_INTERVAL_SYM_PI = ClosedInterval.symmetric(Math.PI);
 
     /**
      * Constructor of the horizontal coordinates
@@ -37,8 +39,8 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      */
     public static HorizontalCoordinates of(double az, double alt) {
         return new HorizontalCoordinates(
-                Preconditions.checkInInterval(RightOpenInterval.of(0, Angle.TAU), az),
-                Preconditions.checkInInterval(ClosedInterval.symmetric(Math.PI), alt)
+                Preconditions.checkInInterval(RIGHT_OPEN_INTERVAL_ZERO_TO_TAU, az),
+                Preconditions.checkInInterval(CLOSED_INTERVAL_SYM_PI, alt)
         );
     }
 
@@ -83,7 +85,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     public String azOctantName(String n, String e, String s, String w) {
         // compute the index of the direction in the array at line 77
         int index = (int) (az() / (Math.PI / 4)) + ((int) ((az() % (Math.PI / 4)) / (Math.PI / 8)) == 0 ? 0 : 1);
-        return new String[]{n, n + e, e, s + e, s, s + w, w, n + w}[index == 8 ? 0 : index];
+        return new String[]{n, n + e, e, s + e, s, s + w, w, n + w}[index % 8];
     }
 
     /**

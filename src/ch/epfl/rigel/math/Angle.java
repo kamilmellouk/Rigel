@@ -16,7 +16,14 @@ public final class Angle {
     // Constants for conversion (could be declared public, but only used locally so left private)
     private static final double HR_PER_RAD = 24.0 / TAU;
     private static final double RAD_PER_HR = 1 / HR_PER_RAD;
-    private static final double RAD_PER_SEC = TAU / (60 * 60 * 360);
+    private static final double MIN_PER_DEG = 60;
+    private static final double SEC_PER_MIN = 60;
+    private static final double SEC_PER_DEG = MIN_PER_DEG * SEC_PER_MIN;
+    private static final double DEG_PER_TAU = 360;
+    private static final double RAD_PER_SEC = TAU / (DEG_PER_TAU * MIN_PER_DEG * SEC_PER_MIN);
+
+    private static final RightOpenInterval RIGHT_OPEN_INTERVAL_ZERO_TO_TAU = RightOpenInterval.of(0, TAU);
+    private static final RightOpenInterval RIGHT_OPEN_INTERVAL_ZERO_TO_SIXTY = RightOpenInterval.of(0, 60);
 
     /**
      * Reducing a given angle to the right open interval [0,TAU[
@@ -25,7 +32,7 @@ public final class Angle {
      * @return the reduced angle in [0,TAU[
      */
     public static double normalizePositive(double rad) {
-        return RightOpenInterval.of(0, TAU).reduce(rad);
+        return RIGHT_OPEN_INTERVAL_ZERO_TO_TAU.reduce(rad);
     }
 
     /**
@@ -49,11 +56,11 @@ public final class Angle {
      */
     public static double ofDMS(int deg, int min, double sec) {
         // check exceptions
-        Preconditions.checkArgument(Math.abs(deg)==deg);
-        Preconditions.checkInInterval(RightOpenInterval.of(0, 60), min);
-        Preconditions.checkInInterval(RightOpenInterval.of(0, 60), sec);
+        Preconditions.checkArgument(Math.abs(deg) == deg);
+        Preconditions.checkInInterval(RIGHT_OPEN_INTERVAL_ZERO_TO_SIXTY, min);
+        Preconditions.checkInInterval(RIGHT_OPEN_INTERVAL_ZERO_TO_SIXTY, sec);
 
-        return ofArcsec(deg * 60 * 60 + min * 60 + sec);
+        return ofArcsec(deg * SEC_PER_DEG + min * MIN_PER_DEG + sec);
     }
 
     /**
