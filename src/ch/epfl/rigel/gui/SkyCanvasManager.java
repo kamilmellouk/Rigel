@@ -15,8 +15,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.transform.Transform;
 
-import java.util.Optional;
-
 /**
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
