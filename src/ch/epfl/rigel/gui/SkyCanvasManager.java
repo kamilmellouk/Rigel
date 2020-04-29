@@ -23,6 +23,7 @@ import javafx.scene.transform.Transform;
 public class SkyCanvasManager {
 
     private final Canvas canvas;
+    private final SkyCanvasPainter painter;
 
     private final ObservableValue<ObservedSky> observedSky;
     private final ObservableValue<StereographicProjection> projection;
@@ -47,20 +48,26 @@ public class SkyCanvasManager {
                             ViewingParametersBean viewingParametersBean) {
 
         canvas = new Canvas();
-        SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
+        painter = new SkyCanvasPainter(canvas);
 
         //-----------------------------------------------------------------------------
         // Events
         //-----------------------------------------------------------------------------
 
         canvas.setOnMouseMoved(
-                e -> mousePosition.setValue(CartesianCoordinates.of(e.getX(), e.getY()))
+                e -> {
+                    mousePosition.setValue(CartesianCoordinates.of(e.getX(), e.getY()));
+                    updateSky();
+                }
         );
 
         canvas.setOnScroll(
-                e -> viewingParametersBean.setFieldOfViewDeg(
-                        Math.abs(e.getDeltaX()) > Math.abs(e.getDeltaY()) ? e.getDeltaX() : e.getDeltaY()
-                )
+                e -> {
+                    viewingParametersBean.setFieldOfViewDeg(
+                            viewingParametersBean.getFieldOfViewDeg() + (Math.abs(e.getDeltaX()) > Math.abs(e.getDeltaY()) ? e.getDeltaX() : e.getDeltaY())
+                    );
+                    updateSky();
+                }
         );
 
         //-----------------------------------------------------------------------------
@@ -184,4 +191,15 @@ public class SkyCanvasManager {
     public CelestialObject getObjectUnderMouse() {
         return objectUnderMouse.getValue();
     }
+
+    private void updateSky() {
+        painter.clear();
+        painter.drawStars(observedSky.getValue(), projection.getValue(), planeToCanvas.getValue());
+        painter.drawPlanets(observedSky.getValue(), projection.getValue(), planeToCanvas.getValue());
+        painter.drawSun(observedSky.getValue(), projection.getValue(), planeToCanvas.getValue());
+        painter.drawMoon(observedSky.getValue(), projection.getValue(), planeToCanvas.getValue());
+        painter.drawHorizon(projection.getValue(), planeToCanvas.getValue());
+        painter.drawCardinalPoints(projection.getValue(), planeToCanvas.getValue());
+    }
+
 }

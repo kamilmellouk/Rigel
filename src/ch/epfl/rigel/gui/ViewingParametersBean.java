@@ -1,6 +1,7 @@
 package ch.epfl.rigel.gui;
 
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
+import ch.epfl.rigel.math.ClosedInterval;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -12,6 +13,8 @@ import javafx.beans.property.SimpleObjectProperty;
  */
 
 public class ViewingParametersBean {
+
+    private static final ClosedInterval closedInterval30To150 = ClosedInterval.of(30, 150);
 
     private final DoubleProperty fieldOfViewDeg = new SimpleDoubleProperty();
     private final ObjectProperty<HorizontalCoordinates> center = new SimpleObjectProperty<>(null);
@@ -40,7 +43,9 @@ public class ViewingParametersBean {
      * @param fieldOfViewDeg the new field of view in deg
      */
     public void setFieldOfViewDeg(double fieldOfViewDeg) {
-        this.fieldOfViewDeg.setValue(fieldOfViewDeg);
+        double value = Math.round(fieldOfViewDeg / 5d) * 5;
+        value = closedInterval30To150.clip(value);
+        this.fieldOfViewDeg.setValue(value);
     }
 
     /**
