@@ -18,7 +18,10 @@ public final class StarCatalogue {
     private final List<Star> stars;
 
     // Map of asterisms with their own stars (especially their index)
-    private final Map<Asterism, List<Integer>> asterismMap = new HashMap<>();
+    private final Map<Asterism, List<Integer>> asterismMap;
+
+    // The set of all asterisms
+    private final Set<Asterism> setAsterisms;
 
     /**
      * Constructor of a StarCatalogue
@@ -29,6 +32,7 @@ public final class StarCatalogue {
     public StarCatalogue(List<Star> stars, List<Asterism> asterisms) {
         this.stars = List.copyOf(stars);
 
+        Map<Asterism, List<Integer>> asterismMapTemp = new HashMap<>();
         // fill in the map with asterisms and their stars (especially their index)
         for (Asterism a : asterisms) {
             List<Integer> indices = new ArrayList<>();
@@ -36,8 +40,11 @@ public final class StarCatalogue {
                 Preconditions.checkArgument(stars.contains(s));
                 indices.add(stars.indexOf(s));
             }
-            asterismMap.put(a, indices);
+            asterismMapTemp.put(a, indices);
         }
+
+        asterismMap = Collections.unmodifiableMap(asterismMapTemp);
+        setAsterisms = Set.copyOf(asterismMap.keySet());
 
     }
 
@@ -56,7 +63,7 @@ public final class StarCatalogue {
      * @return immutable copy of asterisms
      */
     public Set<Asterism> asterisms() {
-        return Set.copyOf(asterismMap.keySet());
+        return setAsterisms;
     }
 
     /**
@@ -157,11 +164,10 @@ public final class StarCatalogue {
     /**
      * Loader of a StarCatalogue
      *
-     * @see HygDatabaseLoader
-     * @see AsterismLoader
-     *
      * @author Bastien Faivre (310929)
      * @author Kamil Mellouk (312327)
+     * @see HygDatabaseLoader
+     * @see AsterismLoader
      */
     public interface Loader {
 
