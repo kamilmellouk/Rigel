@@ -16,7 +16,6 @@ import javafx.beans.value.ObservableDoubleValue;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.input.KeyCode;
 import javafx.scene.transform.Transform;
 
 import java.util.Optional;
@@ -83,20 +82,16 @@ public class SkyCanvasManager {
                     HorizontalCoordinates center = viewingParametersBean.getCenter();
                     switch (e.getCode()) {
                         case LEFT:
-                            System.out.println("LEFT");
-                            viewingParametersBean.setCenter(centerWithAzDifference(center, -10));
+                            viewingParametersBean.setCenter(centerWithAzDiff(center, -10));
                             break;
                         case RIGHT:
-                            System.out.println("RIGHT");
-                            viewingParametersBean.setCenter(centerWithAzDifference(center, 10));
+                            viewingParametersBean.setCenter(centerWithAzDiff(center, 10));
                             break;
                         case UP:
-                            System.out.println("UP");
-                            viewingParametersBean.setCenter(centerWithAltDifference(center, 5));
+                            viewingParametersBean.setCenter(centerWithAltDiff(center, 5));
                             break;
                         case DOWN:
-                            System.out.println("DOWN");
-                            viewingParametersBean.setCenter(centerWithAltDifference(center, -5));
+                            viewingParametersBean.setCenter(centerWithAltDiff(center, -5));
                             break;
                     }
                 }
@@ -132,8 +127,8 @@ public class SkyCanvasManager {
         // TODO: 01/05/2020 piazza index 222
         planeToCanvas = Bindings.createObjectBinding(
                 () -> {
-                    Transform t = Transform.translate(canvas.getWidth()/2, canvas.getHeight()/2);
-                    double scaleFactor = canvas.getWidth()/projection.getValue().applyToAngle(Angle.ofDeg(viewingParametersBean.getFieldOfViewDeg()));
+                    Transform t = Transform.translate(canvas.getWidth() / 2, canvas.getHeight() / 2);
+                    double scaleFactor = canvas.getWidth() / projection.getValue().applyToAngle(Angle.ofDeg(viewingParametersBean.getFieldOfViewDeg()));
                     Transform s = Transform.scale(scaleFactor, -scaleFactor);
                     return t.createConcatenation(s);
                 },
@@ -253,14 +248,14 @@ public class SkyCanvasManager {
     /**
      * Return the new coordinates with the difference if possible
      *
-     * @param center       the current coordinates
-     * @param azDifference the azimuth difference to apply
+     * @param center the current coordinates
+     * @param azDiff the azimuth difference to apply
      * @return the new coordinates with the difference if possible
      */
-    private HorizontalCoordinates centerWithAzDifference(HorizontalCoordinates center, double azDifference) {
-        double newAz = center.azDeg() + azDifference;
+    private HorizontalCoordinates centerWithAzDiff(HorizontalCoordinates center, double azDiff) {
+        double newAz = azDiff >= 0 ? (center.azDeg() + azDiff) % 360 : (center.azDeg() + azDiff + 360) % 360;
         return HorizontalCoordinates.ofDeg(
-                RIGHT_OPEN_INTERVAL_0_TO_360.contains(newAz) ? newAz : center.azDeg(),
+                newAz,
                 center.altDeg()
         );
     }
@@ -268,12 +263,12 @@ public class SkyCanvasManager {
     /**
      * Return the new coordinates with the difference if possible
      *
-     * @param center        the current coordinates
-     * @param altDifference the altitude difference to apply
+     * @param center  the current coordinates
+     * @param altDiff the altitude difference to apply
      * @return the new coordinates with the difference if possible
      */
-    private HorizontalCoordinates centerWithAltDifference(HorizontalCoordinates center, double altDifference) {
-        double newAlt = center.altDeg() + altDifference;
+    private HorizontalCoordinates centerWithAltDiff(HorizontalCoordinates center, double altDiff) {
+        double newAlt = center.altDeg() + altDiff;
         return HorizontalCoordinates.ofDeg(
                 center.azDeg(),
                 CLOSED_INTERVAL_5_TO_90.clip(newAlt)
