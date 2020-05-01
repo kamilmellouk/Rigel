@@ -27,8 +27,6 @@ import java.util.Optional;
 
 public class SkyCanvasManager {
 
-    private static final RightOpenInterval RIGHT_OPEN_INTERVAL_0_TO_360 = RightOpenInterval.of(0, 360);
-    private static final ClosedInterval CLOSED_INTERVAL_5_TO_90 = ClosedInterval.of(5, 90);
 
     private final Canvas canvas = new Canvas();
     private final SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
@@ -37,11 +35,13 @@ public class SkyCanvasManager {
     private final ObservableValue<StereographicProjection> projection;
     private final ObservableValue<Transform> planeToCanvas;
     private final ObjectProperty<CartesianCoordinates> mousePosition = new SimpleObjectProperty<>(CartesianCoordinates.of(0, 0));
-    private final ObservableValue<CelestialObject> objectUnderMouse;
-    private final ObservableValue<HorizontalCoordinates> mouseHorizontalPosition;
+    private final ObservableValue<CelestialObject> objUnderMouse;
+    private final ObservableValue<HorizontalCoordinates> mouseHorPos;
     private final ObservableDoubleValue mouseAzDeg;
     private final ObservableDoubleValue mouseAltDeg;
 
+    private static final RightOpenInterval RIGHT_OPEN_INTERVAL_0_TO_360 = RightOpenInterval.of(0, 360);
+    private static final ClosedInterval CLOSED_INTERVAL_5_TO_90 = ClosedInterval.of(5, 90);
     /**
      * Constructor of a sky canvas manager
      *
@@ -118,6 +118,7 @@ public class SkyCanvasManager {
                 observerLocationBean.coordinatesProperty(),
                 projection
         );
+
         observedSky.addListener(
                 (p, o, n) -> updateSky()
         );
@@ -131,39 +132,40 @@ public class SkyCanvasManager {
                 },
                 projection, canvas.widthProperty(), canvas.heightProperty(), viewingParametersBean.fieldOfViewDegProperty()
         );
+
         planeToCanvas.addListener(
                 (p, o, n) -> updateSky()
         );
 
-        objectUnderMouse = Bindings.createObjectBinding(
+        objUnderMouse = Bindings.createObjectBinding(
                 () -> {
-                    Point2D mousePos = planeToCanvas.getValue().inverseDeltaTransform(mousePosition.getValue().x(), mousePosition.getValue().y());
-                    Optional<CelestialObject> objectClosest = observedSky.getValue().objectClosestTo(CartesianCoordinates.of(mousePos.getX(), mousePos.getY()), planeToCanvas.getValue().inverseDeltaTransform(10, 0).getX());
-                    return objectClosest.isEmpty() ? null : objectClosest.get();
+                    Point2D mousePos = planeToCanvas.getValue().inverseTransform(mousePosition.getValue().x(), mousePosition.getValue().y());
+                    Optional<CelestialObject> closestObj = observedSky.getValue().objectClosestTo(CartesianCoordinates.of(mousePos.getX(), mousePos.getY()), planeToCanvas.getValue().inverseDeltaTransform(10, 0).getX());
+                    return closestObj.isEmpty() ? null : closestObj.get();
                 },
                 observedSky, mousePosition
         );
 
-        mouseHorizontalPosition = Bindings.createObjectBinding(
+        mouseHorPos = Bindings.createObjectBinding(
                 () -> {
-                    Point2D inverseTransformedMousePosition = planeToCanvas.getValue().inverseTransform(mousePosition.getValue().x(), mousePosition.getValue().y());
-                    HorizontalCoordinates horizontalPosition = projection.getValue().inverseApply(CartesianCoordinates.of(inverseTransformedMousePosition.getX(), inverseTransformedMousePosition.getY()));
+                    Point2D invTransformedMousePos = planeToCanvas.getValue().inverseTransform(mousePosition.getValue().x(), mousePosition.getValue().y());
+                    HorizontalCoordinates horPos = projection.getValue().inverseApply(CartesianCoordinates.of(invTransformedMousePos.getX(), invTransformedMousePos.getY()));
                     return HorizontalCoordinates.of(
-                            horizontalPosition.az(),
-                            horizontalPosition.alt()
+                            horPos.az(),
+                            horPos.alt()
                     );
                 },
                 planeToCanvas, projection, mousePosition
         );
 
         mouseAzDeg = Bindings.createDoubleBinding(
-                () -> mouseHorizontalPosition.getValue().azDeg(),
-                mouseHorizontalPosition
+                () -> mouseHorPos.getValue().azDeg(),
+                mouseHorPos
         );
 
         mouseAltDeg = Bindings.createDoubleBinding(
-                () -> mouseHorizontalPosition.getValue().altDeg(),
-                mouseHorizontalPosition
+                () -> mouseHorPos.getValue().altDeg(),
+                mouseHorPos
         );
 
     }
@@ -220,8 +222,8 @@ public class SkyCanvasManager {
      *
      * @return the property object under mouse
      */
-    public ObservableValue<CelestialObject> objectUnderMouseProperty() {
-        return objectUnderMouse;
+    public ObservableValue<CelestialObject> objUnderMouseProperty() {
+        return objUnderMouse;
     }
 
     /**
@@ -229,12 +231,14 @@ public class SkyCanvasManager {
      *
      * @return the object under mouse
      */
-    public CelestialObject getObjectUnderMouse() {
-        return objectUnderMouse.getValue();
+    public CelestialObject getObjUnderMouse() {
+        return objUnderMouse.getValue();
     }
 
+    // TODO javadoc
     private void updateSky() {
         painter.clear();
+        painter.drawAsterisms(observedSky.getValue(), planeToCanvas.getValue());
         painter.drawStars(observedSky.getValue(), projection.getValue(), planeToCanvas.getValue());
         painter.drawPlanets(observedSky.getValue(), projection.getValue(), planeToCanvas.getValue());
         painter.drawSun(observedSky.getValue(), projection.getValue(), planeToCanvas.getValue());
@@ -251,9 +255,8 @@ public class SkyCanvasManager {
      * @return the new coordinates with the difference if possible
      */
     private HorizontalCoordinates centerWithAzDiff(HorizontalCoordinates center, double azDiff) {
-        double newAz = azDiff >= 0 ? (center.azDeg() + azDiff) % 360 : (center.azDeg() + azDiff + 360) % 360;
         return HorizontalCoordinates.ofDeg(
-                newAz,
+                RIGHT_OPEN_INTERVAL_0_TO_360.reduce(center.azDeg() + azDiff),
                 center.altDeg()
         );
     }
@@ -266,10 +269,9 @@ public class SkyCanvasManager {
      * @return the new coordinates with the difference if possible
      */
     private HorizontalCoordinates centerWithAltDiff(HorizontalCoordinates center, double altDiff) {
-        double newAlt = center.altDeg() + altDiff;
         return HorizontalCoordinates.ofDeg(
                 center.azDeg(),
-                CLOSED_INTERVAL_5_TO_90.clip(newAlt)
+                CLOSED_INTERVAL_5_TO_90.clip(center.altDeg() + altDiff)
         );
     }
 

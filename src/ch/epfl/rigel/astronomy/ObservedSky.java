@@ -191,8 +191,6 @@ public final class ObservedSky {
         double x = coordinates.x();
         double y = coordinates.y();
 
-        System.out.println(sunPosition());
-        System.out.println(x + " " + y);
 
         if (Math.abs(x - sunPosition().x()) < maxDistance && Math.abs(y - sunPosition().y()) < maxDistance) {
             double sunDistanceSquared = distanceBetweenSquared(coordinates, sunPosition());
@@ -200,7 +198,7 @@ public final class ObservedSky {
                 closestObject = sun;
             }
         }
-        /*
+
         if (Math.abs(x - moonPosition().x()) < maxDistance && Math.abs(y - moonPosition().y()) < maxDistance) {
             double moonDistanceSquared = distanceBetweenSquared(coordinates, moonPosition());
             if (moonDistanceSquared < minDistanceSquared) {
@@ -228,7 +226,9 @@ public final class ObservedSky {
                     closestObject = stars().get(i / 2);
                 }
             }
-        }*/
+        }
+
+        System.out.println(closestObject);
 
         return Optional.ofNullable(closestObject);
     }

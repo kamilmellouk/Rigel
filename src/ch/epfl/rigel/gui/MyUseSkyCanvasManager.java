@@ -1,5 +1,6 @@
 package ch.epfl.rigel.gui;
 
+import ch.epfl.rigel.astronomy.AsterismLoader;
 import ch.epfl.rigel.astronomy.HygDatabaseLoader;
 import ch.epfl.rigel.astronomy.StarCatalogue;
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
@@ -29,9 +30,11 @@ public final class MyUseSkyCanvasManager extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        InputStream as = getClass().getResourceAsStream("/asterisms.txt");
         try (InputStream hs = resourceStream("/hygdata_v3.csv")) {
             StarCatalogue catalogue = new StarCatalogue.Builder()
                     .loadFrom(hs, HygDatabaseLoader.INSTANCE)
+                    .loadFrom(as, AsterismLoader.INSTANCE)
                     .build();
 
             ZonedDateTime when =
@@ -56,7 +59,7 @@ public final class MyUseSkyCanvasManager extends Application {
                     observerLocationBean,
                     viewingParametersBean);
 
-            canvasManager.objectUnderMouseProperty().addListener(
+            canvasManager.objUnderMouseProperty().addListener(
                     (p, o, n) -> {
                         if (n != null) System.out.println(n);
                     });
@@ -66,6 +69,8 @@ public final class MyUseSkyCanvasManager extends Application {
 
             sky.widthProperty().bind(root.widthProperty());
             sky.heightProperty().bind(root.heightProperty());
+
+            primaryStage.setTitle("Rigel");
 
             primaryStage.setMinWidth(800);
             primaryStage.setMinHeight(600);
