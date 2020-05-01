@@ -122,9 +122,6 @@ public class SkyCanvasManager {
                 (p, o, n) -> updateSky()
         );
 
-        // TODO: 28/04/2020 How do we create the Tranform ?
-        // TODO: 01/05/2020 see serie 10
-        // TODO: 01/05/2020 piazza index 222
         planeToCanvas = Bindings.createObjectBinding(
                 () -> {
                     Transform t = Transform.translate(canvas.getWidth() / 2, canvas.getHeight() / 2);
@@ -140,7 +137,8 @@ public class SkyCanvasManager {
 
         objectUnderMouse = Bindings.createObjectBinding(
                 () -> {
-                    Optional<CelestialObject> objectClosest = observedSky.getValue().objectClosestTo(mousePosition.getValue(), planeToCanvas.getValue().inverseDeltaTransform(10, 0).getX());
+                    Point2D mousePos = planeToCanvas.getValue().inverseDeltaTransform(mousePosition.getValue().x(), mousePosition.getValue().y());
+                    Optional<CelestialObject> objectClosest = observedSky.getValue().objectClosestTo(CartesianCoordinates.of(mousePos.getX(), mousePos.getY()), planeToCanvas.getValue().inverseDeltaTransform(10, 0).getX());
                     return objectClosest.isEmpty() ? null : objectClosest.get();
                 },
                 observedSky, mousePosition
