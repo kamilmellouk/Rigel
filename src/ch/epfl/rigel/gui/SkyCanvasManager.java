@@ -42,6 +42,7 @@ public class SkyCanvasManager {
 
     private static final RightOpenInterval RIGHT_OPEN_INTERVAL_0_TO_360 = RightOpenInterval.of(0, 360);
     private static final ClosedInterval CLOSED_INTERVAL_5_TO_90 = ClosedInterval.of(5, 90);
+
     /**
      * Constructor of a sky canvas manager
      *
@@ -66,14 +67,13 @@ public class SkyCanvasManager {
         );
 
         canvas.setOnMouseMoved(
-                e -> {
-                    mousePosition.setValue(CartesianCoordinates.of(e.getX(), e.getY()));
-                }
+                e -> mousePosition.setValue(CartesianCoordinates.of(e.getX(), e.getY()))
         );
 
         canvas.setOnScroll(
                 e -> viewingParametersBean.setFieldOfViewDeg(
-                        viewingParametersBean.getFieldOfViewDeg() + (Math.abs(e.getDeltaX()) > Math.abs(e.getDeltaY()) ? e.getDeltaX() : e.getDeltaY())
+                        viewingParametersBean.getFieldOfViewDeg() +
+                                (Math.abs(e.getDeltaX()) > Math.abs(e.getDeltaY()) ? e.getDeltaX() : e.getDeltaY())
                 )
         );
 
@@ -111,7 +111,11 @@ public class SkyCanvasManager {
         );
 
         observedSky = Bindings.createObjectBinding(
-                () -> new ObservedSky(dateTimeBean.getZonedDateTime(), observerLocationBean.getCoordinates(), projection.getValue(), starCatalogue),
+                () -> new ObservedSky(
+                        dateTimeBean.getZonedDateTime(),
+                        observerLocationBean.getCoordinates(),
+                        projection.getValue(),
+                        starCatalogue),
                 dateTimeBean.dateProperty(),
                 dateTimeBean.timeProperty(),
                 dateTimeBean.zoneProperty(),
@@ -126,7 +130,8 @@ public class SkyCanvasManager {
         planeToCanvas = Bindings.createObjectBinding(
                 () -> {
                     Transform t = Transform.translate(canvas.getWidth() / 2, canvas.getHeight() / 2);
-                    double scaleFactor = canvas.getWidth() / projection.getValue().applyToAngle(Angle.ofDeg(viewingParametersBean.getFieldOfViewDeg()));
+                    double scaleFactor = canvas.getWidth() / projection.getValue().applyToAngle(
+                            Angle.ofDeg(viewingParametersBean.getFieldOfViewDeg()));
                     Transform s = Transform.scale(scaleFactor, -scaleFactor);
                     return t.createConcatenation(s);
                 },
@@ -139,8 +144,14 @@ public class SkyCanvasManager {
 
         objUnderMouse = Bindings.createObjectBinding(
                 () -> {
-                    Point2D mousePos = planeToCanvas.getValue().inverseTransform(mousePosition.getValue().x(), mousePosition.getValue().y());
-                    Optional<CelestialObject> closestObj = observedSky.getValue().objectClosestTo(CartesianCoordinates.of(mousePos.getX(), mousePos.getY()), planeToCanvas.getValue().inverseDeltaTransform(10, 0).getX());
+                    Point2D mousePos = planeToCanvas.getValue().inverseTransform(
+                            mousePosition.getValue().x(),
+                            mousePosition.getValue().y()
+                    );
+                    Optional<CelestialObject> closestObj = observedSky.getValue().objectClosestTo(
+                            CartesianCoordinates.of(mousePos.getX(), mousePos.getY()),
+                            planeToCanvas.getValue().inverseDeltaTransform(10, 0).getX()
+                    );
                     return closestObj.isEmpty() ? null : closestObj.get();
                 },
                 observedSky, mousePosition
@@ -148,8 +159,14 @@ public class SkyCanvasManager {
 
         mouseHorPos = Bindings.createObjectBinding(
                 () -> {
-                    Point2D invTransformedMousePos = planeToCanvas.getValue().inverseTransform(mousePosition.getValue().x(), mousePosition.getValue().y());
-                    HorizontalCoordinates horPos = projection.getValue().inverseApply(CartesianCoordinates.of(invTransformedMousePos.getX(), invTransformedMousePos.getY()));
+                    Point2D invTransformedMousePos = planeToCanvas.getValue().inverseTransform(
+                            mousePosition.getValue().x(),
+                            mousePosition.getValue().y()
+                    );
+                    HorizontalCoordinates horPos = projection.getValue().inverseApply(CartesianCoordinates.of(
+                            invTransformedMousePos.getX(),
+                            invTransformedMousePos.getY())
+                    );
                     return HorizontalCoordinates.of(
                             horPos.az(),
                             horPos.alt()
