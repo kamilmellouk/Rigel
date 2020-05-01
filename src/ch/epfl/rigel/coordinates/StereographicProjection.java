@@ -128,10 +128,11 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @return nothing
      * @throws UnsupportedOperationException the exception to throw
      */
-    @Override
+    /**@Override
     public final boolean equals(Object obj) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
+     **/
 
     @Override
     public String toString() {

@@ -37,12 +37,12 @@ public final class ObservedSky {
         // add sun
         sun = SunModel.SUN.at(Epoch.J2010.daysUntil(when), new EclipticToEquatorialConversion(when));
         CartesianCoordinates sunPosition = stereographicProjection.apply(conversionSystem.apply(sun.equatorialPos()));
-        objectPosMap.put(ObservedCelestialObjects.SUN, new double[]{sunPosition.x(), sunPosition.x()});
+        objectPosMap.put(ObservedCelestialObjects.SUN, new double[]{sunPosition.x(), sunPosition.y()});
 
         // add moon
         moon = MoonModel.MOON.at(Epoch.J2010.daysUntil(when), new EclipticToEquatorialConversion(when));
         CartesianCoordinates moonPosition = stereographicProjection.apply(conversionSystem.apply(moon.equatorialPos()));
-        objectPosMap.put(ObservedCelestialObjects.MOON, new double[]{moonPosition.x(), moonPosition.x()});
+        objectPosMap.put(ObservedCelestialObjects.MOON, new double[]{moonPosition.x(), moonPosition.y()});
 
         // add planets
         List<Planet> tempPlanetList = new ArrayList<>();

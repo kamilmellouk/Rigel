@@ -39,6 +39,7 @@ public enum SunModel implements CelestialObjectModel<Sun> {
         double sunGeocentricEclipticLon = Angle.normalizePositive(sunRealAnomaly + SUN_LON_AT_PERIGEE);
         EclipticCoordinates sunEclipticCoordinates = EclipticCoordinates.of(sunGeocentricEclipticLon, 0);
 
+        System.out.println("pos recomputed");
         return new Sun(
                 sunEclipticCoordinates,
                 eclipticToEquatorialConversion.apply(sunEclipticCoordinates),
