@@ -84,16 +84,20 @@ public class SkyCanvasManager {
                     switch (e.getCode()) {
                         case LEFT:
                             System.out.println("LEFT");
-                            //viewingParametersBean.setCenter(centerWithAzDifference(center, -10));
+                            viewingParametersBean.setCenter(centerWithAzDifference(center, -10));
+                            break;
                         case RIGHT:
                             System.out.println("RIGHT");
-                            //viewingParametersBean.setCenter(centerWithAzDifference(center, 10));
+                            viewingParametersBean.setCenter(centerWithAzDifference(center, 10));
+                            break;
                         case UP:
                             System.out.println("UP");
-                            //viewingParametersBean.setCenter(centerWithAltDifference(center, 5));
+                            viewingParametersBean.setCenter(centerWithAltDifference(center, 5));
+                            break;
                         case DOWN:
                             System.out.println("DOWN");
-                            //viewingParametersBean.setCenter(centerWithAltDifference(center, -5));
+                            viewingParametersBean.setCenter(centerWithAltDifference(center, -5));
+                            break;
                     }
                 }
         );
