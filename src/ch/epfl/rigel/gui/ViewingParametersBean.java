@@ -43,9 +43,7 @@ public class ViewingParametersBean {
      * @param fieldOfViewDeg the new field of view in deg
      */
     public void setFieldOfViewDeg(double fieldOfViewDeg) {
-        double value = Math.round(fieldOfViewDeg / 5d) * 5;
-        value = closedInterval30To150.clip(value);
-        this.fieldOfViewDeg.setValue(value);
+        this.fieldOfViewDeg.setValue(closedInterval30To150.clip(fieldOfViewDeg));
     }
 
     /**

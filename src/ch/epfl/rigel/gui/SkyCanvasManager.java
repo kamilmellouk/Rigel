@@ -6,6 +6,8 @@ import ch.epfl.rigel.astronomy.StarCatalogue;
 import ch.epfl.rigel.coordinates.CartesianCoordinates;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.coordinates.StereographicProjection;
+import ch.epfl.rigel.math.ClosedInterval;
+import ch.epfl.rigel.math.RightOpenInterval;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -13,7 +15,10 @@ import javafx.beans.value.ObservableDoubleValue;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.KeyCode;
 import javafx.scene.transform.Transform;
+
+import java.util.Optional;
 
 /**
  * @author Bastien Faivre (310929)
@@ -22,13 +27,16 @@ import javafx.scene.transform.Transform;
 
 public class SkyCanvasManager {
 
+    private static final RightOpenInterval RIGHT_OPEN_INTERVAL_0_TO_360 = RightOpenInterval.of(0, 360);
+    private static final ClosedInterval CLOSED_INTERVAL_5_TO_90 = ClosedInterval.of(5, 90);
+
     private final Canvas canvas;
     private final SkyCanvasPainter painter;
 
     private final ObservableValue<ObservedSky> observedSky;
     private final ObservableValue<StereographicProjection> projection;
     private final ObservableValue<Transform> planeToCanvas;
-    private final ObjectProperty<CartesianCoordinates> mousePosition = new SimpleObjectProperty<>(null);
+    private final ObjectProperty<CartesianCoordinates> mousePosition = new SimpleObjectProperty<>(CartesianCoordinates.of(0, 0));
     private final ObservableValue<CelestialObject> objectUnderMouse;
     private final ObservableValue<HorizontalCoordinates> mouseHorizontalPosition;
     private final ObservableDoubleValue mouseAzDeg;
@@ -54,10 +62,15 @@ public class SkyCanvasManager {
         // Events
         //-----------------------------------------------------------------------------
 
+        canvas.setOnMousePressed(
+                e -> {
+                    if (e.isPrimaryButtonDown()) canvas.requestFocus();
+                }
+        );
+
         canvas.setOnMouseMoved(
                 e -> {
                     mousePosition.setValue(CartesianCoordinates.of(e.getX(), e.getY()));
-                    updateSky();
                 }
         );
 
@@ -66,6 +79,27 @@ public class SkyCanvasManager {
                     viewingParametersBean.setFieldOfViewDeg(
                             viewingParametersBean.getFieldOfViewDeg() + (Math.abs(e.getDeltaX()) > Math.abs(e.getDeltaY()) ? e.getDeltaX() : e.getDeltaY())
                     );
+                    updateSky();
+                }
+        );
+
+        canvas.setOnKeyPressed(
+                e -> {
+                    HorizontalCoordinates center = viewingParametersBean.getCenter();
+                    switch (e.getCode()) {
+                        case LEFT:
+                            System.out.println("LEFT");
+                            //viewingParametersBean.setCenter(centerWithAzDifference(center, -10));
+                        case RIGHT:
+                            System.out.println("RIGHT");
+                            //viewingParametersBean.setCenter(centerWithAzDifference(center, 10));
+                        case UP:
+                            System.out.println("UP");
+                            //viewingParametersBean.setCenter(centerWithAltDifference(center, 5));
+                        case DOWN:
+                            System.out.println("DOWN");
+                            //viewingParametersBean.setCenter(centerWithAltDifference(center, -5));
+                    }
                     updateSky();
                 }
         );
@@ -97,7 +131,10 @@ public class SkyCanvasManager {
 
         // TODO: 28/04/2020 what is 10 units on the canvas ?
         objectUnderMouse = Bindings.createObjectBinding(
-                () -> observedSky.getValue().objectClosestTo(mousePosition.getValue(), 10).isEmpty() ? null : observedSky.getValue().objectClosestTo(mousePosition.getValue(), 10).get(),
+                () -> {
+                    Optional<CelestialObject> objectClosest = observedSky.getValue().objectClosestTo(mousePosition.getValue(), 100);
+                    return objectClosest.isEmpty() ? null : objectClosest.get();
+                },
                 observedSky, mousePosition
         );
 
@@ -200,6 +237,22 @@ public class SkyCanvasManager {
         painter.drawMoon(observedSky.getValue(), projection.getValue(), planeToCanvas.getValue());
         painter.drawHorizon(projection.getValue(), planeToCanvas.getValue());
         painter.drawCardinalPoints(projection.getValue(), planeToCanvas.getValue());
+    }
+
+    private HorizontalCoordinates centerWithAzDifference(HorizontalCoordinates center, double azDifference) {
+        double newAz = center.azDeg() + azDifference;
+        return HorizontalCoordinates.ofDeg(
+                RIGHT_OPEN_INTERVAL_0_TO_360.contains(newAz) ? newAz : center.azDeg(),
+                center.altDeg()
+        );
+    }
+
+    private HorizontalCoordinates centerWithAltDifference(HorizontalCoordinates center, double altDifference) {
+        double newAlt = center.altDeg() + altDifference;
+        return HorizontalCoordinates.ofDeg(
+                center.azDeg(),
+                CLOSED_INTERVAL_5_TO_90.clip(newAlt)
+        );
     }
 
 }
