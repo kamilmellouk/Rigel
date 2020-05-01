@@ -6,6 +6,7 @@ import ch.epfl.rigel.astronomy.StarCatalogue;
 import ch.epfl.rigel.coordinates.CartesianCoordinates;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.coordinates.StereographicProjection;
+import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 import ch.epfl.rigel.math.RightOpenInterval;
 import javafx.beans.binding.Bindings;
@@ -109,6 +110,7 @@ public class SkyCanvasManager {
                 () -> new StereographicProjection(viewingParametersBean.getCenter()),
                 viewingParametersBean.centerProperty()
         );
+
         projection.addListener(
                 (p, o, n) -> updateSky()
         );
@@ -129,9 +131,15 @@ public class SkyCanvasManager {
         // TODO: 01/05/2020 see serie 10
         // TODO: 01/05/2020 piazza index 222
         planeToCanvas = Bindings.createObjectBinding(
-                () -> Transform.affine(1300, 0, 0, -1300, 400, 300),
+                () -> {
+                    Transform t = Transform.translate(canvas.getWidth()/2, canvas.getHeight()/2);
+                    double scaleFactor = canvas.getWidth()/projection.getValue().applyToAngle(Angle.ofDeg(viewingParametersBean.getFieldOfViewDeg()));
+                    Transform s = Transform.scale(scaleFactor, -scaleFactor);
+                    return t.createConcatenation(s);
+                },
                 projection, canvas.widthProperty(), canvas.heightProperty(), viewingParametersBean.fieldOfViewDegProperty()
         );
+
         planeToCanvas.addListener(
                 (p, o, n) -> updateSky()
         );
