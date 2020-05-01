@@ -67,7 +67,6 @@ public class SkyCanvasManager {
 
         canvas.setOnMouseMoved(
                 e -> {
-                    System.out.println("mouse moved");
                     mousePosition.setValue(CartesianCoordinates.of(e.getX(), e.getY()));
                 }
         );
@@ -137,8 +136,6 @@ public class SkyCanvasManager {
                 (p, o, n) -> updateSky()
         );
 
-
-        // TODO: 28/04/2020 what is 10 units on the canvas ?
         objectUnderMouse = Bindings.createObjectBinding(
                 () -> {
                     Optional<CelestialObject> objectClosest = observedSky.getValue().objectClosestTo(mousePosition.getValue(), planeToCanvas.getValue().inverseDeltaTransform(10, 0).getX());
@@ -180,8 +177,6 @@ public class SkyCanvasManager {
         return canvas;
     }
 
-    // TODO: 28/04/2020 Any setter for these 3 properties ?
-    // TODO: 28/04/2020 Do the other bindings need getter and setter too ?
 
     /**
      * Getter for the property azimuth in deg of the mouse
