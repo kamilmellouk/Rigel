@@ -19,6 +19,7 @@ public enum MoonModel implements CelestialObjectModel<Moon> {
     private static final double ASCENDING_NODE_LON = Angle.ofDeg(291.682547);
     private static final double ORBIT_INCLINATION = Angle.ofDeg(5.145396);
     private static final double ORBIT_ECCENTRICITY = 0.0549;
+    private static final double ORBIT_ECCENTRICITY_SQUARED = ORBIT_ECCENTRICITY * ORBIT_ECCENTRICITY;
 
     /**
      * Compute the model of the moon
@@ -64,7 +65,7 @@ public enum MoonModel implements CelestialObjectModel<Moon> {
 
         double phase = (1 - Math.cos(realOrbitalLon - sunGeoEclLon)) / 2;
 
-        double distanceEarthMoon = (1 - ORBIT_ECCENTRICITY * ORBIT_ECCENTRICITY) / (1 + ORBIT_ECCENTRICITY * Math.cos(correctedAnomaly + centralEquationCorrection));
+        double distanceEarthMoon = (1 - ORBIT_ECCENTRICITY_SQUARED) / (1 + ORBIT_ECCENTRICITY * Math.cos(correctedAnomaly + centralEquationCorrection));
         double angularSize = Angle.ofDeg(0.5181) / distanceEarthMoon;
 
         return new Moon(
