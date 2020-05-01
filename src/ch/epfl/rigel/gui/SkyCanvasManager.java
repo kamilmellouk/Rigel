@@ -139,7 +139,6 @@ public class SkyCanvasManager {
                 },
                 projection, canvas.widthProperty(), canvas.heightProperty(), viewingParametersBean.fieldOfViewDegProperty()
         );
-
         planeToCanvas.addListener(
                 (p, o, n) -> updateSky()
         );
