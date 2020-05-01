@@ -188,14 +188,19 @@ public final class ObservedSky {
         double minDistanceSquared = maxDistance * maxDistance;
         CelestialObject closestObject = null;
 
-        if (sunPosition().x() < maxDistance && sunPosition().y() < maxDistance) {
+        double x = coordinates.x();
+        double y = coordinates.y();
+
+        System.out.println(sunPosition().x());
+
+        if (Math.abs(x - sunPosition().x()) < maxDistance && Math.abs(y - sunPosition().y()) < maxDistance) {
             double sunDistanceSquared = distanceBetweenSquared(coordinates, sunPosition());
             if (sunDistanceSquared < minDistanceSquared) {
                 closestObject = sun;
             }
         }
 
-        if (moonPosition().x() < maxDistance && moonPosition().y() < maxDistance) {
+        if (Math.abs(x - moonPosition().x()) < maxDistance && Math.abs(y - moonPosition().y()) < maxDistance) {
             double moonDistanceSquared = distanceBetweenSquared(coordinates, moonPosition());
             if (moonDistanceSquared < minDistanceSquared) {
                 closestObject = moon;
@@ -204,7 +209,7 @@ public final class ObservedSky {
 
         for (int i = 0; i < planetPositions().length; i += 2) {
             CartesianCoordinates planetPos = CartesianCoordinates.of(planetPositions()[i], planetPositions()[i + 1]);
-            if (planetPos.x() < maxDistance && planetPos.y() < maxDistance) {
+            if (Math.abs(x - planetPos.x()) < maxDistance && Math.abs(y - planetPos.y()) < maxDistance) {
                 double distanceSquared = distanceBetweenSquared(planetPos, coordinates);
                 if (distanceSquared < minDistanceSquared) {
                     minDistanceSquared = distanceSquared;
@@ -215,7 +220,7 @@ public final class ObservedSky {
 
         for (int i = 0; i < starPositions().length; i += 2) {
             CartesianCoordinates starPos = CartesianCoordinates.of(starPositions()[i], starPositions()[i + 1]);
-            if (starPos.y() < maxDistance && starPos.y() < maxDistance) {
+            if (Math.abs(x - starPos.x()) < maxDistance && Math.abs(y - starPos.y()) < maxDistance) {
                 double distanceSquared = distanceBetweenSquared(starPos, coordinates);
                 if (distanceSquared < minDistanceSquared) {
                     minDistanceSquared = distanceSquared;
