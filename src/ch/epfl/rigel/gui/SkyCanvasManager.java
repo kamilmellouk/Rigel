@@ -69,18 +69,13 @@ public class SkyCanvasManager {
         );
 
         canvas.setOnMouseMoved(
-                e -> {
-                    mousePosition.setValue(CartesianCoordinates.of(e.getX(), e.getY()));
-                }
+                e -> mousePosition.setValue(CartesianCoordinates.of(e.getX(), e.getY()))
         );
 
         canvas.setOnScroll(
-                e -> {
-                    viewingParametersBean.setFieldOfViewDeg(
-                            viewingParametersBean.getFieldOfViewDeg() + (Math.abs(e.getDeltaX()) > Math.abs(e.getDeltaY()) ? e.getDeltaX() : e.getDeltaY())
-                    );
-                    updateSky();
-                }
+                e -> viewingParametersBean.setFieldOfViewDeg(
+                        viewingParametersBean.getFieldOfViewDeg() + (Math.abs(e.getDeltaX()) > Math.abs(e.getDeltaY()) ? e.getDeltaX() : e.getDeltaY())
+                )
         );
 
         canvas.setOnKeyPressed(
@@ -100,7 +95,6 @@ public class SkyCanvasManager {
                             System.out.println("DOWN");
                             //viewingParametersBean.setCenter(centerWithAltDifference(center, -5));
                     }
-                    updateSky();
                 }
         );
 
@@ -112,6 +106,9 @@ public class SkyCanvasManager {
                 () -> new StereographicProjection(viewingParametersBean.getCenter()),
                 viewingParametersBean.centerProperty()
         );
+        projection.addListener(
+                (p, o, n) -> updateSky()
+        );
 
         observedSky = Bindings.createObjectBinding(
                 () -> new ObservedSky(dateTimeBean.getZonedDateTime(), observerLocationBean.getCoordinates(), projection.getValue(), starCatalogue),
@@ -121,11 +118,17 @@ public class SkyCanvasManager {
                 observerLocationBean.coordinatesProperty(),
                 projection
         );
+        observedSky.addListener(
+                (p, o, n) -> updateSky()
+        );
 
         // TODO: 28/04/2020 How do we create the Tranform ?
         planeToCanvas = Bindings.createObjectBinding(
                 () -> Transform.affine(1300, 0, 0, -1300, 400, 300),
                 projection, canvas.widthProperty(), canvas.heightProperty(), viewingParametersBean.fieldOfViewDegProperty()
+        );
+        planeToCanvas.addListener(
+                (p, o, n) -> updateSky()
         );
 
 
@@ -239,6 +242,13 @@ public class SkyCanvasManager {
         painter.drawCardinalPoints(projection.getValue(), planeToCanvas.getValue());
     }
 
+    /**
+     * Return the new coordinates with the difference if possible
+     *
+     * @param center       the current coordinates
+     * @param azDifference the azimuth difference to apply
+     * @return the new coordinates with the difference if possible
+     */
     private HorizontalCoordinates centerWithAzDifference(HorizontalCoordinates center, double azDifference) {
         double newAz = center.azDeg() + azDifference;
         return HorizontalCoordinates.ofDeg(
@@ -247,6 +257,13 @@ public class SkyCanvasManager {
         );
     }
 
+    /**
+     * Return the new coordinates with the difference if possible
+     *
+     * @param center        the current coordinates
+     * @param altDifference the altitude difference to apply
+     * @return the new coordinates with the difference if possible
+     */
     private HorizontalCoordinates centerWithAltDifference(HorizontalCoordinates center, double altDifference) {
         double newAlt = center.altDeg() + altDifference;
         return HorizontalCoordinates.ofDeg(
