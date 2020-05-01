@@ -135,6 +135,6 @@ public final class StereographicProjection implements Function<HorizontalCoordin
 
     @Override
     public String toString() {
-        return String.format(Locale.ROOT, "StereographicProjection of center : x=%.4f, y=%.4f", centerAz, center.alt());
+        return String.format(Locale.ROOT, "StereographicProjection of center : %s", center);
     }
 }

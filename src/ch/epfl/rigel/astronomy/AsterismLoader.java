@@ -18,6 +18,10 @@ public enum AsterismLoader implements StarCatalogue.Loader {
 
     @Override
     public void load(InputStream inputStream, StarCatalogue.Builder builder) throws IOException {
+        // Map containing an hipparcos ID with its corresponding star
+        Map<Integer, Star> hipWithStar = new HashMap<>();
+        builder.stars().forEach(star -> hipWithStar.put(star.hipparcosId(), star));
+
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.US_ASCII))) {
             String s;
             while ((s = bufferedReader.readLine()) != null) {
@@ -32,10 +36,7 @@ public enum AsterismLoader implements StarCatalogue.Loader {
                 // add the stars
                 for (String value : tabLine) {
                     int hipId = Integer.parseInt(value);
-                    builder.stars().forEach(star -> {
-                        if (star.hipparcosId() == hipId)
-                            starList.add(star);
-                    });
+                    starList.add(hipWithStar.get(hipId));
                 }
 
                 builder.addAsterism(new Asterism(starList));

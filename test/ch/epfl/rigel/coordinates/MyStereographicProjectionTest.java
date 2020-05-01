@@ -105,8 +105,7 @@ public class MyStereographicProjectionTest {
 
     @Test
     void toStringWorks() {
-        assertEquals("StereographicProjection of center : x=0.0000, y=0.0000", new StereographicProjection(HorizontalCoordinates.of(0,0)).toString());
-        assertEquals("StereographicProjection of center : x=0.0000, y=0.0000", new StereographicProjection(HorizontalCoordinates.of(0,0)).toString());
+        assertEquals("StereographicProjection of center : (az=0.0000°, alt=0.0000°)", new StereographicProjection(HorizontalCoordinates.of(0,0)).toString());
     }
 
     @Test
@@ -153,12 +152,8 @@ public class MyStereographicProjectionTest {
 
     @Test
     void doesHashCodeAndEqualsFail() {
-        assertThrows(UnsupportedOperationException.class, () -> {
-            sProj.hashCode();
-        });
-        assertThrows(UnsupportedOperationException.class, () -> {
-            sProj.equals(null);
-        });
+        assertThrows(UnsupportedOperationException.class, () -> sProj.hashCode());
+        assertThrows(UnsupportedOperationException.class, () -> sProj.equals(null));
     }
 
     @Test

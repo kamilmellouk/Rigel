@@ -32,13 +32,17 @@ public final class StarCatalogue {
     public StarCatalogue(List<Star> stars, List<Asterism> asterisms) {
         this.stars = List.copyOf(stars);
 
+        // Map containing a star with its corresponding index
+        Map<Star, Integer> starWithIndex = new HashMap<>();
+        stars.forEach(star -> starWithIndex.put(star, stars.indexOf(star)));
+
         Map<Asterism, List<Integer>> asterismMapTemp = new HashMap<>();
         // fill in the map with asterisms and their stars (especially their index)
         for (Asterism a : asterisms) {
             List<Integer> indices = new ArrayList<>();
             for (Star s : a.stars()) {
                 Preconditions.checkArgument(stars.contains(s));
-                indices.add(stars.indexOf(s));
+                indices.add(starWithIndex.get(s));
             }
             asterismMapTemp.put(a, indices);
         }

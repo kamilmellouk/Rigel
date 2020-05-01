@@ -30,8 +30,8 @@ public class SkyCanvasManager {
     private static final RightOpenInterval RIGHT_OPEN_INTERVAL_0_TO_360 = RightOpenInterval.of(0, 360);
     private static final ClosedInterval CLOSED_INTERVAL_5_TO_90 = ClosedInterval.of(5, 90);
 
-    private final Canvas canvas;
-    private final SkyCanvasPainter painter;
+    private final Canvas canvas = new Canvas();
+    private final SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
 
     private final ObservableValue<ObservedSky> observedSky;
     private final ObservableValue<StereographicProjection> projection;
@@ -55,9 +55,6 @@ public class SkyCanvasManager {
                             ObserverLocationBean observerLocationBean,
                             ViewingParametersBean viewingParametersBean) {
 
-        canvas = new Canvas();
-        painter = new SkyCanvasPainter(canvas);
-
         //-----------------------------------------------------------------------------
         // Events
         //-----------------------------------------------------------------------------
@@ -69,7 +66,10 @@ public class SkyCanvasManager {
         );
 
         canvas.setOnMouseMoved(
-                e -> mousePosition.setValue(CartesianCoordinates.of(e.getX(), e.getY()))
+                e -> {
+                    System.out.println("mouse moved");
+                    mousePosition.setValue(CartesianCoordinates.of(e.getX(), e.getY()));
+                }
         );
 
         canvas.setOnScroll(
@@ -127,6 +127,8 @@ public class SkyCanvasManager {
         );
 
         // TODO: 28/04/2020 How do we create the Tranform ?
+        // TODO: 01/05/2020 see serie 10
+        // TODO: 01/05/2020 piazza index 222
         planeToCanvas = Bindings.createObjectBinding(
                 () -> Transform.affine(1300, 0, 0, -1300, 400, 300),
                 projection, canvas.widthProperty(), canvas.heightProperty(), viewingParametersBean.fieldOfViewDegProperty()
@@ -139,7 +141,7 @@ public class SkyCanvasManager {
         // TODO: 28/04/2020 what is 10 units on the canvas ?
         objectUnderMouse = Bindings.createObjectBinding(
                 () -> {
-                    Optional<CelestialObject> objectClosest = observedSky.getValue().objectClosestTo(mousePosition.getValue(), 100);
+                    Optional<CelestialObject> objectClosest = observedSky.getValue().objectClosestTo(mousePosition.getValue(), planeToCanvas.getValue().inverseDeltaTransform(10, 0).getX());
                     return objectClosest.isEmpty() ? null : objectClosest.get();
                 },
                 observedSky, mousePosition
