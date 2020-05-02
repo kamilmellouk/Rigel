@@ -21,7 +21,8 @@ public final class ObservedSky {
     private final List<Planet> planets;
 
     private final StarCatalogue catalogue;
-
+    private final List<Star> stars;
+    private final Set<Asterism> asterisms;
 
     /**
      * Constructor of the observed sky
@@ -32,17 +33,19 @@ public final class ObservedSky {
      * @param catalogue               the catalogue of stars
      */
     public ObservedSky(ZonedDateTime when, GeographicCoordinates where, StereographicProjection stereographicProjection, StarCatalogue catalogue) {
-        EquatorialToHorizontalConversion conversionSystem = new EquatorialToHorizontalConversion(when, where);
+        EquatorialToHorizontalConversion equToHorConversion = new EquatorialToHorizontalConversion(when, where);
+        EclipticToEquatorialConversion eclToEquConversion = new EclipticToEquatorialConversion(when);
+        double daysFromJ2010UntilWhen = Epoch.J2010.daysUntil(when);
 
         // add sun
-        sun = SunModel.SUN.at(Epoch.J2010.daysUntil(when), new EclipticToEquatorialConversion(when));
-        CartesianCoordinates sunPosition = stereographicProjection.apply(conversionSystem.apply(sun.equatorialPos()));
-        objectPosMap.put(ObservedCelestialObjects.SUN, new double[]{sunPosition.x(), sunPosition.y()});
+        this.sun = SunModel.SUN.at(daysFromJ2010UntilWhen, eclToEquConversion);
+        CartesianCoordinates sunPosition = stereographicProjection.apply(equToHorConversion.apply(this.sun.equatorialPos()));
+        this.objectPosMap.put(ObservedCelestialObjects.SUN, new double[]{sunPosition.x(), sunPosition.y()});
 
         // add moon
-        moon = MoonModel.MOON.at(Epoch.J2010.daysUntil(when), new EclipticToEquatorialConversion(when));
-        CartesianCoordinates moonPosition = stereographicProjection.apply(conversionSystem.apply(moon.equatorialPos()));
-        objectPosMap.put(ObservedCelestialObjects.MOON, new double[]{moonPosition.x(), moonPosition.y()});
+        this.moon = MoonModel.MOON.at(daysFromJ2010UntilWhen, eclToEquConversion);
+        CartesianCoordinates moonPosition = stereographicProjection.apply(equToHorConversion.apply(this.moon.equatorialPos()));
+        this.objectPosMap.put(ObservedCelestialObjects.MOON, new double[]{moonPosition.x(), moonPosition.y()});
 
         // add planets
         List<Planet> tempPlanetList = new ArrayList<>();
@@ -51,29 +54,31 @@ public final class ObservedSky {
         for (PlanetModel planetModel : PlanetModel.values()) {
             // the earth is skipped
             if (!planetModel.equals(PlanetModel.EARTH)) {
-                Planet planet = planetModel.at(Epoch.J2010.daysUntil(when), new EclipticToEquatorialConversion(when));
+                Planet planet = planetModel.at(daysFromJ2010UntilWhen, eclToEquConversion);
                 tempPlanetList.add(planet);
 
-                CartesianCoordinates position = stereographicProjection.apply(conversionSystem.apply(planet.equatorialPos()));
+                CartesianCoordinates position = stereographicProjection.apply(equToHorConversion.apply(planet.equatorialPos()));
                 planetPositions[planetIndex] = position.x();
                 planetPositions[planetIndex + 1] = position.y();
                 planetIndex += 2;
             }
         }
-        objectPosMap.put(ObservedCelestialObjects.PLANETS, planetPositions);
-        planets = List.copyOf(tempPlanetList);
+        this.objectPosMap.put(ObservedCelestialObjects.PLANETS, planetPositions);
+        this.planets = List.copyOf(tempPlanetList);
 
-        // add stars
         this.catalogue = catalogue;
-        double[] starPositions = new double[catalogue.stars().size() * 2];
+        this.stars = catalogue.stars();
+        this.asterisms = catalogue.asterisms();
+        // add stars
+        double[] starPositions = new double[this.stars.size() * 2];
         int starIndex = 0;
         for (Star star : catalogue.stars()) {
-            CartesianCoordinates position = stereographicProjection.apply(conversionSystem.apply(star.equatorialPos()));
+            CartesianCoordinates position = stereographicProjection.apply(equToHorConversion.apply(star.equatorialPos()));
             starPositions[starIndex] = position.x();
             starPositions[starIndex + 1] = position.y();
             starIndex += 2;
         }
-        objectPosMap.put(ObservedCelestialObjects.STARS, starPositions);
+        this.objectPosMap.put(ObservedCelestialObjects.STARS, starPositions);
 
     }
 
@@ -143,7 +148,7 @@ public final class ObservedSky {
      * @return the list of stars of the star catalogue used
      */
     public List<Star> stars() {
-        return catalogue.stars();
+        return stars;
     }
 
     /**
@@ -162,7 +167,7 @@ public final class ObservedSky {
      * @return the set of asterism of the star catalogue used
      */
     public Set<Asterism> asterisms() {
-        return catalogue.asterisms();
+        return asterisms;
     }
 
     /**
@@ -191,7 +196,7 @@ public final class ObservedSky {
         double x = coordinates.x();
         double y = coordinates.y();
 
-
+        // check the sun
         if (Math.abs(x - sunPosition().x()) < maxDistance && Math.abs(y - sunPosition().y()) < maxDistance) {
             double sunDistanceSquared = distanceBetweenSquared(coordinates, sunPosition());
             if (sunDistanceSquared < minDistanceSquared) {
@@ -199,6 +204,7 @@ public final class ObservedSky {
             }
         }
 
+        // check the moon
         if (Math.abs(x - moonPosition().x()) < maxDistance && Math.abs(y - moonPosition().y()) < maxDistance) {
             double moonDistanceSquared = distanceBetweenSquared(coordinates, moonPosition());
             if (moonDistanceSquared < minDistanceSquared) {
@@ -206,6 +212,7 @@ public final class ObservedSky {
             }
         }
 
+        // check the planets
         for (int i = 0; i < planetPositions().length; i += 2) {
             CartesianCoordinates planetPos = CartesianCoordinates.of(planetPositions()[i], planetPositions()[i + 1]);
             if (Math.abs(x - planetPos.x()) < maxDistance && Math.abs(y - planetPos.y()) < maxDistance) {
@@ -217,6 +224,7 @@ public final class ObservedSky {
             }
         }
 
+        // check the stars
         for (int i = 0; i < starPositions().length; i += 2) {
             CartesianCoordinates starPos = CartesianCoordinates.of(starPositions()[i], starPositions()[i + 1]);
             if (Math.abs(x - starPos.x()) < maxDistance && Math.abs(y - starPos.y()) < maxDistance) {
@@ -227,8 +235,6 @@ public final class ObservedSky {
                 }
             }
         }
-
-        System.out.println(closestObject);
 
         return Optional.ofNullable(closestObject);
     }
