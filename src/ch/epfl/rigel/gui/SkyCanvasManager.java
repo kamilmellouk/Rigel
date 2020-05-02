@@ -27,6 +27,8 @@ import java.util.Optional;
 
 public class SkyCanvasManager {
 
+    private static final RightOpenInterval RIGHT_OPEN_INTERVAL_0_TO_360 = RightOpenInterval.of(0, 360);
+    private static final ClosedInterval CLOSED_INTERVAL_5_TO_90 = ClosedInterval.of(5, 90);
 
     private final Canvas canvas = new Canvas();
     private final SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
@@ -39,9 +41,6 @@ public class SkyCanvasManager {
     private final ObservableValue<HorizontalCoordinates> mouseHorPos;
     private final ObservableDoubleValue mouseAzDeg;
     private final ObservableDoubleValue mouseAltDeg;
-
-    private static final RightOpenInterval RIGHT_OPEN_INTERVAL_0_TO_360 = RightOpenInterval.of(0, 360);
-    private static final ClosedInterval CLOSED_INTERVAL_5_TO_90 = ClosedInterval.of(5, 90);
 
     /**
      * Constructor of a sky canvas manager
@@ -59,6 +58,8 @@ public class SkyCanvasManager {
         //-----------------------------------------------------------------------------
         // Events
         //-----------------------------------------------------------------------------
+
+        // TODO: 02/05/2020 Where do we have to put the consume ?
 
         canvas.setOnMousePressed(
                 e -> {
@@ -135,7 +136,10 @@ public class SkyCanvasManager {
                     Transform s = Transform.scale(scaleFactor, -scaleFactor);
                     return t.createConcatenation(s);
                 },
-                projection, canvas.widthProperty(), canvas.heightProperty(), viewingParametersBean.fieldOfViewDegProperty()
+                projection,
+                canvas.widthProperty(),
+                canvas.heightProperty(),
+                viewingParametersBean.fieldOfViewDegProperty()
         );
 
         planeToCanvas.addListener(
@@ -252,8 +256,11 @@ public class SkyCanvasManager {
         return objUnderMouse.getValue();
     }
 
-    // TODO javadoc
+    /**
+     * Update/draw all elements of the sky
+     */
     private void updateSky() {
+        // TODO: 02/05/2020 add intermediate values ?
         painter.clear();
         painter.drawAsterisms(observedSky.getValue(), planeToCanvas.getValue());
         painter.drawStars(observedSky.getValue(), projection.getValue(), planeToCanvas.getValue());
