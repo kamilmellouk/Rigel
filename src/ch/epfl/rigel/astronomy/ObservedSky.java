@@ -228,7 +228,7 @@ public final class ObservedSky {
             }
         }
 
-        System.out.println(closestObject);
+        if(closestObject != null) System.out.println(closestObject);
 
         return Optional.ofNullable(closestObject);
     }
