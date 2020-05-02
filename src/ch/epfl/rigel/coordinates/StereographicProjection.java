@@ -123,17 +123,18 @@ public final class StereographicProjection implements Function<HorizontalCoordin
         throw new UnsupportedOperationException();
     }
 
+    // TODO: 02/05/2020 remove comments ?
+
     /**
      * @param obj the object
      * @return nothing
      * @throws UnsupportedOperationException the exception to throw
      */
-    /**@Override
+    /*
+    @Override
     public final boolean equals(Object obj) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
-    }
-     **/
-
+    }*/
     @Override
     public String toString() {
         return String.format(Locale.ROOT, "StereographicProjection of center : %s", center);
