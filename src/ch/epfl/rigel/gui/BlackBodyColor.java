@@ -18,6 +18,7 @@ public final class BlackBodyColor {
 
     private static final String colorFile = "/bbr_color.txt";
     private static final Map<Double, String> temperatureWithColor = load();
+    private static final ClosedInterval CLOSED_INTERVAL_1000_TO_40000 = ClosedInterval.of(1000, 40000);
 
     /**
      * Private constructor to ensure that the class isn't instantiable
@@ -34,7 +35,7 @@ public final class BlackBodyColor {
      */
     public static Color colorForTemperature(double temperature) throws IllegalArgumentException {
         // check exception
-        Preconditions.checkInInterval(ClosedInterval.of(1000, 40000), temperature);
+        Preconditions.checkInInterval(CLOSED_INTERVAL_1000_TO_40000, temperature);
 
         // round the temperature to the closest hundred
         double closestColor = (double) Math.round(temperature / 100d) * 100;
@@ -54,21 +55,10 @@ public final class BlackBodyColor {
 
             Map<Double, String> loaderMap = new HashMap<>();
 
-            //TODO implement flow coding
-//            bufferedReader.lines()
-//                    .filter(l -> !(l.charAt(0) == '#') && l.startsWith("10deg", 10))
-//                    .map(l -> Double.parseDouble(l.substring(1, 6)))
-//                    .
-
             // add all pairs (temperature, color)
-            String s;
-            while ((s = bufferedReader.readLine()) != null) {
-                if (!(s.charAt(0) == '#') && s.startsWith("10deg", 10)) {
-                    double temperature = Double.parseDouble(s.substring(1, 6));
-                    String color = s.substring(80, 87);
-                    loaderMap.put(temperature, color);
-                }
-            }
+            bufferedReader.lines()
+                    .filter(l -> !(l.charAt(0) == '#') && l.startsWith("10deg", 10))
+                    .forEach(l -> loaderMap.put(Double.parseDouble(l.substring(1, 6)), l.substring(80, 87)));
 
             return loaderMap;
 

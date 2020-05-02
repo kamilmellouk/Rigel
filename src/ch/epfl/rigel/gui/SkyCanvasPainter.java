@@ -59,13 +59,15 @@ public class SkyCanvasPainter {
      * @param planeToCanvas transformation
      */
     public void drawStars(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
-        double[] transformedStarPositions = new double[sky.starPositions().length];
-        planeToCanvas.transform2DPoints(sky.starPositions(), 0, transformedStarPositions, 0, sky.stars().size());
+        // transform all positions of the stars
+        double[] starPositions = sky.starPositions();
+        double[] transformedPos = new double[starPositions.length];
+        planeToCanvas.transform2DPoints(starPositions, 0, transformedPos, 0, sky.stars().size());
 
         int index = 0;
         for (Star star : sky.stars()) {
             double diameter = transformedDiameter(star.magnitude(), projection, planeToCanvas);
-            fillDisk(transformedStarPositions[index], transformedStarPositions[index + 1], diameter,
+            fillDisk(transformedPos[index], transformedPos[index + 1], diameter,
                     BlackBodyColor.colorForTemperature(star.colorTemperature()));
             index += 2;
         }
@@ -81,25 +83,30 @@ public class SkyCanvasPainter {
         ctx.setStroke(Color.BLUE);
         ctx.setLineWidth(1);
 
-        var bounds = canvas.getBoundsInLocal();
+        // transform all positions of the stars
+        double[] starPositions = sky.starPositions();
+        double[] transformedPos = new double[starPositions.length];
+        planeToCanvas.transform2DPoints(starPositions, 0, transformedPos, 0, sky.stars().size());
 
-        double[] transformedPos = new double[sky.starPositions().length];
-        planeToCanvas.transform2DPoints(sky.starPositions(), 0, transformedPos, 0, sky.stars().size());
+        var bounds = canvas.getBoundsInLocal();
 
         for (Asterism asterism : sky.asterisms()) {
             ctx.beginPath();
             List<Integer> indices = sky.asterismIndices(asterism);
+            // get the position of the first star of the asterism
             Point2D currentPos = new Point2D(
                     transformedPos[indices.get(0) * 2],
                     transformedPos[indices.get(0) * 2 + 1]
             );
             ctx.moveTo(currentPos.getX(), currentPos.getY());
-
             Point2D nextPos;
-            for (int i = 1; i < indices.size(); i++) {
+
+            for (Integer indice : indices) {
+                // TODO: 02/05/2020 why Integer isn't accept in the array ?
+                int i = indice;
                 nextPos = new Point2D(
-                        transformedPos[indices.get(i) * 2],
-                        transformedPos[indices.get(i) * 2 + 1]
+                        transformedPos[i * 2],
+                        transformedPos[i * 2 + 1]
                 );
                 // skip the line between two stars that are invisible on screen
                 if (bounds.contains(currentPos) || bounds.contains(nextPos)) {
@@ -109,6 +116,7 @@ public class SkyCanvasPainter {
                 }
                 currentPos = nextPos;
             }
+
             ctx.stroke();
         }
     }
@@ -121,8 +129,10 @@ public class SkyCanvasPainter {
      * @param planeToCanvas transformation
      */
     public void drawPlanets(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
-        double[] transformedPlanetPositions = new double[14];
-        planeToCanvas.transform2DPoints(sky.planetPositions(), 0, transformedPlanetPositions, 0, 7);
+        // transform all positions of the planets
+        double[] planetPositions = sky.planetPositions();
+        double[] transformedPlanetPositions = new double[planetPositions.length];
+        planeToCanvas.transform2DPoints(planetPositions, 0, transformedPlanetPositions, 0, 7);
 
         int index = 0;
         for (Planet planet : sky.planets()) {
@@ -144,8 +154,8 @@ public class SkyCanvasPainter {
         double tempDiam = projection.applyToAngle(sky.sun().angularSize());
         double diameter = planeToCanvas.deltaTransform(tempDiam, 0).getX();
         // yellow halo around the sun
-        fillDisk(pos.getX(), pos.getY(), 2.2 * diameter,
-                Color.YELLOW.deriveColor(0, 0, 1, 0.25));
+        // TODO: 02/05/2020 constant for these numbers ?
+        fillDisk(pos.getX(), pos.getY(), 2.2 * diameter, Color.YELLOW.deriveColor(0, 0, 1, 0.25));
         fillDisk(pos.getX(), pos.getY(), diameter + 2, Color.YELLOW);
         fillDisk(pos.getX(), pos.getY(), diameter, Color.WHITE);
     }
@@ -191,6 +201,7 @@ public class SkyCanvasPainter {
         ctx.setStroke(Color.RED);
         ctx.setLineWidth(1);
         ctx.setTextBaseline(VPos.TOP);
+        // TODO: 02/05/2020 constant for these numbers ?
         for (int az = 0; az < 360; az += 45) {
             HorizontalCoordinates azAlt = HorizontalCoordinates.ofDeg(az, -0.5);
             CartesianCoordinates cardPos = projection.apply(azAlt);
@@ -223,7 +234,7 @@ public class SkyCanvasPainter {
      */
     private static double transformedDiameter(double m, StereographicProjection p, Transform ptc) {
         double clippedM = MAG_INTERVAL.clip(m);
-        double factor = (99 - 17*clippedM) / 140d;
+        double factor = (99 - 17 * clippedM) / 140d;
         double diameter = factor * p.applyToAngle(ZERO_FIVE_DEG_TO_RAD);
         Point2D size = ptc.deltaTransform(diameter, diameter);
         return size.getX();
