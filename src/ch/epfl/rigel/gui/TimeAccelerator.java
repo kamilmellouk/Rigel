@@ -12,6 +12,8 @@ import java.time.temporal.ChronoUnit;
 @FunctionalInterface
 public interface TimeAccelerator {
 
+    static final double SEC_PER_NANOS = 1e-9;
+
     /**
      * Return a continuous time accelerator
      *
@@ -32,7 +34,7 @@ public interface TimeAccelerator {
      */
     static TimeAccelerator discrete(int advancementFrequency, Duration step) {
         return (initialSimulatedTime, elapsedRealTime) ->
-                initialSimulatedTime.plus(step.multipliedBy((long) Math.floor(advancementFrequency * elapsedRealTime * 1e-9)));
+                initialSimulatedTime.plus(step.multipliedBy((long) Math.floor(advancementFrequency * elapsedRealTime * SEC_PER_NANOS)));
     }
 
     /**

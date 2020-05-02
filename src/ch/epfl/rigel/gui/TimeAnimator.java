@@ -25,7 +25,7 @@ public final class TimeAnimator extends AnimationTimer {
      */
     public TimeAnimator(DateTimeBean observationTime) {
         this.observationTime = observationTime;
-        firstHandle = false;
+        firstHandle = true;
     }
 
     /**
@@ -65,14 +65,14 @@ public final class TimeAnimator extends AnimationTimer {
     public void stop() {
         super.stop();
         running.set(false);
-        firstHandle = false;
+        firstHandle = true;
     }
 
     @Override
     public void handle(long now) {
-        if (!firstHandle) {
+        if (firstHandle) {
             lastNanos = now;
-            firstHandle = true;
+            firstHandle = false;
         }
         observationTime.setZonedDateTime(accelerator.get().adjust(observationTime.getZonedDateTime(), now - lastNanos));
         lastNanos = now;
