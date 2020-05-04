@@ -36,12 +36,13 @@ public final class MyDrawSky extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        InputStream as = getClass().getResourceAsStream("/asterisms.txt");
-        try (InputStream hs = resourceStream("/hygdata_v3.csv")) {
+        try (InputStream hs = resourceStream("/hygdata_v3.csv");
+             InputStream as = resourceStream("/asterisms.txt")) {
             StarCatalogue catalogue = new StarCatalogue.Builder()
                     .loadFrom(hs, HygDatabaseLoader.INSTANCE)
                     .loadFrom(as, AsterismLoader.INSTANCE)
                     .build();
+
             ZonedDateTime when =
                     ZonedDateTime.parse("2020-02-17T20:15:00+01:00");
             GeographicCoordinates where =

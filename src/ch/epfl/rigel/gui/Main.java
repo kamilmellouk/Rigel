@@ -6,9 +6,19 @@ import ch.epfl.rigel.astronomy.StarCatalogue;
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import javafx.application.Application;
-import javafx.scene.Scene;
+import javafx.beans.binding.Bindings;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -16,10 +26,11 @@ import java.io.InputStream;
 import java.time.ZonedDateTime;
 
 /**
- * @author Mohamed Kamil MELLOUK
- * 28.04.20
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk (312327)
  */
-public final class MyUseSkyCanvasManager extends Application {
+public class Main extends Application {
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -29,7 +40,35 @@ public final class MyUseSkyCanvasManager extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws Exception {
+
+        Pane skyPane = createSkyPane();
+        BorderPane mainPane = new BorderPane(skyPane, createControlBar(), null, null, null);
+
+        primaryStage.setTitle("Rigel");
+        primaryStage.setMinWidth(800);
+        primaryStage.setMinHeight(600);
+
+        primaryStage.show();
+        skyPane.requestFocus();
+    }
+
+    private HBox createControlBar() {
+        TextField lonTextField = new TextField();
+        lonTextField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
+        TextField latTextField = new TextField();
+        latTextField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
+        HBox whereControl = new HBox(new Label("Longitude (°) :"), lonTextField, new Label("Latitude (°) :"), latTextField);
+        whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
+
+
+        HBox controlBar = new HBox(whereControl);
+        controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
+
+        return controlBar;
+    }
+
+    private Pane createSkyPane() throws IOException {
         try (InputStream hs = resourceStream("/hygdata_v3.csv");
              InputStream as = resourceStream("/asterisms.txt")) {
             StarCatalogue catalogue = new StarCatalogue.Builder()
@@ -65,22 +104,18 @@ public final class MyUseSkyCanvasManager extends Application {
                     });
 
             Canvas sky = canvasManager.canvas();
-            BorderPane root = new BorderPane(sky);
+            Pane root = new Pane(sky);
 
             sky.widthProperty().bind(root.widthProperty());
             sky.heightProperty().bind(root.heightProperty());
-
-            primaryStage.setTitle("Rigel");
-
-            primaryStage.setMinWidth(800);
-            primaryStage.setMinHeight(600);
-
-            primaryStage.setY(100);
-
-            primaryStage.setScene(new Scene(root));
-            primaryStage.show();
-
-            sky.requestFocus();
+            return root;
         }
+    }
+
+    private BorderPane createInfoBar() {
+        //Text fovText = new Text(Bindings.format("Champ de vue : %s°", viewingParametersBean.getFieldOfViewDeg()));
+        Text objText = new Text();
+        Text mousePosText = new Text();
+        BorderPane infoBar = new BorderPane(objText, null, mousePosText, null, fovText);
     }
 }

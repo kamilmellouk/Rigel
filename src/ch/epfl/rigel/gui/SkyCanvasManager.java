@@ -24,7 +24,6 @@ import java.util.Optional;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public class SkyCanvasManager {
 
     private static final RightOpenInterval RIGHT_OPEN_INTERVAL_0_TO_360 = RightOpenInterval.of(0, 360);
@@ -78,6 +77,7 @@ public class SkyCanvasManager {
                 )
         );
 
+        // TODO : make center changes variable ?
         canvas.setOnKeyPressed(
                 e -> {
                     HorizontalCoordinates center = viewingParametersBean.getCenter();
@@ -130,7 +130,7 @@ public class SkyCanvasManager {
 
         planeToCanvas = Bindings.createObjectBinding(
                 () -> {
-                    Transform t = Transform.translate(canvas.getWidth() / 2, canvas.getHeight() / 2);
+                    Transform t = Transform.translate(canvas.getWidth() / 2d, canvas.getHeight() / 2d);
                     double scaleFactor = canvas.getWidth() / projection.getValue().applyToAngle(
                             Angle.ofDeg(viewingParametersBean.getFieldOfViewDeg()));
                     Transform s = Transform.scale(scaleFactor, -scaleFactor);
@@ -171,10 +171,8 @@ public class SkyCanvasManager {
                             invTransformedMousePos.getX(),
                             invTransformedMousePos.getY())
                     );
-                    return HorizontalCoordinates.of(
-                            horPos.az(),
-                            horPos.alt()
-                    );
+                    // TODO why ?
+                    return HorizontalCoordinates.of(horPos.az(), horPos.alt());
                 },
                 planeToCanvas, projection, mousePosition
         );
