@@ -6,29 +6,35 @@ import ch.epfl.rigel.astronomy.StarCatalogue;
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import javafx.application.Application;
-import javafx.beans.binding.Bindings;
-import javafx.scene.Group;
-import javafx.scene.Node;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.Border;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.converter.LocalTimeStringConverter;
+import javafx.util.converter.NumberStringConverter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.function.UnaryOperator;
 
 /**
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
+
 public class Main extends Application {
 
     public static void main(String[] args) {
@@ -53,19 +59,85 @@ public class Main extends Application {
         skyPane.requestFocus();
     }
 
+    /**
+     * Create the control bar
+     *
+     * @return the control bar
+     */
     private HBox createControlBar() {
+
+        // observation position
+
         TextField lonTextField = new TextField();
         lonTextField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
+        lonTextField.setTextFormatter(getFormatter(true));
+
         TextField latTextField = new TextField();
         latTextField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
+        latTextField.setTextFormatter(getFormatter(false));
+
         HBox whereControl = new HBox(new Label("Longitude (°) :"), lonTextField, new Label("Latitude (°) :"), latTextField);
         whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
+        // observation time
 
-        HBox controlBar = new HBox(whereControl);
+        DatePicker datePicker = new DatePicker();
+
+        TextField timeField = new TextField();
+        timeField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
+        DateTimeFormatter hmsFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalTimeStringConverter stringConverter = new LocalTimeStringConverter(hmsFormatter, hmsFormatter);
+        TextFormatter<LocalTime> timeFormatter = new TextFormatter<LocalTime>(stringConverter);
+        timeField.setTextFormatter(timeFormatter);
+
+        ComboBox<String> timeZone = new ComboBox<>();
+        List<String> zoneIds = new ArrayList<>(ZoneId.getAvailableZoneIds());
+        timeZone.setItems(FXCollections.observableList(zoneIds));
+        timeZone.setStyle("-fx-pref-width: 180");
+
+        HBox whenControl = new HBox(new Label("Date :"), datePicker, new Label("Heure :"), timeField, timeZone);
+        whenControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
+
+        // time flow
+
+        ChoiceBox<NamedTimeAccelerator> acceleratorChoicer = new ChoiceBox<>();
+        acceleratorChoicer.setItems(FXCollections.observableList(List.of(NamedTimeAccelerator.values())));
+
+        HBox timeFlowControl = new HBox(acceleratorChoicer);
+        timeFlowControl.setStyle("-fx-spacing: inherit");
+
+        // controle bar
+        HBox controlBar = new HBox(whereControl, whenControl, timeFlowControl);
         controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
 
         return controlBar;
+    }
+
+    /**
+     * Return the formatter
+     *
+     * @param isLon {@code true} iff this is the formatter for the longitude,
+     *              {@code false} iff this is the formatter for the latitude
+     * @return the formatter
+     */
+    private TextFormatter<Number> getFormatter(boolean isLon) {
+        NumberStringConverter stringConverter = new NumberStringConverter("#0.00");
+
+        UnaryOperator<TextFormatter.Change> filter = (change -> {
+            try {
+                String newText = change.getControlNewText();
+                double newValue = stringConverter.fromString(newText).doubleValue();
+                if (isLon) {
+                    return GeographicCoordinates.isValidLonDeg(newValue) ? change : null;
+                } else {
+                    return GeographicCoordinates.isValidLatDeg(newValue) ? change : null;
+                }
+            } catch (Exception e) {
+                return null;
+            }
+        });
+
+        return new TextFormatter<Number>(stringConverter, 0, filter);
     }
 
     private Pane createSkyPane() throws IOException {
