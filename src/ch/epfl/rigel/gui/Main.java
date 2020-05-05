@@ -10,10 +10,7 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -58,15 +55,28 @@ public class Main extends Application {
         lonTextField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
         TextField latTextField = new TextField();
         latTextField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
-        HBox whereControl = new HBox(new Label("Longitude (°) :"), lonTextField, new Label("Latitude (°) :"), latTextField);
+        HBox whereControl = new HBox(
+                new Label("Longitude (°) :"), lonTextField,
+                new Label("Latitude (°) :"), latTextField
+        );
         whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
+        DatePicker datePicker = new DatePicker();
+        //datePicker.getValue() = Bindings.createObjectBinding();
+        datePicker.setStyle("-fx-pref-width: 120;");
+        HBox whenControl = new HBox(
+                new Label("Date :"), datePicker,
+                new Label("Heure")
+        );
+        whenControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
-        HBox controlBar = new HBox(whereControl);
+
+        HBox controlBar = new HBox(whereControl, new Separator());
         controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
 
         return controlBar;
     }
+
 
     private Pane createSkyPane() throws IOException {
         try (InputStream hs = resourceStream("/hygdata_v3.csv");
@@ -113,9 +123,10 @@ public class Main extends Application {
     }
 
     private BorderPane createInfoBar() {
-        //Text fovText = new Text(Bindings.format("Champ de vue : %s°", viewingParametersBean.getFieldOfViewDeg()));
+        Text fovText = new Text();
         Text objText = new Text();
         Text mousePosText = new Text();
         BorderPane infoBar = new BorderPane(objText, null, mousePosText, null, fovText);
+        return infoBar;
     }
 }

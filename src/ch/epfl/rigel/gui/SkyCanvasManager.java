@@ -148,6 +148,7 @@ public class SkyCanvasManager {
 
         objUnderMouse = Bindings.createObjectBinding(
                 () -> {
+                    // TODO : fix error "Zero scale is not invertible"
                     Point2D mousePos = planeToCanvas.getValue().inverseTransform(
                             mousePosition.getValue().x(),
                             mousePosition.getValue().y()
