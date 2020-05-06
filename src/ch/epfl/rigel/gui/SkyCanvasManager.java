@@ -30,8 +30,8 @@ public class SkyCanvasManager {
     private static final RightOpenInterval RIGHT_OPEN_INTERVAL_0_TO_360 = RightOpenInterval.of(0, 360);
     private static final ClosedInterval CLOSED_INTERVAL_5_TO_90 = ClosedInterval.of(5, 90);
 
-    private final Canvas canvas = new Canvas();
-    private final SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
+    private final Canvas canvas;
+    private final SkyCanvasPainter painter;
 
     private final ObservableValue<ObservedSky> observedSky;
     private final ObservableValue<StereographicProjection> projection;
@@ -55,6 +55,12 @@ public class SkyCanvasManager {
                             DateTimeBean dateTimeBean,
                             ObserverLocationBean observerLocationBean,
                             ViewingParametersBean viewingParametersBean) {
+
+        canvas = new Canvas();
+        canvas.setHeight(1);
+        canvas.setWidth(1);
+
+        painter = new SkyCanvasPainter(canvas);
 
         //-----------------------------------------------------------------------------
         // Events

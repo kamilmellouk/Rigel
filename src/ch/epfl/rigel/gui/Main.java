@@ -1,5 +1,6 @@
 package ch.epfl.rigel.gui;
 
+import ch.epfl.rigel.astronomy.AsterismLoader;
 import ch.epfl.rigel.astronomy.HygDatabaseLoader;
 import ch.epfl.rigel.astronomy.StarCatalogue;
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
@@ -15,10 +16,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.converter.LocalTimeStringConverter;
 import javafx.util.converter.NumberStringConverter;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +32,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.UnaryOperator;
 
 /**
@@ -43,14 +46,14 @@ public class Main extends Application {
         launch(args);
     }
 
-    private InputStream resourceStream() {
-        return getClass().getResourceAsStream("/hygdata_v3.csv");
-    }
-
     @Override
     public void start(Stage primaryStage) throws IOException {
+            primaryStage.setTitle("Rigel");
+            primaryStage.setMinWidth(800);
+            primaryStage.setMinHeight(600);
 
-        try (InputStream hs = resourceStream()) {
+        try (InputStream hs = getClass().getResourceAsStream("/hygdata_v3.csv");
+             InputStream as = getClass().getResourceAsStream("/asterisms.txt")) {
 
             // observation position
 
@@ -102,7 +105,7 @@ public class Main extends Application {
             Collections.sort(zoneIds);
             timeZone.setItems(FXCollections.observableList(zoneIds));
             timeZone.setStyle("-fx-pref-width: 180");
-            timeZone.setValue(ZoneId.systemDefault().toString());
+            timeZone.setValue(ZoneId.of("UTC").toString());
 
             ObservableValue<DateTimeBean> dateTimeBean = Bindings.createObjectBinding(
                     () -> {
@@ -129,21 +132,33 @@ public class Main extends Application {
             HBox timeFlowControl = new HBox(acceleratorChoicer);
             timeFlowControl.setStyle("-fx-spacing: inherit");
 
+            InputStream fontStream = getClass()
+                    .getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf");
+            Font fontAwesome = Font.loadFont(fontStream, 15);
+
+            Button resetButton = new Button("\uf0e2");
+            resetButton.setFont(fontAwesome);
+
             // control bar
 
-            HBox controlBar = new HBox(whereControl, verticalSeparator(), whenControl, verticalSeparator(), timeFlowControl);
+            HBox controlBar = new HBox(
+                    whereControl, verticalSeparator(),
+                    whenControl, verticalSeparator(),
+                    timeFlowControl, resetButton
+            );
             controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
 
             ViewingParametersBean viewingParametersBean =
                     new ViewingParametersBean();
             viewingParametersBean.setCenter(
                     HorizontalCoordinates.ofDeg(180.000000000001, 42));
-            viewingParametersBean.setFieldOfViewDeg(70);
+            viewingParametersBean.setFieldOfViewDeg(100);
 
             // sky
 
             StarCatalogue catalogue = new StarCatalogue.Builder()
                     .loadFrom(hs, HygDatabaseLoader.INSTANCE)
+                    .loadFrom(as, AsterismLoader.INSTANCE)
                     .build();
             ObservableValue<SkyCanvasManager> canvasManager = Bindings.createObjectBinding(
                     () -> new SkyCanvasManager(
@@ -155,15 +170,40 @@ public class Main extends Application {
                     dateTimeBean, observerLocationBean
             );
 
-            BorderPane skyPane = new BorderPane(canvasManager.getValue().canvas());
 
-            BorderPane mainPane = new BorderPane(skyPane, controlBar, null, null, null);
+            Pane skyPane = new Pane(canvasManager.getValue().canvas());
 
-            primaryStage.setTitle("Rigel");
-            primaryStage.setMinWidth(800);
-            primaryStage.setMinHeight(600);
+
+            // info bar
+
+            Text fovDisplay = new Text();
+            fovDisplay.setText(Bindings.format(Locale.ROOT,
+                    "Champ de vue : %.1f°",
+                    viewingParametersBean.getFieldOfViewDeg()).get());
+
+            Text objectInfo = new Text();
+            objectInfo.setText(Bindings.format(Locale.ROOT,
+                    "%s",
+                    canvasManager.getValue().getObjUnderMouse().info()).get());
+
+            Text mousePos = new Text();
+            mousePos.setText(Bindings.format(Locale.ROOT,
+                    "Azimut : %.2f°, hauteur : %.2f°",
+                    canvasManager.getValue().getMouseAzDeg(),
+                    canvasManager.getValue().getMouseAltDeg()).get());
+
+
+            BorderPane infoBar = new BorderPane(objectInfo, null, mousePos, null, fovDisplay);
+            infoBar.setStyle("-fx-padding: 4; -fx-background-color: white;");
+
+
+            BorderPane mainPane = new BorderPane(skyPane, controlBar, null, infoBar, null);
+
+            canvasManager.getValue().canvas().widthProperty().bind(mainPane.widthProperty());
+            canvasManager.getValue().canvas().heightProperty().bind(mainPane.heightProperty());
 
             primaryStage.setScene(new Scene(mainPane));
+
             primaryStage.show();
             skyPane.requestFocus();
         }
