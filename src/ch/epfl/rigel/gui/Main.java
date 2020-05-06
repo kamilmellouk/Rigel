@@ -7,7 +7,6 @@ import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -25,9 +24,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.function.UnaryOperator;
 
 /**
@@ -87,7 +84,7 @@ public class Main extends Application {
         timeField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
         DateTimeFormatter hmsFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalTimeStringConverter stringConverter = new LocalTimeStringConverter(hmsFormatter, hmsFormatter);
-        TextFormatter<LocalTime> timeFormatter = new TextFormatter<LocalTime>(stringConverter);
+        TextFormatter<LocalTime> timeFormatter = new TextFormatter<>(stringConverter);
         timeField.setTextFormatter(timeFormatter);
 
         ComboBox<String> timeZone = new ComboBox<>();
@@ -137,7 +134,7 @@ public class Main extends Application {
             }
         });
 
-        return new TextFormatter<Number>(stringConverter, 0, filter);
+        return new TextFormatter<>(stringConverter, 0, filter);
     }
 
     private Pane createSkyPane() throws IOException {
@@ -188,6 +185,7 @@ public class Main extends Application {
         //Text fovText = new Text(Bindings.format("Champ de vue : %s°", viewingParametersBean.getFieldOfViewDeg()));
         Text objText = new Text();
         Text mousePosText = new Text();
-        BorderPane infoBar = new BorderPane(objText, null, mousePosText, null, fovText);
+        BorderPane infoBar = new BorderPane();
+        return infoBar;
     }
 }
