@@ -73,7 +73,10 @@ public class Main extends Application {
         latTextField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
         latTextField.setTextFormatter(getFormatter(false));
 
-        HBox whereControl = new HBox(new Label("Longitude (°) :"), lonTextField, new Label("Latitude (°) :"), latTextField);
+        HBox whereControl = new HBox(
+                new Label("Longitude (°) :"), lonTextField,
+                new Label("Latitude (°) :"), latTextField
+        );
         whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
         // observation time
@@ -92,7 +95,10 @@ public class Main extends Application {
         timeZone.setItems(FXCollections.observableList(zoneIds));
         timeZone.setStyle("-fx-pref-width: 180");
 
-        HBox whenControl = new HBox(new Label("Date :"), datePicker, new Label("Heure :"), timeField, timeZone);
+        HBox whenControl = new HBox(
+                new Label("Date :"), datePicker,
+                new Label("Heure :"), timeField, timeZone
+        );
         whenControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
         // time flow
@@ -138,47 +144,7 @@ public class Main extends Application {
     }
 
     private Pane createSkyPane() throws IOException {
-        try (InputStream hs = resourceStream("/hygdata_v3.csv");
-             InputStream as = resourceStream("/asterisms.txt")) {
-            StarCatalogue catalogue = new StarCatalogue.Builder()
-                    .loadFrom(hs, HygDatabaseLoader.INSTANCE)
-                    .loadFrom(as, AsterismLoader.INSTANCE)
-                    .build();
-
-            ZonedDateTime when =
-                    ZonedDateTime.parse("2020-01-28T12:15:00+01:00");
-            DateTimeBean dateTimeBean = new DateTimeBean();
-            dateTimeBean.setZonedDateTime(when);
-
-            ObserverLocationBean observerLocationBean =
-                    new ObserverLocationBean();
-            observerLocationBean.setCoordinates(
-                    GeographicCoordinates.ofDeg(6.57, 46.52));
-
-            ViewingParametersBean viewingParametersBean =
-                    new ViewingParametersBean();
-            viewingParametersBean.setCenter(
-                    HorizontalCoordinates.ofDeg(180.000000000001, 42));
-            viewingParametersBean.setFieldOfViewDeg(70);
-
-            SkyCanvasManager canvasManager = new SkyCanvasManager(
-                    catalogue,
-                    dateTimeBean,
-                    observerLocationBean,
-                    viewingParametersBean);
-
-            canvasManager.objUnderMouseProperty().addListener(
-                    (p, o, n) -> {
-                        if (n != null) System.out.println(n);
-                    });
-
-            Canvas sky = canvasManager.canvas();
-            Pane root = new Pane(sky);
-
-            sky.widthProperty().bind(root.widthProperty());
-            sky.heightProperty().bind(root.heightProperty());
-            return root;
-        }
+        return null;
     }
 
     private BorderPane createInfoBar() {
