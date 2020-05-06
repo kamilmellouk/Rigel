@@ -16,6 +16,7 @@ import javafx.beans.value.ObservableDoubleValue;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 
 import java.util.Optional;
@@ -35,7 +36,8 @@ public class SkyCanvasManager {
     private final ObservableValue<ObservedSky> observedSky;
     private final ObservableValue<StereographicProjection> projection;
     private final ObservableValue<Transform> planeToCanvas;
-    private final ObjectProperty<CartesianCoordinates> mousePosition = new SimpleObjectProperty<>(CartesianCoordinates.of(0, 0));
+    private final ObjectProperty<CartesianCoordinates> mousePosition =
+            new SimpleObjectProperty<>(CartesianCoordinates.of(0, 0));
     private final ObservableValue<CelestialObject> objUnderMouse;
     private final ObservableValue<HorizontalCoordinates> mouseHorPos;
     private final ObservableDoubleValue mouseAzDeg;
@@ -77,7 +79,6 @@ public class SkyCanvasManager {
                 )
         );
 
-        // TODO : make center changes variable ?
         canvas.setOnKeyPressed(
                 e -> {
                     HorizontalCoordinates center = viewingParametersBean.getCenter();
@@ -148,13 +149,8 @@ public class SkyCanvasManager {
 
         objUnderMouse = Bindings.createObjectBinding(
                 () -> {
-                    // TODO : fix error "Zero scale is not invertible"
-                    Point2D mousePos = planeToCanvas.getValue().inverseTransform(
-                            mousePosition.getValue().x(),
-                            mousePosition.getValue().y()
-                    );
                     Optional<CelestialObject> closestObj = observedSky.getValue().objectClosestTo(
-                            CartesianCoordinates.of(mousePos.getX(), mousePos.getY()),
+                            CartesianCoordinates.of(invertedMousePos().getX(), invertedMousePos().getY()),
                             planeToCanvas.getValue().inverseDeltaTransform(10, 0).getX()
                     );
                     return closestObj.isEmpty() ? null : closestObj.get();
@@ -163,18 +159,11 @@ public class SkyCanvasManager {
         );
 
         mouseHorPos = Bindings.createObjectBinding(
-                () -> {
-                    Point2D invTransformedMousePos = planeToCanvas.getValue().inverseTransform(
-                            mousePosition.getValue().x(),
-                            mousePosition.getValue().y()
-                    );
-                    HorizontalCoordinates horPos = projection.getValue().inverseApply(CartesianCoordinates.of(
-                            invTransformedMousePos.getX(),
-                            invTransformedMousePos.getY())
-                    );
-                    // TODO why ?
-                    return HorizontalCoordinates.of(horPos.az(), horPos.alt());
-                },
+                () ->
+                    projection.getValue().inverseApply(CartesianCoordinates.of(
+                            invertedMousePos().getX(),
+                            invertedMousePos().getY())
+                    ),
                 planeToCanvas, projection, mousePosition
         );
 
@@ -295,6 +284,13 @@ public class SkyCanvasManager {
         return HorizontalCoordinates.ofDeg(
                 center.azDeg(),
                 CLOSED_INTERVAL_5_TO_90.clip(center.altDeg() + altDiff)
+        );
+    }
+
+    private Point2D invertedMousePos() throws NonInvertibleTransformException {
+        return planeToCanvas.getValue().inverseTransform(
+                mousePosition.getValue().x(),
+                mousePosition.getValue().y()
         );
     }
 
