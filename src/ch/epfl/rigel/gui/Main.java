@@ -159,6 +159,7 @@ public class Main extends Application {
                     whenControl, verticalSeparator(),
                     timeFlowControl
             );
+
             controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
 
             ViewingParametersBean viewingParametersBean =
@@ -185,37 +186,15 @@ public class Main extends Application {
 
             Pane skyPane = new Pane(canvasManager.getValue().canvas());
 
-            // info bar
 
-            Text fovDisplay = new Text();
-            viewingParametersBean.fieldOfViewDegProperty().addListener(
-                    (p, o, n) -> fovDisplay.setText(Bindings.format(Locale.ROOT,
-                            "Champ de vue : %.1f°", n).get())
+
+            BorderPane mainPane = new BorderPane(
+                    skyPane,
+                    controlBar,
+                    null,
+                    infoBar(viewingParametersBean, canvasManager),
+                    null
             );
-
-            Text objectInfo = new Text();
-            canvasManager.getValue().objUnderMouseProperty().addListener(
-                    (p, o, n) -> {
-                        if (n != null) {
-                            objectInfo.setText(n.info());
-                        } else {
-                            objectInfo.setText("");
-                        }
-                    }
-            );
-
-            Text mousePos = new Text();
-            mousePos.setText(Bindings.format(Locale.ROOT,
-                    "Azimut : %.2f°, hauteur : %.2f°",
-                    canvasManager.getValue().getMouseAzDeg(),
-                    canvasManager.getValue().getMouseAltDeg()).get());
-
-
-            BorderPane infoBar = new BorderPane(objectInfo, null, mousePos, null, fovDisplay);
-            infoBar.setStyle("-fx-padding: 4; -fx-background-color: white;");
-
-
-            BorderPane mainPane = new BorderPane(skyPane, controlBar, null, infoBar, null);
 
             canvasManager.getValue().canvas().widthProperty().bind(mainPane.widthProperty());
             canvasManager.getValue().canvas().heightProperty().bind(mainPane.heightProperty());
@@ -226,6 +205,36 @@ public class Main extends Application {
             skyPane.requestFocus();
         }
 
+    }
+
+    private BorderPane infoBar(ViewingParametersBean vpb, ObservableValue<SkyCanvasManager> canvasManager) {
+        Text fovDisplay = new Text();
+        vpb.fieldOfViewDegProperty().addListener(
+                (p, o, n) -> fovDisplay.setText(Bindings.format(Locale.ROOT,
+                        "Champ de vue : %.1f°", n).get())
+        );
+
+        Text objectInfo = new Text();
+        canvasManager.getValue().objUnderMouseProperty().addListener(
+                (p, o, n) -> {
+                    if (n != null) {
+                        objectInfo.setText(n.info());
+                    } else {
+                        objectInfo.setText("");
+                    }
+                }
+        );
+
+        Text mousePos = new Text();
+        mousePos.setText(Bindings.format(Locale.ROOT,
+                "Azimut : %.2f°, hauteur : %.2f°",
+                canvasManager.getValue().getMouseAzDeg(),
+                canvasManager.getValue().getMouseAltDeg()).get());
+
+
+        BorderPane infoBar = new BorderPane(objectInfo, null, mousePos, null, fovDisplay);
+        infoBar.setStyle("-fx-padding: 4; -fx-background-color: white;");
+        return infoBar;
     }
 
     /**
