@@ -11,7 +11,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -27,7 +26,6 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,12 +46,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-            primaryStage.setTitle("Rigel");
-            primaryStage.setMinWidth(800);
-            primaryStage.setMinHeight(600);
+        primaryStage.setTitle("Rigel");
+        primaryStage.setMinWidth(800);
+        primaryStage.setMinHeight(600);
 
         try (InputStream hs = getClass().getResourceAsStream("/hygdata_v3.csv");
-             InputStream as = getClass().getResourceAsStream("/asterisms.txt")) {
+             InputStream as = getClass().getResourceAsStream("/asterisms.txt");
+             InputStream fs = getClass().getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
 
             // observation position
 
@@ -68,6 +67,12 @@ public class Main extends Application {
             TextFormatter<Number> textFormatterLat = getFormatter(false);
             latTextField.setTextFormatter(textFormatterLat);
             textFormatterLat.setValue(46.52);
+
+            textFormatterLon.valueProperty().addListener(
+                    (p, o, n) -> System.out.println(n)
+            );
+
+            // TODO: 07/05/2020 why?
 
             ObservableValue<ObserverLocationBean> observerLocationBean = Bindings.createObjectBinding(
                     () -> {
@@ -105,7 +110,7 @@ public class Main extends Application {
             Collections.sort(zoneIds);
             timeZone.setItems(FXCollections.observableList(zoneIds));
             timeZone.setStyle("-fx-pref-width: 180");
-            timeZone.setValue(ZoneId.of("UTC").toString());
+            timeZone.setValue(ZoneId.systemDefault().toString());
 
             ObservableValue<DateTimeBean> dateTimeBean = Bindings.createObjectBinding(
                     () -> {
@@ -129,22 +134,23 @@ public class Main extends Application {
             ChoiceBox<NamedTimeAccelerator> acceleratorChoicer = new ChoiceBox<>();
             acceleratorChoicer.setItems(FXCollections.observableList(List.of(NamedTimeAccelerator.values())));
 
-            HBox timeFlowControl = new HBox(acceleratorChoicer);
-            timeFlowControl.setStyle("-fx-spacing: inherit");
+            Font fontAwesome = Font.loadFont(fs, 15);
 
-            InputStream fontStream = getClass()
-                    .getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf");
-            Font fontAwesome = Font.loadFont(fontStream, 15);
+            Button startStopButton = new Button();
+            startStopButton.setFont(fontAwesome);
 
             Button resetButton = new Button("\uf0e2");
             resetButton.setFont(fontAwesome);
+
+            HBox timeFlowControl = new HBox(acceleratorChoicer, startStopButton, resetButton);
+            timeFlowControl.setStyle("-fx-spacing: inherit");
 
             // control bar
 
             HBox controlBar = new HBox(
                     whereControl, verticalSeparator(),
                     whenControl, verticalSeparator(),
-                    timeFlowControl, resetButton
+                    timeFlowControl
             );
             controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
 
@@ -170,21 +176,26 @@ public class Main extends Application {
                     dateTimeBean, observerLocationBean
             );
 
-
             Pane skyPane = new Pane(canvasManager.getValue().canvas());
-
 
             // info bar
 
             Text fovDisplay = new Text();
-            fovDisplay.setText(Bindings.format(Locale.ROOT,
-                    "Champ de vue : %.1f°",
-                    viewingParametersBean.getFieldOfViewDeg()).get());
+            viewingParametersBean.fieldOfViewDegProperty().addListener(
+                    (p, o, n) -> fovDisplay.setText(Bindings.format(Locale.ROOT,
+                            "Champ de vue : %.1f°", n).get())
+            );
 
             Text objectInfo = new Text();
-            objectInfo.setText(Bindings.format(Locale.ROOT,
-                    "%s",
-                    canvasManager.getValue().getObjUnderMouse().info()).get());
+            canvasManager.getValue().objUnderMouseProperty().addListener(
+                    (p, o, n) -> {
+                        if (n != null) {
+                            objectInfo.setText(n.info());
+                        } else {
+                            objectInfo.setText("");
+                        }
+                    }
+            );
 
             Text mousePos = new Text();
             mousePos.setText(Bindings.format(Locale.ROOT,
