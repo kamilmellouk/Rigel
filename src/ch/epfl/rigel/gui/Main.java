@@ -141,8 +141,15 @@ public class Main extends Application {
 
             Button resetButton = new Button("\uf0e2");
             resetButton.setFont(fontAwesome);
+            resetButton.setOnKeyPressed( e -> {
+                datePicker.setValue(LocalDate.now());
+                timeFormatter.setValue(LocalTime.now());
+                timeZone.setValue(ZoneId.systemDefault().toString());
 
-            HBox timeFlowControl = new HBox(acceleratorChoicer, startStopButton, resetButton);
+            } );
+
+
+            HBox timeFlowControl = new HBox(acceleratorChoicer, resetButton, startStopButton);
             timeFlowControl.setStyle("-fx-spacing: inherit");
 
             // control bar
