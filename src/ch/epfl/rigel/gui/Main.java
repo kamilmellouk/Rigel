@@ -147,6 +147,14 @@ public class Main extends Application {
 
         Font fontAwesome = loadFontAwesome();
 
+        Button resetButton = new Button("\uf0e2");
+        resetButton.setFont(fontAwesome);
+        resetButton.setOnAction(e -> {
+            datePicker.setValue(LocalDate.now());
+            timeFormatter.setValue(LocalTime.now());
+            timeZone.setValue(ZoneId.systemDefault());
+        });
+
         Button startStopButton = new Button("\uf04b");
         startStopButton.setFont(fontAwesome);
         startStopButton.setOnAction(e -> {
@@ -159,13 +167,6 @@ public class Main extends Application {
             }
         });
 
-        Button resetButton = new Button("\uf0e2");
-        resetButton.setFont(fontAwesome);
-        resetButton.setOnAction(e -> {
-            datePicker.setValue(LocalDate.now());
-            timeFormatter.setValue(LocalTime.now());
-            timeZone.setValue(ZoneId.systemDefault());
-        });
 
         HBox timeFlowControl = new HBox(acceleratorChoicer, resetButton, startStopButton);
         timeFlowControl.setStyle("-fx-spacing: inherit");
