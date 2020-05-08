@@ -255,15 +255,17 @@ public class SkyCanvasManager {
      * Update/draw all elements of the sky
      */
     private void updateSky() {
-        // TODO: 02/05/2020 add intermediate values ?
+        ObservedSky observedSkyValue = observedSky.getValue();
+        StereographicProjection projectionValue = projection.getValue();
+        Transform planeToCanvasValue = planeToCanvas.getValue();
         painter.clear();
-        painter.drawAsterisms(observedSky.getValue(), planeToCanvas.getValue());
-        painter.drawStars(observedSky.getValue(), projection.getValue(), planeToCanvas.getValue());
-        painter.drawPlanets(observedSky.getValue(), projection.getValue(), planeToCanvas.getValue());
-        painter.drawSun(observedSky.getValue(), projection.getValue(), planeToCanvas.getValue());
-        painter.drawMoon(observedSky.getValue(), projection.getValue(), planeToCanvas.getValue());
-        painter.drawHorizon(projection.getValue(), planeToCanvas.getValue());
-        painter.drawCardinalPoints(projection.getValue(), planeToCanvas.getValue());
+        painter.drawAsterisms(observedSkyValue, planeToCanvasValue);
+        painter.drawStars(observedSkyValue, projectionValue, planeToCanvasValue);
+        painter.drawPlanets(observedSkyValue, projectionValue, planeToCanvasValue);
+        painter.drawSun(observedSkyValue, projectionValue, planeToCanvasValue);
+        painter.drawMoon(observedSkyValue, projectionValue, planeToCanvasValue);
+        painter.drawHorizon(projectionValue, planeToCanvasValue);
+        painter.drawCardinalPoints(projectionValue, planeToCanvasValue);
     }
 
     /**

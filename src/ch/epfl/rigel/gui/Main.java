@@ -39,11 +39,6 @@ import java.util.function.UnaryOperator;
 
 public class Main extends Application {
 
-    // TODO : canvas too small to display the full info bar ?
-    // TODO : my draw sky, may use skycanvas manager, draw sky, epfl logo.... to keep in main package no
-    // TODO : lon and lat textfields left digit doesnt delete
-    // TODO : reset button doesnt resets datepicker, but not
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -60,15 +55,16 @@ public class Main extends Application {
 
         SkyCanvasManager canvasManager = createManager(dateTimeBean, observerLocationBean, viewingParametersBean);
 
+        TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
+
         BorderPane mainPane = new BorderPane(
                 new Pane(canvasManager.canvas()),
-                controlBar(observerLocationBean, dateTimeBean),
+                controlBar(observerLocationBean, dateTimeBean , timeAnimator),
                 null,
                 infoBar(viewingParametersBean, canvasManager),
                 null
         );
 
-        TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
 
         canvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
         canvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
@@ -97,19 +93,19 @@ public class Main extends Application {
         return tf;
     }
 
-    private HBox controlBar(ObserverLocationBean olb, DateTimeBean dtb) throws IOException {
+    private HBox controlBar(ObserverLocationBean observerLocationBean, DateTimeBean dateTimeBean, TimeAnimator timeAnimator) throws IOException {
 
         // Observer Location
         HBox whereControl = new HBox(
-                new Label("Longitude (°) :"), createTextField(true, olb, 6.57),
-                new Label("Latitude (°) :"), createTextField(false, olb, 46.52)
+                new Label("Longitude (°) :"), createTextField(true, observerLocationBean, 6.57),
+                new Label("Latitude (°) :"), createTextField(false, observerLocationBean, 46.52)
         );
         whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
         // observation time
 
         DatePicker datePicker = new DatePicker();
-        dtb.dateProperty().bind(datePicker.valueProperty());
+        dateTimeBean.dateProperty().bind(datePicker.valueProperty());
         datePicker.setValue(LocalDate.now());
 
 
@@ -119,7 +115,7 @@ public class Main extends Application {
         LocalTimeStringConverter stringConverter = new LocalTimeStringConverter(hmsFormatter, hmsFormatter);
         TextFormatter<LocalTime> timeFormatter = new TextFormatter<>(stringConverter);
         timeField.setTextFormatter(timeFormatter);
-        dtb.timeProperty().bind(timeFormatter.valueProperty());
+        dateTimeBean.timeProperty().bind(timeFormatter.valueProperty());
         timeFormatter.setValue(LocalTime.now());
 
 
@@ -130,7 +126,7 @@ public class Main extends Application {
         availableZoneIds.forEach(e -> zoneIdList.add(ZoneId.of(e)));
         timeZone.setItems(FXCollections.observableList(zoneIdList));
         timeZone.setStyle("-fx-pref-width: 180");
-        dtb.zoneProperty().bind(timeZone.valueProperty());
+        dateTimeBean.zoneProperty().bind(timeZone.valueProperty());
         timeZone.setValue(ZoneId.systemDefault());
 
 
@@ -144,6 +140,7 @@ public class Main extends Application {
 
         ChoiceBox<NamedTimeAccelerator> acceleratorChoicer = new ChoiceBox<>();
         acceleratorChoicer.setItems(FXCollections.observableList(List.of(NamedTimeAccelerator.values())));
+        acceleratorChoicer.setValue(NamedTimeAccelerator.TIMES_300);
 
         Font fontAwesome = loadFont();
 
