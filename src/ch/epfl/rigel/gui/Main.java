@@ -105,9 +105,9 @@ public class Main extends Application {
         // observation time
 
         DatePicker datePicker = new DatePicker();
-        dateTimeBean.dateProperty().bind(datePicker.valueProperty());
+        datePicker.setStyle("-fx-pref-width: 120");
         datePicker.setValue(LocalDate.now());
-
+        dateTimeBean.dateProperty().bind(datePicker.valueProperty());
 
         TextField timeField = new TextField();
         timeField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
@@ -115,9 +115,8 @@ public class Main extends Application {
         LocalTimeStringConverter stringConverter = new LocalTimeStringConverter(hmsFormatter, hmsFormatter);
         TextFormatter<LocalTime> timeFormatter = new TextFormatter<>(stringConverter);
         timeField.setTextFormatter(timeFormatter);
-        dateTimeBean.timeProperty().bind(timeFormatter.valueProperty());
         timeFormatter.setValue(LocalTime.now());
-
+        dateTimeBean.timeProperty().bind(timeFormatter.valueProperty());
 
         ComboBox<ZoneId> timeZone = new ComboBox<>();
         List<String> availableZoneIds = new ArrayList<>(ZoneId.getAvailableZoneIds());
@@ -126,9 +125,8 @@ public class Main extends Application {
         availableZoneIds.forEach(e -> zoneIdList.add(ZoneId.of(e)));
         timeZone.setItems(FXCollections.observableList(zoneIdList));
         timeZone.setStyle("-fx-pref-width: 180");
-        dateTimeBean.zoneProperty().bind(timeZone.valueProperty());
         timeZone.setValue(ZoneId.systemDefault());
-
+        dateTimeBean.zoneProperty().bind(timeZone.valueProperty());
 
         HBox whenControl = new HBox(
                 new Label("Date :"), datePicker,
@@ -141,6 +139,11 @@ public class Main extends Application {
         ChoiceBox<NamedTimeAccelerator> acceleratorChoicer = new ChoiceBox<>();
         acceleratorChoicer.setItems(FXCollections.observableList(List.of(NamedTimeAccelerator.values())));
         acceleratorChoicer.setValue(NamedTimeAccelerator.TIMES_300);
+        acceleratorChoicer.valueProperty().addListener(
+                (p, o, n) -> {
+                    timeAnimator.setAccelerator(n.getAccelerator());
+                }
+        );
 
         Font fontAwesome = loadFont();
 
@@ -169,7 +172,6 @@ public class Main extends Application {
         controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
         return controlBar;
 
-
     }
 
     private SkyCanvasManager createManager(DateTimeBean dtb, ObserverLocationBean olb, ViewingParametersBean vpb) throws IOException {
@@ -186,27 +188,17 @@ public class Main extends Application {
 
     private BorderPane infoBar(ViewingParametersBean vpb, SkyCanvasManager canvasManager) {
         Text fovDisplay = new Text();
-        fovDisplay.setText(Bindings.format(Locale.ROOT, "Champ de vue : %.1f°", vpb.getFieldOfViewDeg()).get());
-        vpb.fieldOfViewDegProperty().addListener((p, o, n) ->
-                fovDisplay.setText(Bindings.format(Locale.ROOT, "Champ de vue : %.1f°", n).get())
-        );
+        fovDisplay.textProperty().bind(Bindings.format(Locale.ROOT, "Champ de vue : %.1f°", vpb.fieldOfViewDegProperty()));
 
+        // TODO: 08/05/2020 check with null
         Text objectInfo = new Text();
-        canvasManager.objUnderMouseProperty().addListener(
-                (p, o, n) -> {
-                    if (n != null) {
-                        objectInfo.setText(n.info());
-                    } else {
-                        objectInfo.setText("");
-                    }
-                }
-        );
+        objectInfo.textProperty().bind(Bindings.format(Locale.ROOT, "%s", canvasManager.objUnderMouseProperty()));
 
         Text mousePos = new Text();
-        mousePos.setText(Bindings.format(Locale.ROOT,
+        mousePos.textProperty().bind(Bindings.format(Locale.ROOT,
                 "Azimut : %.2f°, hauteur : %.2f°",
-                canvasManager.getMouseAzDeg(),
-                canvasManager.getMouseAltDeg()).get());
+                canvasManager.mouseAzDegProperty(),
+                canvasManager.mouseAltDegProperty()));
 
         BorderPane infoBar = new BorderPane(objectInfo, null, mousePos, null, fovDisplay);
         infoBar.setStyle("-fx-padding: 4; -fx-background-color: white;");
