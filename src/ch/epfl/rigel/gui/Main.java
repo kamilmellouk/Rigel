@@ -148,7 +148,6 @@ public class Main extends Application {
 
             } );
 
-
             HBox timeFlowControl = new HBox(acceleratorChoicer, resetButton, startStopButton);
             timeFlowControl.setStyle("-fx-spacing: inherit");
 
