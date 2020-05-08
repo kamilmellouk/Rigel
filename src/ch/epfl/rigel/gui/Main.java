@@ -60,15 +60,15 @@ public class Main extends Application {
 
         SkyCanvasManager canvasManager = createManager(dateTimeBean, observerLocationBean, viewingParametersBean);
 
+        TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
+
         BorderPane mainPane = new BorderPane(
                 new Pane(canvasManager.canvas()),
-                controlBar(observerLocationBean, dateTimeBean),
+                controlBar(observerLocationBean, dateTimeBean, timeAnimator),
                 null,
                 infoBar(viewingParametersBean, canvasManager),
                 null
         );
-
-        TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
 
         canvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
         canvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
@@ -97,7 +97,7 @@ public class Main extends Application {
         return tf;
     }
 
-    private HBox controlBar(ObserverLocationBean olb, DateTimeBean dtb) throws IOException {
+    private HBox controlBar(ObserverLocationBean olb, DateTimeBean dtb, TimeAnimator timeAnimator) throws IOException {
         try (InputStream fs = getClass().getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
 
             // Observer Location
@@ -146,6 +146,7 @@ public class Main extends Application {
 
             ChoiceBox<NamedTimeAccelerator> acceleratorChoicer = new ChoiceBox<>();
             acceleratorChoicer.setItems(FXCollections.observableList(List.of(NamedTimeAccelerator.values())));
+            acceleratorChoicer.setValue(NamedTimeAccelerator.TIMES_300);
 
             Font fontAwesome = Font.loadFont(fs, 15);
 
