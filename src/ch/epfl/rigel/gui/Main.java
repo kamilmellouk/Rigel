@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
 
 /**
  * @author Bastien Faivre (310929)
@@ -59,11 +60,15 @@ public class Main extends Application {
 
             // observation position
 
+            ObserverLocationBean observerLocationBean = new ObserverLocationBean();
+
             TextField lonTextField = new TextField();
             lonTextField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
             TextFormatter<Number> textFormatterLon = getFormatter(true);
             lonTextField.setTextFormatter(textFormatterLon);
             textFormatterLon.setValue(6.57);
+
+            observerLocationBean.lonDegProperty().bind(textFormatterLon.valueProperty());
 
             TextField latTextField = new TextField();
             latTextField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
@@ -71,23 +76,7 @@ public class Main extends Application {
             latTextField.setTextFormatter(textFormatterLat);
             textFormatterLat.setValue(46.52);
 
-            textFormatterLon.valueProperty().addListener(
-                    (p, o, n) -> System.out.println(n)
-            );
-
-            // TODO: 07/05/2020 why?
-
-            ObservableValue<ObserverLocationBean> observerLocationBean = Bindings.createObjectBinding(
-                    () -> {
-                        ObserverLocationBean olb = new ObserverLocationBean();
-                        olb.setCoordinates(GeographicCoordinates.ofDeg(
-                                textFormatterLon.getValue().doubleValue(),
-                                textFormatterLat.getValue().doubleValue()
-                        ));
-                        return olb;
-                    },
-                    textFormatterLon.valueProperty(), textFormatterLat.valueProperty()
-            );
+            observerLocationBean.latDegProperty().bind(textFormatterLat.valueProperty());
 
             HBox whereControl = new HBox(
                     new Label("Longitude (°) :"), lonTextField,
@@ -97,8 +86,12 @@ public class Main extends Application {
 
             // observation time
 
+            DateTimeBean dateTimeBean = new DateTimeBean();
+
             DatePicker datePicker = new DatePicker();
+            dateTimeBean.dateProperty().bind(datePicker.valueProperty());
             datePicker.setValue(LocalDate.now());
+
 
             TextField timeField = new TextField();
             timeField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
@@ -108,23 +101,18 @@ public class Main extends Application {
             timeField.setTextFormatter(timeFormatter);
             timeFormatter.setValue(LocalTime.now());
 
-            ComboBox<String> timeZone = new ComboBox<>();
-            List<String> zoneIds = new ArrayList<>(ZoneId.getAvailableZoneIds());
-            Collections.sort(zoneIds);
-            timeZone.setItems(FXCollections.observableList(zoneIds));
-            timeZone.setStyle("-fx-pref-width: 180");
-            timeZone.setValue(ZoneId.systemDefault().toString());
+            dateTimeBean.timeProperty().bind(timeFormatter.valueProperty());
 
-            ObservableValue<DateTimeBean> dateTimeBean = Bindings.createObjectBinding(
-                    () -> {
-                        DateTimeBean dtb = new DateTimeBean();
-                        dtb.setDate(datePicker.getValue());
-                        dtb.setTime(timeFormatter.getValue());
-                        dtb.setZone(ZoneId.of(timeZone.getValue()));
-                        return dtb;
-                    },
-                    datePicker.valueProperty(), timeFormatter.valueProperty(), timeZone.valueProperty()
-            );
+            ComboBox<ZoneId> timeZone = new ComboBox<>();
+            List<String> availableZoneIds = new ArrayList<>(ZoneId.getAvailableZoneIds());
+            Collections.sort(availableZoneIds);
+            List<ZoneId> zoneIdList = new ArrayList<>();
+            availableZoneIds.forEach(e -> zoneIdList.add(ZoneId.of(e)));
+            timeZone.setItems(FXCollections.observableList(zoneIdList));
+            timeZone.setStyle("-fx-pref-width: 180");
+            timeZone.setValue(ZoneId.systemDefault());
+
+            dateTimeBean.zoneProperty().bind(timeZone.valueProperty());
 
             HBox whenControl = new HBox(
                     new Label("Date :"), datePicker,
@@ -144,10 +132,10 @@ public class Main extends Application {
 
             Button resetButton = new Button("\uf0e2");
             resetButton.setFont(fontAwesome);
-            resetButton.setOnAction( e -> {
+            resetButton.setOnAction(e -> {
                 datePicker.setValue(LocalDate.now());
                 timeFormatter.setValue(LocalTime.now());
-                timeZone.setValue(ZoneId.systemDefault().toString());
+                timeZone.setValue(ZoneId.systemDefault());
             });
 
             HBox timeFlowControl = new HBox(acceleratorChoicer, resetButton, startStopButton);
@@ -175,7 +163,8 @@ public class Main extends Application {
                     .loadFrom(hs, HygDatabaseLoader.INSTANCE)
                     .loadFrom(as, AsterismLoader.INSTANCE)
                     .build();
-            ObservableValue<SkyCanvasManager> canvasManager = Bindings.createObjectBinding(
+
+            /*ObservableValue<SkyCanvasManager> canvasManager = Bindings.createObjectBinding(
                     () -> new SkyCanvasManager(
                             catalogue,
                             dateTimeBean.getValue(),
@@ -183,10 +172,10 @@ public class Main extends Application {
                             viewingParametersBean
                     ),
                     dateTimeBean, observerLocationBean
-            );
+            );*/
+            SkyCanvasManager canvasManager = new SkyCanvasManager(catalogue, dateTimeBean, observerLocationBean, viewingParametersBean);
 
-            Pane skyPane = new Pane(canvasManager.getValue().canvas());
-
+            Pane skyPane = new Pane(canvasManager.canvas());
 
             BorderPane mainPane = new BorderPane(
                     skyPane,
@@ -196,8 +185,8 @@ public class Main extends Application {
                     null
             );
 
-            canvasManager.getValue().canvas().widthProperty().bind(mainPane.widthProperty());
-            canvasManager.getValue().canvas().heightProperty().bind(mainPane.heightProperty());
+            canvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
+            canvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
 
             primaryStage.setScene(new Scene(mainPane));
 
@@ -206,12 +195,12 @@ public class Main extends Application {
             primaryStage.setMinHeight(600);
 
             primaryStage.show();
-            canvasManager.getValue().canvas().requestFocus();
+            canvasManager.canvas().requestFocus();
         }
 
     }
 
-    private BorderPane infoBar(ViewingParametersBean vpb, ObservableValue<SkyCanvasManager> canvasManager) {
+    private BorderPane infoBar(ViewingParametersBean vpb, SkyCanvasManager canvasManager) {
         Text fovDisplay = new Text();
         vpb.fieldOfViewDegProperty().addListener(
                 (p, o, n) -> fovDisplay.setText(Bindings.format(Locale.ROOT,
@@ -219,7 +208,7 @@ public class Main extends Application {
         );
 
         Text objectInfo = new Text();
-        canvasManager.getValue().objUnderMouseProperty().addListener(
+        canvasManager.objUnderMouseProperty().addListener(
                 (p, o, n) -> {
                     if (n != null) {
                         objectInfo.setText(n.info());
@@ -232,8 +221,8 @@ public class Main extends Application {
         Text mousePos = new Text();
         mousePos.setText(Bindings.format(Locale.ROOT,
                 "Azimut : %.2f°, hauteur : %.2f°",
-                canvasManager.getValue().getMouseAzDeg(),
-                canvasManager.getValue().getMouseAltDeg()).get());
+                canvasManager.getMouseAzDeg(),
+                canvasManager.getMouseAltDeg()).get());
 
         BorderPane infoBar = new BorderPane(objectInfo, null, mousePos, null, fovDisplay);
         infoBar.setStyle("-fx-padding: 4; -fx-background-color: white;");
