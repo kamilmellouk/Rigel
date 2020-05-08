@@ -40,15 +40,18 @@ import java.util.function.UnaryOperator;
 
 public class Main extends Application {
 
+    // TODO : canvas too small to display the full info bar ?
+    // TODO : my draw sky, may use skycanvas manager, draw sky, epfl logo.... to keep in main package no
+    // TODO : lon and lat textfields left digit doesnt delete
+    // TODO : reset button doesnt resets datepicker, but not
+
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        primaryStage.setTitle("Rigel");
-        primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(600);
+
 
         try (InputStream hs = getClass().getResourceAsStream("/hygdata_v3.csv");
              InputStream as = getClass().getResourceAsStream("/asterisms.txt");
@@ -141,12 +144,11 @@ public class Main extends Application {
 
             Button resetButton = new Button("\uf0e2");
             resetButton.setFont(fontAwesome);
-            resetButton.setOnKeyPressed( e -> {
+            resetButton.setOnAction( e -> {
                 datePicker.setValue(LocalDate.now());
                 timeFormatter.setValue(LocalTime.now());
                 timeZone.setValue(ZoneId.systemDefault().toString());
-
-            } );
+            });
 
             HBox timeFlowControl = new HBox(acceleratorChoicer, resetButton, startStopButton);
             timeFlowControl.setStyle("-fx-spacing: inherit");
@@ -186,7 +188,6 @@ public class Main extends Application {
             Pane skyPane = new Pane(canvasManager.getValue().canvas());
 
 
-
             BorderPane mainPane = new BorderPane(
                     skyPane,
                     controlBar,
@@ -200,8 +201,12 @@ public class Main extends Application {
 
             primaryStage.setScene(new Scene(mainPane));
 
+            primaryStage.setTitle("Rigel");
+            primaryStage.setMinWidth(800);
+            primaryStage.setMinHeight(600);
+
             primaryStage.show();
-            skyPane.requestFocus();
+            canvasManager.getValue().canvas().requestFocus();
         }
 
     }
@@ -229,7 +234,6 @@ public class Main extends Application {
                 "Azimut : %.2f°, hauteur : %.2f°",
                 canvasManager.getValue().getMouseAzDeg(),
                 canvasManager.getValue().getMouseAltDeg()).get());
-
 
         BorderPane infoBar = new BorderPane(objectInfo, null, mousePos, null, fovDisplay);
         infoBar.setStyle("-fx-padding: 4; -fx-background-color: white;");

@@ -36,8 +36,8 @@ public class SkyCanvasManager {
     private final ObservableValue<ObservedSky> observedSky;
     private final ObservableValue<StereographicProjection> projection;
     private final ObservableValue<Transform> planeToCanvas;
-    private final ObjectProperty<CartesianCoordinates> mousePosition =
-            new SimpleObjectProperty<>(CartesianCoordinates.of(0, 0));
+    private final ObjectProperty<Point2D> mousePosition =
+            new SimpleObjectProperty<>(Point2D.ZERO);
     private final ObservableValue<CelestialObject> objUnderMouse;
     private final ObservableValue<HorizontalCoordinates> mouseHorPos;
     private final ObservableDoubleValue mouseAzDeg;
@@ -57,16 +57,12 @@ public class SkyCanvasManager {
                             ViewingParametersBean viewingParametersBean) {
 
         canvas = new Canvas();
-        canvas.setHeight(1);
-        canvas.setWidth(1);
 
         painter = new SkyCanvasPainter(canvas);
 
         //-----------------------------------------------------------------------------
         // Events
         //-----------------------------------------------------------------------------
-
-        // TODO: 02/05/2020 Where do we have to put the consume ?
 
         canvas.setOnMousePressed(
                 e -> {
@@ -75,7 +71,7 @@ public class SkyCanvasManager {
         );
 
         canvas.setOnMouseMoved(
-                e -> mousePosition.setValue(CartesianCoordinates.of(e.getX(), e.getY()))
+                e -> mousePosition.setValue(new Point2D(e.getX(), e.getY()))
         );
 
         canvas.setOnScroll(
@@ -102,6 +98,7 @@ public class SkyCanvasManager {
                             viewingParametersBean.setCenter(centerWithAltDiff(center, -5));
                             break;
                     }
+                    e.consume();
                 }
         );
 
@@ -155,21 +152,25 @@ public class SkyCanvasManager {
 
         objUnderMouse = Bindings.createObjectBinding(
                 () -> {
-                    Optional<CelestialObject> closestObj = observedSky.getValue().objectClosestTo(
-                            CartesianCoordinates.of(invertedMousePos().getX(), invertedMousePos().getY()),
-                            planeToCanvas.getValue().inverseDeltaTransform(10, 0).getX()
-                    );
-                    return closestObj.isEmpty() ? null : closestObj.get();
+                    try {
+                        Optional<CelestialObject> closestObj = observedSky.getValue().objectClosestTo(
+                                CartesianCoordinates.of(invertedMousePos().getX(), invertedMousePos().getY()),
+                                planeToCanvas.getValue().inverseDeltaTransform(10, 0).getX()
+                        );
+                        return closestObj.isEmpty() ? null : closestObj.get();
+                    } catch (NonInvertibleTransformException e) {
+                        return null;
+                    }
                 },
                 observedSky, mousePosition
         );
 
         mouseHorPos = Bindings.createObjectBinding(
                 () ->
-                    projection.getValue().inverseApply(CartesianCoordinates.of(
-                            invertedMousePos().getX(),
-                            invertedMousePos().getY())
-                    ),
+                        projection.getValue().inverseApply(CartesianCoordinates.of(
+                                invertedMousePos().getX(),
+                                invertedMousePos().getY())
+                        ),
                 planeToCanvas, projection, mousePosition
         );
 
@@ -293,11 +294,13 @@ public class SkyCanvasManager {
         );
     }
 
-    private Point2D invertedMousePos() throws NonInvertibleTransformException {
-        return planeToCanvas.getValue().inverseTransform(
-                mousePosition.getValue().x(),
-                mousePosition.getValue().y()
-        );
+    private Point2D invertedMousePos() {
+
+        try {
+            return planeToCanvas.getValue().inverseTransform(mousePosition.get());
+        } catch (NonInvertibleTransformException e) {
+            return Point2D.ZERO;
+        }
     }
 
 }
