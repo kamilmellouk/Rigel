@@ -65,7 +65,6 @@ public class Main extends Application {
                 null
         );
 
-
         canvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
         canvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
 
