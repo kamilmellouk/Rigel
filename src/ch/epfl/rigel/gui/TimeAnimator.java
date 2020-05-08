@@ -12,7 +12,7 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public final class TimeAnimator extends AnimationTimer {
 
-    private final DateTimeBean observationTime;
+    private final DateTimeBean dateTimeBean;
     private final ObjectProperty<TimeAccelerator> accelerator = new SimpleObjectProperty<>(null);
     private final SimpleBooleanProperty running = new SimpleBooleanProperty(false);
     private long lastNanos;
@@ -21,10 +21,10 @@ public final class TimeAnimator extends AnimationTimer {
     /**
      * Constructor of a time animator
      *
-     * @param observationTime the observation time
+     * @param dateTimeBean the observation time
      */
-    public TimeAnimator(DateTimeBean observationTime) {
-        this.observationTime = observationTime;
+    public TimeAnimator(DateTimeBean dateTimeBean) {
+        this.dateTimeBean = dateTimeBean;
         firstHandle = true;
     }
 
@@ -55,6 +55,11 @@ public final class TimeAnimator extends AnimationTimer {
         this.accelerator.setValue(accelerator);
     }
 
+    // TODO : check if ok to add method
+    public boolean isRunning() {
+        return running.getValue();
+    }
+
     @Override
     public void start() {
         super.start();
@@ -74,7 +79,8 @@ public final class TimeAnimator extends AnimationTimer {
             lastNanos = now;
             firstHandle = false;
         }
-        observationTime.setZonedDateTime(accelerator.get().adjust(observationTime.getZonedDateTime(), now - lastNanos));
+        dateTimeBean.setZonedDateTime(
+                accelerator.get().adjust(dateTimeBean.getZonedDateTime(), now - lastNanos));
         lastNanos = now;
     }
 }

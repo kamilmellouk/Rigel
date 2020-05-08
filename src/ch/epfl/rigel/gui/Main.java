@@ -107,7 +107,7 @@ public class Main extends Application {
         DatePicker datePicker = new DatePicker();
         datePicker.setStyle("-fx-pref-width: 120");
         datePicker.setValue(LocalDate.now());
-        dateTimeBean.dateProperty().bind(datePicker.valueProperty());
+        dateTimeBean.dateProperty().bindBidirectional(datePicker.valueProperty());
 
         TextField timeField = new TextField();
         timeField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
@@ -116,7 +116,7 @@ public class Main extends Application {
         TextFormatter<LocalTime> timeFormatter = new TextFormatter<>(stringConverter);
         timeField.setTextFormatter(timeFormatter);
         timeFormatter.setValue(LocalTime.now());
-        dateTimeBean.timeProperty().bind(timeFormatter.valueProperty());
+        dateTimeBean.timeProperty().bindBidirectional(timeFormatter.valueProperty());
 
         ComboBox<ZoneId> timeZone = new ComboBox<>();
         List<String> availableZoneIds = new ArrayList<>(ZoneId.getAvailableZoneIds());
@@ -126,7 +126,7 @@ public class Main extends Application {
         timeZone.setItems(FXCollections.observableList(zoneIdList));
         timeZone.setStyle("-fx-pref-width: 180");
         timeZone.setValue(ZoneId.systemDefault());
-        dateTimeBean.zoneProperty().bind(timeZone.valueProperty());
+        dateTimeBean.zoneProperty().bindBidirectional(timeZone.valueProperty());
 
         HBox whenControl = new HBox(
                 new Label("Date :"), datePicker,
@@ -138,17 +138,26 @@ public class Main extends Application {
 
         ChoiceBox<NamedTimeAccelerator> acceleratorChoicer = new ChoiceBox<>();
         acceleratorChoicer.setItems(FXCollections.observableList(List.of(NamedTimeAccelerator.values())));
-        acceleratorChoicer.setValue(NamedTimeAccelerator.TIMES_300);
         acceleratorChoicer.valueProperty().addListener(
                 (p, o, n) -> {
                     timeAnimator.setAccelerator(n.getAccelerator());
                 }
         );
+        acceleratorChoicer.setValue(NamedTimeAccelerator.TIMES_300);
 
-        Font fontAwesome = loadFont();
+        Font fontAwesome = loadFontAwesome();
 
-        Button startStopButton = new Button();
+        Button startStopButton = new Button("\uf04b");
         startStopButton.setFont(fontAwesome);
+        startStopButton.setOnAction(e -> {
+            if(!timeAnimator.isRunning()) {
+                timeAnimator.start();
+                startStopButton.setText("\uf04c");
+            } else {
+                timeAnimator.stop();
+                startStopButton.setText("\uf04b");
+            }
+        });
 
         Button resetButton = new Button("\uf0e2");
         resetButton.setFont(fontAwesome);
@@ -188,11 +197,20 @@ public class Main extends Application {
 
     private BorderPane infoBar(ViewingParametersBean vpb, SkyCanvasManager canvasManager) {
         Text fovDisplay = new Text();
-        fovDisplay.textProperty().bind(Bindings.format(Locale.ROOT, "Champ de vue : %.1f°", vpb.fieldOfViewDegProperty()));
+        fovDisplay.textProperty().bind(Bindings.format(Locale.ROOT, "Champ de vue : %.1f°",
+                vpb.fieldOfViewDegProperty()));
 
         // TODO: 08/05/2020 check with null
         Text objectInfo = new Text();
-        objectInfo.textProperty().bind(Bindings.format(Locale.ROOT, "%s", canvasManager.objUnderMouseProperty()));
+        canvasManager.objUnderMouseProperty().addListener(
+                (p, o, n) -> {
+                    if (n != null) {
+                        objectInfo.setText(n.info());
+                    } else {
+                        objectInfo.setText("");
+                    }
+                }
+        );
 
         Text mousePos = new Text();
         mousePos.textProperty().bind(Bindings.format(Locale.ROOT,
@@ -214,7 +232,7 @@ public class Main extends Application {
         return verticalSeparator;
     }
 
-    private Font loadFont() throws IOException {
+    private Font loadFontAwesome() throws IOException {
         try (InputStream fs = getClass().getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
             return Font.loadFont(fs, 15);
         }
