@@ -15,9 +15,9 @@ import java.time.ZonedDateTime;
 
 public final class DateTimeBean {
 
-    private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(null);
-    private final ObjectProperty<LocalTime> time = new SimpleObjectProperty<>(null);
-    private final ObjectProperty<ZoneId> zone = new SimpleObjectProperty<>(null);
+    private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(LocalDate.now());
+    private final ObjectProperty<LocalTime> time = new SimpleObjectProperty<>(LocalTime.now());
+    private final ObjectProperty<ZoneId> zone = new SimpleObjectProperty<>(ZoneId.systemDefault());
 
     /**
      * Getter for the property local date
