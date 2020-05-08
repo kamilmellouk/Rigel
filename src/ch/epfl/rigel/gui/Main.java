@@ -98,82 +98,80 @@ public class Main extends Application {
     }
 
     private HBox controlBar(ObserverLocationBean olb, DateTimeBean dtb) throws IOException {
-        try (InputStream fs = getClass().getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
 
-            // Observer Location
-            HBox whereControl = new HBox(
-                    new Label("Longitude (°) :"), createTextField(true, olb, 6.57),
-                    new Label("Latitude (°) :"), createTextField(false, olb, 46.52)
-            );
-            whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
+        // Observer Location
+        HBox whereControl = new HBox(
+                new Label("Longitude (°) :"), createTextField(true, olb, 6.57),
+                new Label("Latitude (°) :"), createTextField(false, olb, 46.52)
+        );
+        whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
-            // observation time
+        // observation time
+
+        DatePicker datePicker = new DatePicker();
+        dtb.dateProperty().bind(datePicker.valueProperty());
+        datePicker.setValue(LocalDate.now());
 
 
-            DatePicker datePicker = new DatePicker();
-            dtb.dateProperty().bind(datePicker.valueProperty());
+        TextField timeField = new TextField();
+        timeField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
+        DateTimeFormatter hmsFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalTimeStringConverter stringConverter = new LocalTimeStringConverter(hmsFormatter, hmsFormatter);
+        TextFormatter<LocalTime> timeFormatter = new TextFormatter<>(stringConverter);
+        timeField.setTextFormatter(timeFormatter);
+        dtb.timeProperty().bind(timeFormatter.valueProperty());
+        timeFormatter.setValue(LocalTime.now());
+
+
+        ComboBox<ZoneId> timeZone = new ComboBox<>();
+        List<String> availableZoneIds = new ArrayList<>(ZoneId.getAvailableZoneIds());
+        Collections.sort(availableZoneIds);
+        List<ZoneId> zoneIdList = new ArrayList<>();
+        availableZoneIds.forEach(e -> zoneIdList.add(ZoneId.of(e)));
+        timeZone.setItems(FXCollections.observableList(zoneIdList));
+        timeZone.setStyle("-fx-pref-width: 180");
+        dtb.zoneProperty().bind(timeZone.valueProperty());
+        timeZone.setValue(ZoneId.systemDefault());
+
+
+        HBox whenControl = new HBox(
+                new Label("Date :"), datePicker,
+                new Label("Heure :"), timeField, timeZone
+        );
+        whenControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
+
+        // time flow
+
+        ChoiceBox<NamedTimeAccelerator> acceleratorChoicer = new ChoiceBox<>();
+        acceleratorChoicer.setItems(FXCollections.observableList(List.of(NamedTimeAccelerator.values())));
+
+        Font fontAwesome = loadFont();
+
+        Button startStopButton = new Button();
+        startStopButton.setFont(fontAwesome);
+
+        Button resetButton = new Button("\uf0e2");
+        resetButton.setFont(fontAwesome);
+        resetButton.setOnAction(e -> {
             datePicker.setValue(LocalDate.now());
-
-
-            TextField timeField = new TextField();
-            timeField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
-            DateTimeFormatter hmsFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-            LocalTimeStringConverter stringConverter = new LocalTimeStringConverter(hmsFormatter, hmsFormatter);
-            TextFormatter<LocalTime> timeFormatter = new TextFormatter<>(stringConverter);
-            timeField.setTextFormatter(timeFormatter);
-            dtb.timeProperty().bind(timeFormatter.valueProperty());
             timeFormatter.setValue(LocalTime.now());
-
-
-            ComboBox<ZoneId> timeZone = new ComboBox<>();
-            List<String> availableZoneIds = new ArrayList<>(ZoneId.getAvailableZoneIds());
-            Collections.sort(availableZoneIds);
-            List<ZoneId> zoneIdList = new ArrayList<>();
-            availableZoneIds.forEach(e -> zoneIdList.add(ZoneId.of(e)));
-            timeZone.setItems(FXCollections.observableList(zoneIdList));
-            timeZone.setStyle("-fx-pref-width: 180");
-            dtb.zoneProperty().bind(timeZone.valueProperty());
             timeZone.setValue(ZoneId.systemDefault());
+        });
 
+        HBox timeFlowControl = new HBox(acceleratorChoicer, resetButton, startStopButton);
+        timeFlowControl.setStyle("-fx-spacing: inherit");
 
-            HBox whenControl = new HBox(
-                    new Label("Date :"), datePicker,
-                    new Label("Heure :"), timeField, timeZone
-            );
-            whenControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
+        // control bar
 
-            // time flow
+        HBox controlBar = new HBox(
+                whereControl, verticalSeparator(),
+                whenControl, verticalSeparator(),
+                timeFlowControl
+        );
 
-            ChoiceBox<NamedTimeAccelerator> acceleratorChoicer = new ChoiceBox<>();
-            acceleratorChoicer.setItems(FXCollections.observableList(List.of(NamedTimeAccelerator.values())));
+        controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
+        return controlBar;
 
-            Font fontAwesome = Font.loadFont(fs, 15);
-
-            Button startStopButton = new Button();
-            startStopButton.setFont(fontAwesome);
-
-            Button resetButton = new Button("\uf0e2");
-            resetButton.setFont(fontAwesome);
-            resetButton.setOnAction(e -> {
-                datePicker.setValue(LocalDate.now());
-                timeFormatter.setValue(LocalTime.now());
-                timeZone.setValue(ZoneId.systemDefault());
-            });
-
-            HBox timeFlowControl = new HBox(acceleratorChoicer, resetButton, startStopButton);
-            timeFlowControl.setStyle("-fx-spacing: inherit");
-
-            // control bar
-
-            HBox controlBar = new HBox(
-                    whereControl, verticalSeparator(),
-                    whenControl, verticalSeparator(),
-                    timeFlowControl
-            );
-
-            controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
-            return controlBar;
-        }
 
     }
 
@@ -186,15 +184,14 @@ public class Main extends Application {
                     .build();
 
             return new SkyCanvasManager(catalogue, dtb, olb, vpb);
-
         }
     }
 
     private BorderPane infoBar(ViewingParametersBean vpb, SkyCanvasManager canvasManager) {
         Text fovDisplay = new Text();
-        vpb.fieldOfViewDegProperty().addListener(
-                (p, o, n) -> fovDisplay.setText(Bindings.format(Locale.ROOT,
-                        "Champ de vue : %.1f°", n).get())
+        fovDisplay.setText(Bindings.format(Locale.ROOT, "Champ de vue : %.1f°", vpb.getFieldOfViewDeg()).get());
+        vpb.fieldOfViewDegProperty().addListener((p, o, n) ->
+                fovDisplay.setText(Bindings.format(Locale.ROOT, "Champ de vue : %.1f°", n).get())
         );
 
         Text objectInfo = new Text();
@@ -226,6 +223,12 @@ public class Main extends Application {
         Separator verticalSeparator = new Separator();
         verticalSeparator.setOrientation(Orientation.VERTICAL);
         return verticalSeparator;
+    }
+
+    private Font loadFont() throws IOException {
+        try (InputStream fs = getClass().getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
+            return Font.loadFont(fs, 15);
+        }
     }
 
     /**
