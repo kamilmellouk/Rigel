@@ -108,7 +108,6 @@ public class Main extends Application {
         dateTimeBean.dateProperty().bind(datePicker.valueProperty());
         datePicker.setValue(LocalDate.now());
 
-
         TextField timeField = new TextField();
         timeField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
         DateTimeFormatter hmsFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
