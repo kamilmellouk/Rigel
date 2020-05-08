@@ -7,7 +7,6 @@ import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
@@ -164,15 +163,6 @@ public class Main extends Application {
                     .loadFrom(as, AsterismLoader.INSTANCE)
                     .build();
 
-            /*ObservableValue<SkyCanvasManager> canvasManager = Bindings.createObjectBinding(
-                    () -> new SkyCanvasManager(
-                            catalogue,
-                            dateTimeBean.getValue(),
-                            observerLocationBean.getValue(),
-                            viewingParametersBean
-                    ),
-                    dateTimeBean, observerLocationBean
-            );*/
             SkyCanvasManager canvasManager = new SkyCanvasManager(catalogue, dateTimeBean, observerLocationBean, viewingParametersBean);
 
             Pane skyPane = new Pane(canvasManager.canvas());
