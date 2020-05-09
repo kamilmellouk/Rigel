@@ -125,9 +125,7 @@ public class Main extends Application {
         ChoiceBox<NamedTimeAccelerator> acceleratorChoicer = new ChoiceBox<>();
         acceleratorChoicer.setItems(FXCollections.observableList(List.of(NamedTimeAccelerator.values())));
         acceleratorChoicer.valueProperty().addListener(
-                (p, o, n) -> {
-                    timeAnimator.setAccelerator(n.getAccelerator());
-                }
+                (p, o, n) -> timeAnimator.setAccelerator(n.getAccelerator())
         );
         acceleratorChoicer.setValue(NamedTimeAccelerator.TIMES_300);
         acceleratorChoicer.disableProperty().bind(timeAnimator.runningProperty());
@@ -189,7 +187,6 @@ public class Main extends Application {
         fovDisplay.textProperty().bind(Bindings.format(Locale.ROOT, "Champ de vue : %.1f°",
                 vpb.fieldOfViewDegProperty()));
 
-        // TODO: 08/05/2020 check with null
         Text objectInfo = new Text();
         canvasManager.objUnderMouseProperty().addListener(
                 (p, o, n) -> {
