@@ -60,6 +60,10 @@ public final class TimeAnimator extends AnimationTimer {
         return running.getValue();
     }
 
+    public SimpleBooleanProperty runningProperty() {
+        return running;
+    }
+
     @Override
     public void start() {
         super.start();

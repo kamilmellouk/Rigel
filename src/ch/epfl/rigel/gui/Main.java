@@ -79,18 +79,6 @@ public class Main extends Application {
 
     }
 
-    private TextField createTextField(boolean isLon, ObserverLocationBean olb, double defaultValue) {
-        TextField tf = new TextField();
-        tf.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
-        TextFormatter<Number> textFormatter = getFormatter(isLon);
-        tf.setTextFormatter(textFormatter);
-        if (isLon)
-            olb.lonDegProperty().bind(textFormatter.valueProperty());
-        else
-            olb.latDegProperty().bind(textFormatter.valueProperty());
-        textFormatter.setValue(defaultValue);
-        return tf;
-    }
 
     private HBox controlBar(ObserverLocationBean observerLocationBean, DateTimeBean dateTimeBean, TimeAnimator timeAnimator) throws IOException {
 
@@ -100,8 +88,6 @@ public class Main extends Application {
                 new Label("Latitude (°) :"), createTextField(false, observerLocationBean, 46.52)
         );
         whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
-
-        // observation time
 
         DatePicker datePicker = new DatePicker();
         datePicker.setStyle("-fx-pref-width: 120");
@@ -132,6 +118,7 @@ public class Main extends Application {
                 new Label("Heure :"), timeField, timeZone
         );
         whenControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
+        whenControl.disableProperty().bind(timeAnimator.runningProperty());
 
         // time flow
 
@@ -143,6 +130,7 @@ public class Main extends Application {
                 }
         );
         acceleratorChoicer.setValue(NamedTimeAccelerator.TIMES_300);
+        acceleratorChoicer.disableProperty().bind(timeAnimator.runningProperty());
 
         Font fontAwesome = loadFontAwesome();
 
@@ -153,6 +141,7 @@ public class Main extends Application {
             timeFormatter.setValue(LocalTime.now());
             timeZone.setValue(ZoneId.systemDefault());
         });
+        resetButton.disableProperty().bind(timeAnimator.runningProperty());
 
         Button startStopButton = new Button("\uf04b");
         startStopButton.setFont(fontAwesome);
@@ -180,8 +169,8 @@ public class Main extends Application {
 
         controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
         return controlBar;
-
     }
+
 
     private SkyCanvasManager createManager(DateTimeBean dtb, ObserverLocationBean olb, ViewingParametersBean vpb) throws IOException {
         try (InputStream hs = getClass().getResourceAsStream("/hygdata_v3.csv");
@@ -236,6 +225,19 @@ public class Main extends Application {
         try (InputStream fs = getClass().getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
             return Font.loadFont(fs, 15);
         }
+    }
+
+    private TextField createTextField(boolean isLon, ObserverLocationBean olb, double defaultValue) {
+        TextField tf = new TextField();
+        tf.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
+        TextFormatter<Number> textFormatter = getFormatter(isLon);
+        tf.setTextFormatter(textFormatter);
+        if (isLon)
+            olb.lonDegProperty().bind(textFormatter.valueProperty());
+        else
+            olb.latDegProperty().bind(textFormatter.valueProperty());
+        textFormatter.setValue(defaultValue);
+        return tf;
     }
 
     /**
