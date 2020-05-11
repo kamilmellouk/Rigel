@@ -39,6 +39,19 @@ import java.util.function.UnaryOperator;
 
 public class Main extends Application {
 
+    // TODO add beans, strings
+    private static final String RESET_ICON = "\uf0e2";
+    private static final String PLAY_ICON = "\uf04b";
+    private static final String PAUSE_ICON = "\uf04c";
+
+    private ObserverLocationBean observerLocationBean = new ObserverLocationBean();
+    private DateTimeBean dateTimeBean = new DateTimeBean();
+    private ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
+
+    private SkyCanvasManager skyCanvasManager;
+    private TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
+
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -46,27 +59,21 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
-        ObserverLocationBean observerLocationBean = new ObserverLocationBean();
-        DateTimeBean dateTimeBean = new DateTimeBean();
-
-        ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
-        viewingParametersBean.setCenter(HorizontalCoordinates.ofDeg(180.000000000001, 42));
+        viewingParametersBean.setCenter(HorizontalCoordinates.ofDeg(180.000000000001, 15));
         viewingParametersBean.setFieldOfViewDeg(100);
 
-        SkyCanvasManager canvasManager = createManager(dateTimeBean, observerLocationBean, viewingParametersBean);
-
-        TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
+        skyCanvasManager = createManager();
 
         BorderPane mainPane = new BorderPane(
-                new Pane(canvasManager.canvas()),
-                controlBar(observerLocationBean, dateTimeBean , timeAnimator),
+                new Pane(skyCanvasManager.canvas()),
+                controlBar(),
                 null,
-                infoBar(viewingParametersBean, canvasManager),
+                infoBar(),
                 null
         );
 
-        canvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
-        canvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
+        skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
+        skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
 
         primaryStage.setScene(new Scene(mainPane));
 
@@ -75,20 +82,27 @@ public class Main extends Application {
         primaryStage.setMinHeight(600);
 
         primaryStage.show();
-        canvasManager.canvas().requestFocus();
-
+        skyCanvasManager.canvas().requestFocus();
     }
 
-
-    private HBox controlBar(ObserverLocationBean observerLocationBean, DateTimeBean dateTimeBean, TimeAnimator timeAnimator) throws IOException {
-
-        // Observer Location
+    private HBox locationControl() {
         HBox whereControl = new HBox(
-                new Label("Longitude (°) :"), createTextField(true, observerLocationBean, 6.57),
-                new Label("Latitude (°) :"), createTextField(false, observerLocationBean, 46.52)
+                new Label("Longitude (°) :"), createTextField(true, 6.57),
+                new Label("Latitude (°) :"), createTextField(false, 46.52)
         );
         whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
+        return whereControl;
+    }
+
+    private HBox timeControl() {
+        return null;
+    }
+
+
+    private HBox controlBar() throws IOException {
+
+        // Observer Location
         DatePicker datePicker = new DatePicker();
         datePicker.setStyle("-fx-pref-width: 120");
         datePicker.setValue(LocalDate.now());
@@ -132,7 +146,7 @@ public class Main extends Application {
 
         Font fontAwesome = loadFontAwesome();
 
-        Button resetButton = new Button("\uf0e2");
+        Button resetButton = new Button(RESET_ICON);
         resetButton.setFont(fontAwesome);
         resetButton.setOnAction(e -> {
             datePicker.setValue(LocalDate.now());
@@ -141,26 +155,26 @@ public class Main extends Application {
         });
         resetButton.disableProperty().bind(timeAnimator.runningProperty());
 
-        Button startStopButton = new Button("\uf04b");
-        startStopButton.setFont(fontAwesome);
-        startStopButton.setOnAction(e -> {
-            if(!timeAnimator.isRunning()) {
+        Button playPauseButton = new Button(PLAY_ICON);
+        playPauseButton.setFont(fontAwesome);
+        playPauseButton.setOnAction(e -> {
+            if (!timeAnimator.isRunning()) {
                 timeAnimator.start();
-                startStopButton.setText("\uf04c");
+                playPauseButton.setText(PAUSE_ICON);
             } else {
                 timeAnimator.stop();
-                startStopButton.setText("\uf04b");
+                playPauseButton.setText(PLAY_ICON);
             }
         });
 
 
-        HBox timeFlowControl = new HBox(acceleratorChoicer, resetButton, startStopButton);
+        HBox timeFlowControl = new HBox(acceleratorChoicer, resetButton, playPauseButton);
         timeFlowControl.setStyle("-fx-spacing: inherit");
 
         // control bar
 
         HBox controlBar = new HBox(
-                whereControl, verticalSeparator(),
+                locationControl(), verticalSeparator(),
                 whenControl, verticalSeparator(),
                 timeFlowControl
         );
@@ -170,7 +184,7 @@ public class Main extends Application {
     }
 
 
-    private SkyCanvasManager createManager(DateTimeBean dtb, ObserverLocationBean olb, ViewingParametersBean vpb) throws IOException {
+    private SkyCanvasManager createManager() throws IOException {
         try (InputStream hs = getClass().getResourceAsStream("/hygdata_v3.csv");
              InputStream as = getClass().getResourceAsStream("/asterisms.txt")) {
             StarCatalogue catalogue = new StarCatalogue.Builder()
@@ -178,17 +192,17 @@ public class Main extends Application {
                     .loadFrom(as, AsterismLoader.INSTANCE)
                     .build();
 
-            return new SkyCanvasManager(catalogue, dtb, olb, vpb);
+            return new SkyCanvasManager(catalogue, dateTimeBean, observerLocationBean, viewingParametersBean);
         }
     }
 
-    private BorderPane infoBar(ViewingParametersBean vpb, SkyCanvasManager canvasManager) {
+    private BorderPane infoBar() {
         Text fovDisplay = new Text();
         fovDisplay.textProperty().bind(Bindings.format(Locale.ROOT, "Champ de vue : %.1f°",
-                vpb.fieldOfViewDegProperty()));
+                viewingParametersBean.fieldOfViewDegProperty()));
 
         Text objectInfo = new Text();
-        canvasManager.objUnderMouseProperty().addListener(
+        skyCanvasManager.objUnderMouseProperty().addListener(
                 (p, o, n) -> {
                     if (n != null) {
                         objectInfo.setText(n.info());
@@ -199,10 +213,9 @@ public class Main extends Application {
         );
 
         Text mousePos = new Text();
-        mousePos.textProperty().bind(Bindings.format(Locale.ROOT,
-                "Azimut : %.2f°, hauteur : %.2f°",
-                canvasManager.mouseAzDegProperty(),
-                canvasManager.mouseAltDegProperty()));
+        mousePos.textProperty().bind(Bindings.format(Locale.ROOT, "Azimut : %.2f°, hauteur : %.2f°",
+                skyCanvasManager.mouseAzDegProperty(),
+                skyCanvasManager.mouseAltDegProperty()));
 
         BorderPane infoBar = new BorderPane(objectInfo, null, mousePos, null, fovDisplay);
         infoBar.setStyle("-fx-padding: 4; -fx-background-color: white;");
@@ -224,15 +237,16 @@ public class Main extends Application {
         }
     }
 
-    private TextField createTextField(boolean isLon, ObserverLocationBean olb, double defaultValue) {
+    private TextField createTextField(boolean isLon, double defaultValue) {
         TextField tf = new TextField();
         tf.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
         TextFormatter<Number> textFormatter = getFormatter(isLon);
         tf.setTextFormatter(textFormatter);
-        if (isLon)
-            olb.lonDegProperty().bind(textFormatter.valueProperty());
-        else
-            olb.latDegProperty().bind(textFormatter.valueProperty());
+        if (isLon) {
+            observerLocationBean.lonDegProperty().bind(textFormatter.valueProperty());
+        } else {
+            observerLocationBean.latDegProperty().bind(textFormatter.valueProperty());
+        }
         textFormatter.setValue(defaultValue);
         return tf;
     }
