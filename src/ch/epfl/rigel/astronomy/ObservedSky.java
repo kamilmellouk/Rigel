@@ -196,6 +196,9 @@ public final class ObservedSky {
         double x = coordinates.x();
         double y = coordinates.y();
 
+        ObservedCelestialObjects typeOfclosestObject = null;
+        int index = 0;
+
         for (ObservedCelestialObjects type : objectPosMap.keySet()) {
             double[] positions = objectPosMap.get(type);
             for (int i = 0; i < positions.length; i += 2) {
@@ -204,17 +207,22 @@ public final class ObservedSky {
                     double distanceSquared = distanceBetweenSquared(pos, coordinates);
                     if (distanceSquared < minDistanceSquared) {
                         minDistanceSquared = distanceSquared;
-                        if (type == ObservedCelestialObjects.SUN) {
-                            closestObject = sun;
-                        } else if (type.equals(ObservedCelestialObjects.MOON)) {
-                            closestObject = moon;
-                        } else if (type.equals(ObservedCelestialObjects.PLANETS)) {
-                            closestObject = planets().get(i / 2);
-                        } else {
-                            closestObject = stars().get(i / 2);
-                        }
+                        typeOfclosestObject = type;
+                        index = i;
                     }
                 }
+            }
+        }
+
+        if (typeOfclosestObject != null) {
+            if (typeOfclosestObject == ObservedCelestialObjects.SUN) {
+                closestObject = sun;
+            } else if (typeOfclosestObject == ObservedCelestialObjects.MOON) {
+                closestObject = moon;
+            } else if (typeOfclosestObject == ObservedCelestialObjects.PLANETS) {
+                closestObject = planets().get(index / 2);
+            } else {
+                closestObject = stars().get(index / 2);
             }
         }
 
