@@ -204,7 +204,7 @@ public final class ObservedSky {
                     double distanceSquared = distanceBetweenSquared(pos, coordinates);
                     if (distanceSquared < minDistanceSquared) {
                         minDistanceSquared = distanceSquared;
-                        if (type.equals(ObservedCelestialObjects.SUN)) {
+                        if (type == ObservedCelestialObjects.SUN) {
                             closestObject = sun;
                         } else if (type.equals(ObservedCelestialObjects.MOON)) {
                             closestObject = moon;

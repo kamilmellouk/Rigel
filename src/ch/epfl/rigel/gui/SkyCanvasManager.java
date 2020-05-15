@@ -261,7 +261,6 @@ public class SkyCanvasManager {
         StereographicProjection projectionValue = projection.getValue();
         Transform planeToCanvasValue = planeToCanvas.getValue();
         painter.clear();
-        painter.drawAsterisms(observedSkyValue, planeToCanvasValue);
         painter.drawStars(observedSkyValue, projectionValue, planeToCanvasValue);
         painter.drawPlanets(observedSkyValue, projectionValue, planeToCanvasValue);
         painter.drawSun(observedSkyValue, projectionValue, planeToCanvasValue);

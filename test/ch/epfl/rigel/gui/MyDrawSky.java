@@ -58,7 +58,6 @@ public final class MyDrawSky extends Application {
             SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
 
             painter.clear();
-            painter.drawAsterisms(sky, planeToCanvas);
             painter.drawStars(sky, projection, planeToCanvas);
             painter.drawPlanets(sky, projection, planeToCanvas);
             painter.drawSun(sky, projection, planeToCanvas);

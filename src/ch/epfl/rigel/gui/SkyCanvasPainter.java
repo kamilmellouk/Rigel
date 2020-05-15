@@ -33,7 +33,7 @@ public class SkyCanvasPainter {
     private final static ClosedInterval MAG_INTERVAL = ClosedInterval.of(-2, 5);
     private final static double ZERO_FIVE_DEG_TO_RAD = Angle.ofDeg(0.5);
 
-    private static final Color YELLOW_HALO =
+    private static final Color YELLOW_HALO_COLOR =
             Color.YELLOW.deriveColor(0, 0, 1, 0.25);
 
     /**
@@ -68,33 +68,13 @@ public class SkyCanvasPainter {
         double[] transformedPos = new double[starPositions.length];
         planeToCanvas.transform2DPoints(starPositions, 0, transformedPos, 0, sky.stars().size());
 
-        int index = 0;
-        for (Star star : sky.stars()) {
-            double diameter = transformedDiameter(star.magnitude(), projection, planeToCanvas);
-            fillDisk(transformedPos[index], transformedPos[index + 1], diameter,
-                    BlackBodyColor.colorForTemperature(star.colorTemperature()));
-            index += 2;
-        }
-    }
+        //-----------------------------------------------------------------------------
+        // Drawing asterisms
+        //-----------------------------------------------------------------------------
 
-    /**
-     * Represent the asterisms by linking their stars on the canvas
-     *
-     * @param sky           to represent
-     * @param planeToCanvas transformation
-     */
-    public void drawAsterisms(ObservedSky sky, Transform planeToCanvas) {
         ctx.setStroke(Color.BLUE);
         ctx.setLineWidth(1);
-
-        // transform all positions of the stars
-        // TODO stock these arrays ? YES
-        double[] starPositions = sky.starPositions();
-        double[] transformedPos = new double[starPositions.length];
-        planeToCanvas.transform2DPoints(starPositions, 0, transformedPos, 0, sky.stars().size());
-
         var bounds = canvas.getBoundsInLocal();
-
         for (Asterism asterism : sky.asterisms()) {
             ctx.beginPath();
             List<Integer> indices = sky.asterismIndices(asterism);
@@ -121,6 +101,18 @@ public class SkyCanvasPainter {
             }
 
             ctx.stroke();
+        }
+
+        //-----------------------------------------------------------------------------
+        // Drawing stars
+        //-----------------------------------------------------------------------------
+
+        int index = 0;
+        for (Star star : sky.stars()) {
+            double diameter = transformedDiameter(star.magnitude(), projection, planeToCanvas);
+            fillDisk(transformedPos[index], transformedPos[index + 1], diameter,
+                    BlackBodyColor.colorForTemperature(star.colorTemperature()));
+            index += 2;
         }
     }
 
@@ -157,11 +149,10 @@ public class SkyCanvasPainter {
         double tempDiam = projection.applyToAngle(sky.sun().angularSize());
         double diameter = planeToCanvas.deltaTransform(tempDiam, 0).getX();
         // yellow halo around the sun
-        fillDisk(pos.getX(), pos.getY(), 2.2 * diameter, YELLOW_HALO);
+        fillDisk(pos.getX(), pos.getY(), diameter * 2.2, YELLOW_HALO_COLOR);
         fillDisk(pos.getX(), pos.getY(), diameter + 2, Color.YELLOW);
         fillDisk(pos.getX(), pos.getY(), diameter, Color.WHITE);
     }
-
 
     /**
      * Represent the Moon (if visible) on the canvas
