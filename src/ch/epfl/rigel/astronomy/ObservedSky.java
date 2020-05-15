@@ -196,50 +196,24 @@ public final class ObservedSky {
         double x = coordinates.x();
         double y = coordinates.y();
 
-        // TODO return celestial object / position pair
-        // TODO one big double for loop iterating in the loop
-
-        for (ObservedCelestialObjects observedCelestialObjects : objectPosMap.keySet()) {
-            for (double coordinate : objectPosMap.get(observedCelestialObjects)) {
-                
-            }
-        }
-        
-        
-        // check the sun
-        if (Math.abs(x - sunPosition().x()) < maxDistance && Math.abs(y - sunPosition().y()) < maxDistance) {
-            double sunDistanceSquared = distanceBetweenSquared(coordinates, sunPosition());
-            if (sunDistanceSquared < minDistanceSquared)
-                closestObject = sun;
-        }
-
-        // check the moon
-        if (Math.abs(x - moonPosition().x()) < maxDistance && Math.abs(y - moonPosition().y()) < maxDistance) {
-            double moonDistanceSquared = distanceBetweenSquared(coordinates, moonPosition());
-            if (moonDistanceSquared < minDistanceSquared)
-                closestObject = moon;
-        }
-
-        // check the planets
-        for (int i = 0; i < planetPositions().length; i += 2) {
-            CartesianCoordinates planetPos = CartesianCoordinates.of(planetPositions()[i], planetPositions()[i + 1]);
-            if (Math.abs(x - planetPos.x()) < maxDistance && Math.abs(y - planetPos.y()) < maxDistance) {
-                double distanceSquared = distanceBetweenSquared(planetPos, coordinates);
-                if (distanceSquared < minDistanceSquared) {
-                    minDistanceSquared = distanceSquared;
-                    closestObject = planets().get(i / 2);
-                }
-            }
-        }
-
-        // check the stars
-        for (int i = 0; i < starPositions().length; i += 2) {
-            CartesianCoordinates starPos = CartesianCoordinates.of(starPositions()[i], starPositions()[i + 1]);
-            if (Math.abs(x - starPos.x()) < maxDistance && Math.abs(y - starPos.y()) < maxDistance) {
-                double distanceSquared = distanceBetweenSquared(starPos, coordinates);
-                if (distanceSquared < minDistanceSquared) {
-                    minDistanceSquared = distanceSquared;
-                    closestObject = stars().get(i / 2);
+        for (ObservedCelestialObjects type : objectPosMap.keySet()) {
+            double[] positions = objectPosMap.get(type);
+            for (int i = 0; i < positions.length; i += 2) {
+                CartesianCoordinates pos = CartesianCoordinates.of(positions[i], positions[i + 1]);
+                if (Math.abs(x - pos.x()) < maxDistance && Math.abs(y - pos.y()) < maxDistance) {
+                    double distanceSquared = distanceBetweenSquared(pos, coordinates);
+                    if (distanceSquared < minDistanceSquared) {
+                        minDistanceSquared = distanceSquared;
+                        if (type.equals(ObservedCelestialObjects.SUN)) {
+                            closestObject = sun;
+                        } else if (type.equals(ObservedCelestialObjects.MOON)) {
+                            closestObject = moon;
+                        } else if (type.equals(ObservedCelestialObjects.PLANETS)) {
+                            closestObject = planets().get(i / 2);
+                        } else {
+                            closestObject = stars().get(i / 2);
+                        }
+                    }
                 }
             }
         }
