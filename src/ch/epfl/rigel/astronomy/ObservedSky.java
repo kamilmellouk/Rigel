@@ -196,6 +196,16 @@ public final class ObservedSky {
         double x = coordinates.x();
         double y = coordinates.y();
 
+        // TODO return celestial object / position pair
+        // TODO one big double for loop iterating in the loop
+
+        for (ObservedCelestialObjects observedCelestialObjects : objectPosMap.keySet()) {
+            for (double coordinate : objectPosMap.get(observedCelestialObjects)) {
+                
+            }
+        }
+        
+        
         // check the sun
         if (Math.abs(x - sunPosition().x()) < maxDistance && Math.abs(y - sunPosition().y()) < maxDistance) {
             double sunDistanceSquared = distanceBetweenSquared(coordinates, sunPosition());

@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.UnaryOperator;
 
+import static javafx.beans.binding.Bindings.when;
+
 /**
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
@@ -84,13 +86,19 @@ public class Main extends Application {
     }
 
     private HBox controlBar() throws IOException {
+
+        //-----------------------------------------------------------------------------
+        // Observation instant
+        //-----------------------------------------------------------------------------
         HBox whereControl = new HBox(
                 new Label("Longitude (°) :"), createTextField(true, 6.57),
                 new Label("Latitude (°) :"), createTextField(false, 46.52)
         );
         whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
-        // Observer Location
+        //-----------------------------------------------------------------------------
+        // Observation location
+        //-----------------------------------------------------------------------------
         DatePicker datePicker = new DatePicker();
         datePicker.setStyle("-fx-pref-width: 120");
         datePicker.setValue(LocalDate.now());
@@ -122,8 +130,10 @@ public class Main extends Application {
         whenControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
         whenControl.disableProperty().bind(timeAnimator.runningProperty());
 
-        // time flow
 
+        //-----------------------------------------------------------------------------
+        // Time flow control
+        //-----------------------------------------------------------------------------
         ChoiceBox<NamedTimeAccelerator> acceleratorChoicer = new ChoiceBox<>();
         acceleratorChoicer.setItems(FXCollections.observableList(List.of(NamedTimeAccelerator.values())));
         acceleratorChoicer.valueProperty().addListener(
@@ -145,22 +155,21 @@ public class Main extends Application {
 
         Button playPauseButton = new Button(PLAY_ICON);
         playPauseButton.setFont(fontAwesome);
+        playPauseButton.textProperty().bind(when(timeAnimator.runningProperty()).then(PAUSE_ICON).otherwise(PLAY_ICON));
         playPauseButton.setOnAction(e -> {
             if (!timeAnimator.getRunning()) {
                 timeAnimator.start();
-                playPauseButton.setText(PAUSE_ICON);
             } else {
                 timeAnimator.stop();
-                playPauseButton.setText(PLAY_ICON);
             }
         });
-
 
         HBox timeFlowControl = new HBox(acceleratorChoicer, resetButton, playPauseButton);
         timeFlowControl.setStyle("-fx-spacing: inherit");
 
-        // control bar
-
+        //-----------------------------------------------------------------------------
+        // Control bar
+        //-----------------------------------------------------------------------------
         HBox controlBar = new HBox(
                 whereControl, verticalSeparator(),
                 whenControl, verticalSeparator(),
@@ -190,20 +199,9 @@ public class Main extends Application {
                 viewingParametersBean.fieldOfViewDegProperty()));
 
         Text objectInfo = new Text();
-        // TODO which one to use ?
-        objectInfo.textProperty().bind(Bindings.format("%s",
+        objectInfo.textProperty().bind(Bindings.createStringBinding(
+                () -> skyCanvasManager.getObjUnderMouse() != null ? skyCanvasManager.getObjUnderMouse().info() : "",
                 skyCanvasManager.objUnderMouseProperty()));
-        skyCanvasManager.objUnderMouseProperty().addListener(
-                (p, o, n) -> {
-                    if (n != null) {
-                        objectInfo.setText(n.info());
-                    } else {
-                        objectInfo.setText("");
-                    }
-                }
-        );
-
-
 
         Text mousePos = new Text();
         mousePos.textProperty().bind(Bindings.format(Locale.ROOT, "Azimut : %.2f°, hauteur : %.2f°",

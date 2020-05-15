@@ -11,6 +11,7 @@ import javafx.beans.property.SimpleObjectProperty;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
+@SuppressWarnings("unused")
 public final class TimeAnimator extends AnimationTimer {
 
     private final DateTimeBean dateTimeBean;
@@ -94,7 +95,7 @@ public final class TimeAnimator extends AnimationTimer {
             firstHandle = false;
         }
         dateTimeBean.setZonedDateTime(
-                accelerator.get().adjust(dateTimeBean.getZonedDateTime(), now - lastNanos));
+                getAccelerator().adjust(dateTimeBean.getZonedDateTime(), now - lastNanos));
         lastNanos = now;
     }
 }

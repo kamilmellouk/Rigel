@@ -33,6 +33,9 @@ public class SkyCanvasPainter {
     private final static ClosedInterval MAG_INTERVAL = ClosedInterval.of(-2, 5);
     private final static double ZERO_FIVE_DEG_TO_RAD = Angle.ofDeg(0.5);
 
+    private static final Color YELLOW_HALO =
+            Color.YELLOW.deriveColor(0, 0, 1, 0.25);
+
     /**
      * Constructor of a Painter with a given canvas
      *
@@ -85,7 +88,7 @@ public class SkyCanvasPainter {
         ctx.setLineWidth(1);
 
         // transform all positions of the stars
-        // TODO stock these arrays ?
+        // TODO stock these arrays ? YES
         double[] starPositions = sky.starPositions();
         double[] transformedPos = new double[starPositions.length];
         planeToCanvas.transform2DPoints(starPositions, 0, transformedPos, 0, sky.stars().size());
@@ -154,9 +157,7 @@ public class SkyCanvasPainter {
         double tempDiam = projection.applyToAngle(sky.sun().angularSize());
         double diameter = planeToCanvas.deltaTransform(tempDiam, 0).getX();
         // yellow halo around the sun
-        // TODO: 02/05/2020 constant for these numbers ?
-        fillDisk(pos.getX(), pos.getY(), 2.2 * diameter,
-                Color.YELLOW.deriveColor(0, 0, 1, 0.25));
+        fillDisk(pos.getX(), pos.getY(), 2.2 * diameter, YELLOW_HALO);
         fillDisk(pos.getX(), pos.getY(), diameter + 2, Color.YELLOW);
         fillDisk(pos.getX(), pos.getY(), diameter, Color.WHITE);
     }
@@ -202,7 +203,6 @@ public class SkyCanvasPainter {
         ctx.setStroke(Color.RED);
         ctx.setLineWidth(1);
         ctx.setTextBaseline(VPos.TOP);
-        // TODO: 02/05/2020 constant for these numbers ?
         for (int az = 0; az < 360; az += 45) {
             HorizontalCoordinates azAlt = HorizontalCoordinates.ofDeg(az, -0.5);
             CartesianCoordinates cardPos = projection.apply(azAlt);
