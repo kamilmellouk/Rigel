@@ -184,6 +184,10 @@ public class SkyCanvasPainter {
                 transformedRadius * 2, transformedRadius * 2);
     }
 
+    public void drawEquatorialGrid() {
+
+    }
+
     /**
      * Represent the cardinal and inter cardinal points on the canvas
      *

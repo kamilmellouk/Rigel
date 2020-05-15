@@ -214,8 +214,6 @@ public final class ObservedSky {
             }
         }
 
-        //bla bla
-
         switch (typeOfclosestObject) {
             case SUN:
                 closestObject = sun;
