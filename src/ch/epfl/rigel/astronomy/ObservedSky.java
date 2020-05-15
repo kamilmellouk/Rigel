@@ -14,6 +14,7 @@ import java.util.*;
 
 public final class ObservedSky {
 
+    // Associating each celestial object(s) with its position(s)
     private final Map<ObservedCelestialObjects, double[]> objectPosMap = new HashMap<>();
 
     private final Sun sun;
@@ -79,7 +80,6 @@ public final class ObservedSky {
             starIndex += 2;
         }
         this.objectPosMap.put(ObservedCelestialObjects.STARS, starPositions);
-
     }
 
     /**
@@ -199,17 +199,15 @@ public final class ObservedSky {
         // check the sun
         if (Math.abs(x - sunPosition().x()) < maxDistance && Math.abs(y - sunPosition().y()) < maxDistance) {
             double sunDistanceSquared = distanceBetweenSquared(coordinates, sunPosition());
-            if (sunDistanceSquared < minDistanceSquared) {
+            if (sunDistanceSquared < minDistanceSquared)
                 closestObject = sun;
-            }
         }
 
         // check the moon
         if (Math.abs(x - moonPosition().x()) < maxDistance && Math.abs(y - moonPosition().y()) < maxDistance) {
             double moonDistanceSquared = distanceBetweenSquared(coordinates, moonPosition());
-            if (moonDistanceSquared < minDistanceSquared) {
+            if (moonDistanceSquared < minDistanceSquared)
                 closestObject = moon;
-            }
         }
 
         // check the planets
@@ -251,6 +249,9 @@ public final class ObservedSky {
                 (p1.y() - p2.y()) * (p1.y() - p2.y());
     }
 
+    /**
+     * Enumeration of the CelestialObjects to observe
+     */
     private enum ObservedCelestialObjects {
         SUN, MOON, PLANETS, STARS
     }

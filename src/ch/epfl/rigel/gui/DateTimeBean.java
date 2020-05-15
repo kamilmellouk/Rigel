@@ -9,10 +9,11 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 /**
+ * Bean for the date and time
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class DateTimeBean {
 
     private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(LocalDate.now());

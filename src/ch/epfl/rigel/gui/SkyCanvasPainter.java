@@ -19,10 +19,11 @@ import javafx.scene.transform.Transform;
 import java.util.List;
 
 /**
+ * Painter for the sky canvas
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public class SkyCanvasPainter {
 
     private final Canvas canvas;
@@ -84,6 +85,7 @@ public class SkyCanvasPainter {
         ctx.setLineWidth(1);
 
         // transform all positions of the stars
+        // TODO stock these arrays ?
         double[] starPositions = sky.starPositions();
         double[] transformedPos = new double[starPositions.length];
         planeToCanvas.transform2DPoints(starPositions, 0, transformedPos, 0, sky.stars().size());
@@ -101,14 +103,12 @@ public class SkyCanvasPainter {
             ctx.moveTo(currentPos.getX(), currentPos.getY());
             Point2D nextPos;
 
-            for (Integer indice : indices) {
-                // TODO: 02/05/2020 why Integer isn't accept in the array ?
-                int i = indice;
+            for (int index : indices) {
                 nextPos = new Point2D(
-                        transformedPos[i * 2],
-                        transformedPos[i * 2 + 1]
+                        transformedPos[index * 2],
+                        transformedPos[index * 2 + 1]
                 );
-                // skip the line between two stars that are invisible on screen
+                // skip the line between two stars that are both invisible on screen
                 if (bounds.contains(currentPos) || bounds.contains(nextPos)) {
                     ctx.lineTo(nextPos.getX(), nextPos.getY());
                 } else {
@@ -155,7 +155,8 @@ public class SkyCanvasPainter {
         double diameter = planeToCanvas.deltaTransform(tempDiam, 0).getX();
         // yellow halo around the sun
         // TODO: 02/05/2020 constant for these numbers ?
-        fillDisk(pos.getX(), pos.getY(), 2.2 * diameter, Color.YELLOW.deriveColor(0, 0, 1, 0.25));
+        fillDisk(pos.getX(), pos.getY(), 2.2 * diameter,
+                Color.YELLOW.deriveColor(0, 0, 1, 0.25));
         fillDisk(pos.getX(), pos.getY(), diameter + 2, Color.YELLOW);
         fillDisk(pos.getX(), pos.getY(), diameter, Color.WHITE);
     }

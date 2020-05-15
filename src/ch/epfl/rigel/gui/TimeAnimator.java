@@ -6,10 +6,11 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 /**
+ * Time Animator
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public final class TimeAnimator extends AnimationTimer {
 
     private final DateTimeBean dateTimeBean;
@@ -55,11 +56,20 @@ public final class TimeAnimator extends AnimationTimer {
         this.accelerator.setValue(accelerator);
     }
 
-    // TODO : check if ok to add method
-    public boolean isRunning() {
+    /**
+     * Getter for the running boolean
+     *
+     * @return running boolean value
+     */
+    public boolean getRunning() {
         return running.getValue();
     }
 
+    /**
+     * Getter for the running property
+     *
+     * @return running property
+     */
     public SimpleBooleanProperty runningProperty() {
         return running;
     }

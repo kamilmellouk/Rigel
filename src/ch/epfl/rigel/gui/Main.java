@@ -36,20 +36,18 @@ import java.util.function.UnaryOperator;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public class Main extends Application {
 
-    // TODO add beans, strings
     private static final String RESET_ICON = "\uf0e2";
     private static final String PLAY_ICON = "\uf04b";
     private static final String PAUSE_ICON = "\uf04c";
 
-    private ObserverLocationBean observerLocationBean = new ObserverLocationBean();
-    private DateTimeBean dateTimeBean = new DateTimeBean();
-    private ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
+    private final ObserverLocationBean observerLocationBean = new ObserverLocationBean();
+    private final DateTimeBean dateTimeBean = new DateTimeBean();
+    private final ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
 
     private SkyCanvasManager skyCanvasManager;
-    private TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
+    private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
 
 
     public static void main(String[] args) {
@@ -85,22 +83,12 @@ public class Main extends Application {
         skyCanvasManager.canvas().requestFocus();
     }
 
-    private HBox locationControl() {
+    private HBox controlBar() throws IOException {
         HBox whereControl = new HBox(
                 new Label("Longitude (°) :"), createTextField(true, 6.57),
                 new Label("Latitude (°) :"), createTextField(false, 46.52)
         );
         whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
-
-        return whereControl;
-    }
-
-    private HBox timeControl() {
-        return null;
-    }
-
-
-    private HBox controlBar() throws IOException {
 
         // Observer Location
         DatePicker datePicker = new DatePicker();
@@ -158,7 +146,7 @@ public class Main extends Application {
         Button playPauseButton = new Button(PLAY_ICON);
         playPauseButton.setFont(fontAwesome);
         playPauseButton.setOnAction(e -> {
-            if (!timeAnimator.isRunning()) {
+            if (!timeAnimator.getRunning()) {
                 timeAnimator.start();
                 playPauseButton.setText(PAUSE_ICON);
             } else {
@@ -174,7 +162,7 @@ public class Main extends Application {
         // control bar
 
         HBox controlBar = new HBox(
-                locationControl(), verticalSeparator(),
+                whereControl, verticalSeparator(),
                 whenControl, verticalSeparator(),
                 timeFlowControl
         );
@@ -202,6 +190,9 @@ public class Main extends Application {
                 viewingParametersBean.fieldOfViewDegProperty()));
 
         Text objectInfo = new Text();
+        // TODO which one to use ?
+        objectInfo.textProperty().bind(Bindings.format("%s",
+                skyCanvasManager.objUnderMouseProperty()));
         skyCanvasManager.objUnderMouseProperty().addListener(
                 (p, o, n) -> {
                     if (n != null) {
@@ -211,6 +202,8 @@ public class Main extends Application {
                     }
                 }
         );
+
+
 
         Text mousePos = new Text();
         mousePos.textProperty().bind(Bindings.format(Locale.ROOT, "Azimut : %.2f°, hauteur : %.2f°",

@@ -22,6 +22,8 @@ import javafx.scene.transform.Transform;
 import java.util.Optional;
 
 /**
+ * Manager for the sky canvas
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
@@ -296,8 +298,12 @@ public class SkyCanvasManager {
         );
     }
 
+    /**
+     * Computing the inverse transformation of planeToCanvas on a Point2D
+     *
+     * @return the inverted Point2D
+     */
     private Point2D invertedMousePos() {
-
         try {
             return planeToCanvas.getValue().inverseTransform(mousePosition.get());
         } catch (NonInvertibleTransformException e) {

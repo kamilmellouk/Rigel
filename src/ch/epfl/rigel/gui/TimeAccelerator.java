@@ -5,14 +5,15 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
 /**
+ * Time Accelerator
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 @FunctionalInterface
 public interface TimeAccelerator {
 
-    static final double SEC_PER_NANOS = 1e-9;
+    double SEC_PER_NANOS = 1e-9;
 
     /**
      * Return a continuous time accelerator

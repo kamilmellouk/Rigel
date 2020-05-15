@@ -10,21 +10,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Representation of the color of a black body
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
 
 public final class BlackBodyColor {
 
-    private static final String colorFile = "/bbr_color.txt";
-    private static final Map<Double, String> temperatureWithColor = load();
+    private static final String COLOR_FILE = "/bbr_color.txt";
+    private static final Map<Double, String> TEMPERATURE_WITH_COLOR = load();
     private static final ClosedInterval CLOSED_INTERVAL_1000_TO_40000 = ClosedInterval.of(1000, 40000);
 
     /**
      * Private constructor to ensure that the class isn't instantiable
      */
-    private BlackBodyColor() {
-    }
+    private BlackBodyColor() {}
 
     /**
      * Return the color corresponding to the given temperature
@@ -39,7 +40,7 @@ public final class BlackBodyColor {
 
         // round the temperature to the closest hundred
         double closestColor = (double) Math.round(temperature / 100d) * 100;
-        return Color.valueOf(temperatureWithColor.get(closestColor));
+        return Color.valueOf(TEMPERATURE_WITH_COLOR.get(closestColor));
     }
 
     /**
@@ -49,7 +50,7 @@ public final class BlackBodyColor {
      * @throws UncheckedIOException in case of input/output exception
      */
     private static Map<Double, String> load() throws UncheckedIOException {
-        try (InputStream inputStream = BlackBodyColor.class.getResourceAsStream(colorFile);
+        try (InputStream inputStream = BlackBodyColor.class.getResourceAsStream(COLOR_FILE);
              InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.US_ASCII);
              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
 

@@ -8,13 +8,14 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 /**
+ * Bean for the viewing parameters
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public class ViewingParametersBean {
 
-    private static final ClosedInterval closedInterval30To150 = ClosedInterval.of(30, 150);
+    private static final ClosedInterval CLOSED_INTERVAL_30_TO_150 = ClosedInterval.of(30, 150);
 
     private final DoubleProperty fieldOfViewDeg = new SimpleDoubleProperty();
     private final ObjectProperty<HorizontalCoordinates> center = new SimpleObjectProperty<>(null);
@@ -43,7 +44,7 @@ public class ViewingParametersBean {
      * @param fieldOfViewDeg the new field of view in deg
      */
     public void setFieldOfViewDeg(double fieldOfViewDeg) {
-        this.fieldOfViewDeg.setValue(closedInterval30To150.clip(fieldOfViewDeg));
+        this.fieldOfViewDeg.setValue(CLOSED_INTERVAL_30_TO_150.clip(fieldOfViewDeg));
     }
 
     /**

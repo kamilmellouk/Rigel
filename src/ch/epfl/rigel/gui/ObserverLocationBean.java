@@ -7,10 +7,11 @@ import javafx.beans.value.ObservableValue;
 
 
 /**
+ * Bean for the observer location
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-
 public class ObserverLocationBean {
 
     private final SimpleDoubleProperty lonDeg = new SimpleDoubleProperty();
