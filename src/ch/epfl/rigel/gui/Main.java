@@ -85,14 +85,20 @@ public class Main extends Application {
         skyCanvasManager.canvas().requestFocus();
     }
 
+    /**
+     * Creating te top bar dedicated to parameters control (location, time, timeflow)
+     *
+     * @return HBox dedicated to parameters control
+     * @throws IOException
+     */
     private HBox controlBar() throws IOException {
 
         //-----------------------------------------------------------------------------
         // Observation instant
         //-----------------------------------------------------------------------------
         HBox whereControl = new HBox(
-                new Label("Longitude (°) :"), createTextField(true, 6.57),
-                new Label("Latitude (°) :"), createTextField(false, 46.52)
+                new Label("Longitude (°) :"), createLonLatTextField(true, 6.57),
+                new Label("Latitude (°) :"), createLonLatTextField(false, 46.52)
         );
         whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
@@ -180,19 +186,11 @@ public class Main extends Application {
         return controlBar;
     }
 
-
-    private SkyCanvasManager createManager() throws IOException {
-        try (InputStream hs = getClass().getResourceAsStream("/hygdata_v3.csv");
-             InputStream as = getClass().getResourceAsStream("/asterisms.txt")) {
-            StarCatalogue catalogue = new StarCatalogue.Builder()
-                    .loadFrom(hs, HygDatabaseLoader.INSTANCE)
-                    .loadFrom(as, AsterismLoader.INSTANCE)
-                    .build();
-
-            return new SkyCanvasManager(catalogue, dateTimeBean, observerLocationBean, viewingParametersBean);
-        }
-    }
-
+    /**
+     * Creating the bottom bar containing information on the sky
+     *
+     * @return HBox containing information on the sky
+     */
     private BorderPane infoBar() {
         Text fovDisplay = new Text();
         fovDisplay.textProperty().bind(Bindings.format(Locale.ROOT, "Champ de vue : %.1f°",
@@ -214,6 +212,24 @@ public class Main extends Application {
     }
 
     /**
+     * Creating the SkyCanvasManager used to manage the sky
+     *
+     * @return SkyCanvasManager used to manage the sky
+     * @throws IOException if there is an input exception
+     */
+    private SkyCanvasManager createManager() throws IOException {
+        try (InputStream hs = getClass().getResourceAsStream("/hygdata_v3.csv");
+             InputStream as = getClass().getResourceAsStream("/asterisms.txt")) {
+            StarCatalogue catalogue = new StarCatalogue.Builder()
+                    .loadFrom(hs, HygDatabaseLoader.INSTANCE)
+                    .loadFrom(as, AsterismLoader.INSTANCE)
+                    .build();
+
+            return new SkyCanvasManager(catalogue, dateTimeBean, observerLocationBean, viewingParametersBean);
+        }
+    }
+
+    /**
      * @return a vertical separator
      */
     private Separator verticalSeparator() {
@@ -222,13 +238,26 @@ public class Main extends Application {
         return verticalSeparator;
     }
 
+    /**
+     * Loading FontAwesome (used for buttons)
+     *
+     * @return the font FontAwesome
+     * @throws IOException if loading exception
+     */
     private Font loadFontAwesome() throws IOException {
         try (InputStream fs = getClass().getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
             return Font.loadFont(fs, 15);
         }
     }
 
-    private TextField createTextField(boolean isLon, double defaultValue) {
+    /**
+     * Creating a text field for lon or lat with the right formatting
+     *
+     * @param isLon        boolean indicating whether the TextField is for lon or lat
+     * @param defaultValue to assign to the TextField
+     * @return TextField with the right formatting
+     */
+    private TextField createLonLatTextField(boolean isLon, double defaultValue) {
         TextField tf = new TextField();
         tf.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
         TextFormatter<Number> textFormatter = getFormatter(isLon);
