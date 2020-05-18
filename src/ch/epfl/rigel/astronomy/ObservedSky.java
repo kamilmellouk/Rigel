@@ -15,7 +15,7 @@ import java.util.*;
 public final class ObservedSky {
 
     // Associating each celestial object(s) with its position(s)
-    private final Map<ObservedCelestialObjects, double[]> objectPosMap = new HashMap<>();
+    private final Map<CelestialObjectType, double[]> objectPosMap = new HashMap<>();
 
     private final Sun sun;
     private final Moon moon;
@@ -41,12 +41,12 @@ public final class ObservedSky {
         // add sun
         this.sun = SunModel.SUN.at(daysFromJ2010UntilWhen, eclToEquConversion);
         CartesianCoordinates sunPosition = stereographicProjection.apply(equToHorConversion.apply(this.sun.equatorialPos()));
-        this.objectPosMap.put(ObservedCelestialObjects.SUN, new double[]{sunPosition.x(), sunPosition.y()});
+        this.objectPosMap.put(CelestialObjectType.SUN, new double[]{sunPosition.x(), sunPosition.y()});
 
         // add moon
         this.moon = MoonModel.MOON.at(daysFromJ2010UntilWhen, eclToEquConversion);
         CartesianCoordinates moonPosition = stereographicProjection.apply(equToHorConversion.apply(this.moon.equatorialPos()));
-        this.objectPosMap.put(ObservedCelestialObjects.MOON, new double[]{moonPosition.x(), moonPosition.y()});
+        this.objectPosMap.put(CelestialObjectType.MOON, new double[]{moonPosition.x(), moonPosition.y()});
 
         // add planets
         List<Planet> tempPlanetList = new ArrayList<>();
@@ -64,7 +64,7 @@ public final class ObservedSky {
                 planetIndex += 2;
             }
         }
-        this.objectPosMap.put(ObservedCelestialObjects.PLANETS, planetPositions);
+        this.objectPosMap.put(CelestialObjectType.PLANETS, planetPositions);
         this.planets = List.copyOf(tempPlanetList);
 
         this.catalogue = catalogue;
@@ -79,7 +79,7 @@ public final class ObservedSky {
             starPositions[starIndex + 1] = position.y();
             starIndex += 2;
         }
-        this.objectPosMap.put(ObservedCelestialObjects.STARS, starPositions);
+        this.objectPosMap.put(CelestialObjectType.STARS, starPositions);
     }
 
     /**
@@ -98,8 +98,8 @@ public final class ObservedSky {
      */
     public CartesianCoordinates sunPosition() {
         return CartesianCoordinates.of(
-                objectPosMap.get(ObservedCelestialObjects.SUN)[0],
-                objectPosMap.get(ObservedCelestialObjects.SUN)[1]
+                objectPosMap.get(CelestialObjectType.SUN)[0],
+                objectPosMap.get(CelestialObjectType.SUN)[1]
         );
     }
 
@@ -119,8 +119,8 @@ public final class ObservedSky {
      */
     public CartesianCoordinates moonPosition() {
         return CartesianCoordinates.of(
-                objectPosMap.get(ObservedCelestialObjects.MOON)[0],
-                objectPosMap.get(ObservedCelestialObjects.MOON)[1]
+                objectPosMap.get(CelestialObjectType.MOON)[0],
+                objectPosMap.get(CelestialObjectType.MOON)[1]
         );
     }
 
@@ -139,7 +139,7 @@ public final class ObservedSky {
      * @return the array containing the coordinates of the 7 extraterrestrial planets
      */
     public double[] planetPositions() {
-        return objectPosMap.get(ObservedCelestialObjects.PLANETS);
+        return objectPosMap.get(CelestialObjectType.PLANETS);
     }
 
     /**
@@ -157,7 +157,7 @@ public final class ObservedSky {
      * @return the array containing the coordinates of the stars
      */
     public double[] starPositions() {
-        return objectPosMap.get(ObservedCelestialObjects.STARS);
+        return objectPosMap.get(CelestialObjectType.STARS);
     }
 
 
@@ -196,10 +196,10 @@ public final class ObservedSky {
         double x = coordinates.x();
         double y = coordinates.y();
 
-        ObservedCelestialObjects typeOfclosestObject = null;
+        CelestialObjectType typeOfclosestObject = null;
         int index = 0;
 
-        for (ObservedCelestialObjects type : objectPosMap.keySet()) {
+        for (CelestialObjectType type : objectPosMap.keySet()) {
             double[] positions = objectPosMap.get(type);
             for (int i = 0; i < positions.length; i += 2) {
                 CartesianCoordinates pos = CartesianCoordinates.of(positions[i], positions[i + 1]);
@@ -247,7 +247,7 @@ public final class ObservedSky {
     /**
      * Enumeration of the CelestialObjects to observe
      */
-    private enum ObservedCelestialObjects {
+    private enum CelestialObjectType {
         SUN, MOON, PLANETS, STARS
     }
 

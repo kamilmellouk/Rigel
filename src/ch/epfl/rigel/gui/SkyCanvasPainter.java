@@ -30,8 +30,8 @@ public class SkyCanvasPainter {
     private final GraphicsContext ctx;
 
     // Constants used to compute the on-screen diameter of an object
-    private final static ClosedInterval MAG_INTERVAL = ClosedInterval.of(-2, 5);
-    private final static double ZERO_FIVE_DEG_TO_RAD = Angle.ofDeg(0.5);
+    private static final ClosedInterval MAG_INTERVAL = ClosedInterval.of(-2, 5);
+    private static final double ZERO_FIVE_DEG_TO_RAD = Angle.ofDeg(0.5);
 
     private static final Color YELLOW_HALO_COLOR =
             Color.YELLOW.deriveColor(0, 0, 1, 0.25);
@@ -182,10 +182,6 @@ public class SkyCanvasPainter {
 
         ctx.strokeOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,
                 transformedRadius * 2, transformedRadius * 2);
-    }
-
-    public void drawEquatorialGrid() {
-
     }
 
     /**
