@@ -214,19 +214,21 @@ public final class ObservedSky {
             }
         }
 
-        switch (typeOfclosestObject) {
-            case SUN:
-                closestObject = sun;
-                break;
-            case MOON:
-                closestObject = moon;
-                break;
-            case PLANETS:
-                closestObject = planets().get(index / 2);
-                break;
-            case STARS:
-                closestObject = stars().get(index / 2);
-                break;
+        if (typeOfclosestObject != null) {
+            switch (typeOfclosestObject) {
+                case SUN:
+                    closestObject = sun;
+                    break;
+                case MOON:
+                    closestObject = moon;
+                    break;
+                case PLANETS:
+                    closestObject = planets().get(index / 2);
+                    break;
+                case STARS:
+                    closestObject = stars().get(index / 2);
+                    break;
+            }
         }
 
         return Optional.ofNullable(closestObject);
