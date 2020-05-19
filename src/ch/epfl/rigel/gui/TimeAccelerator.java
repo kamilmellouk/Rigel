@@ -37,7 +37,7 @@ public interface TimeAccelerator {
         return (initialSimulatedTime, elapsedRealTime) ->
                 initialSimulatedTime.plus(
                         step.multipliedBy(
-                                (long) Math.floor(advancementFrequency * elapsedRealTime * SEC_PER_NANOS)));
+                                (long) (advancementFrequency * elapsedRealTime * SEC_PER_NANOS)));
     }
 
     /**
