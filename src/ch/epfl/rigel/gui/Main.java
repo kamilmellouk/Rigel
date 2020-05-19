@@ -58,12 +58,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-
         viewingParametersBean.setCenter(HorizontalCoordinates.ofDeg(180.000000000001, 15));
         viewingParametersBean.setFieldOfViewDeg(100);
-
         skyCanvasManager = createManager();
-
         BorderPane mainPane = new BorderPane(
                 new Pane(skyCanvasManager.canvas()),
                 controlBar(),
@@ -71,16 +68,12 @@ public class Main extends Application {
                 infoBar(),
                 null
         );
-
         skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
         skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
-
         primaryStage.setScene(new Scene(mainPane));
-
         primaryStage.setTitle("Rigel");
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(600);
-
         primaryStage.show();
         skyCanvasManager.canvas().requestFocus();
     }

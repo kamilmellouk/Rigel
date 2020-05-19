@@ -216,6 +216,7 @@ public class SkyCanvasManager {
         return mouseAzDeg.get();
     }
 
+    // TODO unused methods ? add @supresswarnings(unused) ?
 
     /**
      * Getter for the property altitude in deg of the mouse

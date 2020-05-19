@@ -48,6 +48,8 @@ public final class TimeAnimator extends AnimationTimer {
         return accelerator.get();
     }
 
+    // TODO unused methods ? add @supresswarnings(unused) ?
+
     /**
      * Setter for the property accelerator
      *
