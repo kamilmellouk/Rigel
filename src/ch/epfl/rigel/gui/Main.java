@@ -61,6 +61,7 @@ public class Main extends Application {
         viewingParametersBean.setCenter(HorizontalCoordinates.ofDeg(180.000000000001, 15));
         viewingParametersBean.setFieldOfViewDeg(100);
         skyCanvasManager = createManager();
+
         BorderPane mainPane = new BorderPane(
                 new Pane(skyCanvasManager.canvas()),
                 controlBar(),
@@ -68,13 +69,16 @@ public class Main extends Application {
                 infoBar(),
                 null
         );
+
         skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
         skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
+
         primaryStage.setScene(new Scene(mainPane));
         primaryStage.setTitle("Rigel");
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(600);
         primaryStage.show();
+
         skyCanvasManager.canvas().requestFocus();
     }
 
@@ -82,7 +86,7 @@ public class Main extends Application {
      * Creating te top bar dedicated to parameters control (location, time, timeflow)
      *
      * @return HBox dedicated to parameters control
-     * @throws IOException
+     * @throws IOException if IO exception when loading AwesomeFont
      */
     private HBox controlBar() throws IOException {
 
@@ -98,11 +102,13 @@ public class Main extends Application {
         //-----------------------------------------------------------------------------
         // Observation location
         //-----------------------------------------------------------------------------
+        // Date selection
         DatePicker datePicker = new DatePicker();
         datePicker.setStyle("-fx-pref-width: 120");
         datePicker.setValue(LocalDate.now());
         dateTimeBean.dateProperty().bindBidirectional(datePicker.valueProperty());
 
+        // Time selection
         TextField timeField = new TextField();
         timeField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
         DateTimeFormatter hmsFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -112,6 +118,7 @@ public class Main extends Application {
         timeFormatter.setValue(LocalTime.now());
         dateTimeBean.timeProperty().bindBidirectional(timeFormatter.valueProperty());
 
+        // Timezone selection
         ComboBox<ZoneId> timeZone = new ComboBox<>();
         List<String> availableZoneIds = new ArrayList<>(ZoneId.getAvailableZoneIds());
         Collections.sort(availableZoneIds);
@@ -133,6 +140,7 @@ public class Main extends Application {
         //-----------------------------------------------------------------------------
         // Time flow control
         //-----------------------------------------------------------------------------
+        // Time accelerator selection
         ChoiceBox<NamedTimeAccelerator> acceleratorChoicer = new ChoiceBox<>();
         acceleratorChoicer.setItems(FXCollections.observableList(List.of(NamedTimeAccelerator.values())));
         acceleratorChoicer.setValue(NamedTimeAccelerator.TIMES_300);
@@ -140,8 +148,8 @@ public class Main extends Application {
                 "accelerator"));
         acceleratorChoicer.disableProperty().bind(timeAnimator.runningProperty());
 
+        // Time reset
         Font fontAwesome = loadFontAwesome();
-
         Button resetButton = new Button(RESET_ICON);
         resetButton.setFont(fontAwesome);
         resetButton.setOnAction(e -> {
@@ -151,6 +159,7 @@ public class Main extends Application {
         });
         resetButton.disableProperty().bind(timeAnimator.runningProperty());
 
+        // Time play/pause
         Button playPauseButton = new Button(PLAY_ICON);
         playPauseButton.setFont(fontAwesome);
         playPauseButton.textProperty().bind(when(timeAnimator.runningProperty()).then(PAUSE_ICON).otherwise(PLAY_ICON));
