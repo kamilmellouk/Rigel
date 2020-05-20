@@ -11,7 +11,6 @@ import javafx.beans.property.SimpleObjectProperty;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
-@SuppressWarnings("unused")
 public final class TimeAnimator extends AnimationTimer {
 
     private final DateTimeBean dateTimeBean;
@@ -47,8 +46,6 @@ public final class TimeAnimator extends AnimationTimer {
     public TimeAccelerator getAccelerator() {
         return accelerator.get();
     }
-
-    // TODO unused methods ? add @supresswarnings(unused) ?
 
     /**
      * Setter for the property accelerator

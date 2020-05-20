@@ -217,7 +217,6 @@ public class Main extends Application {
                     .loadFrom(hs, HygDatabaseLoader.INSTANCE)
                     .loadFrom(as, AsterismLoader.INSTANCE)
                     .build();
-
             return new SkyCanvasManager(catalogue, dateTimeBean, observerLocationBean, viewingParametersBean);
         }
     }
