@@ -135,10 +135,9 @@ public class Main extends Application {
         //-----------------------------------------------------------------------------
         ChoiceBox<NamedTimeAccelerator> acceleratorChoicer = new ChoiceBox<>();
         acceleratorChoicer.setItems(FXCollections.observableList(List.of(NamedTimeAccelerator.values())));
-        acceleratorChoicer.valueProperty().addListener(
-                (p, o, n) -> timeAnimator.setAccelerator(n.getAccelerator())
-        );
         acceleratorChoicer.setValue(NamedTimeAccelerator.TIMES_300);
+        timeAnimator.acceleratorProperty().bind(Bindings.select(acceleratorChoicer.valueProperty(),
+                "accelerator"));
         acceleratorChoicer.disableProperty().bind(timeAnimator.runningProperty());
 
         Font fontAwesome = loadFontAwesome();

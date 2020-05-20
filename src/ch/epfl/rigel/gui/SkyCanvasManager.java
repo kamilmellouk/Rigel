@@ -27,6 +27,7 @@ import java.util.Optional;
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
+@SuppressWarnings("unused")
 public class SkyCanvasManager {
 
     private static final RightOpenInterval RIGHT_OPEN_INTERVAL_0_TO_360 = RightOpenInterval.of(0, 360);
@@ -185,7 +186,6 @@ public class SkyCanvasManager {
                 () -> mouseHorPos.getValue().altDeg(),
                 mouseHorPos
         );
-
     }
 
     /**
@@ -215,8 +215,6 @@ public class SkyCanvasManager {
     public double getMouseAzDeg() {
         return mouseAzDeg.get();
     }
-
-    // TODO unused methods ? add @supresswarnings(unused) ?
 
     /**
      * Getter for the property altitude in deg of the mouse
