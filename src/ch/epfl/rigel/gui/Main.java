@@ -91,7 +91,7 @@ public class Main extends Application {
     private HBox controlBar() throws IOException {
 
         //-----------------------------------------------------------------------------
-        // Observation instant
+        // Observation location
         //-----------------------------------------------------------------------------
         HBox whereControl = new HBox(
                 new Label("Longitude (°) :"), createLonLatTextField(true, 6.57),
@@ -100,7 +100,7 @@ public class Main extends Application {
         whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
         //-----------------------------------------------------------------------------
-        // Observation location
+        // Observation instant
         //-----------------------------------------------------------------------------
         // Date selection
         DatePicker datePicker = new DatePicker();
