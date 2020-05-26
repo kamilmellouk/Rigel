@@ -65,7 +65,7 @@ public final class ObservedSky {
             }
         }
         this.objectPosMap.put(CelestialObjectType.PLANETS, planetPositions);
-        this.planets = List.copyOf(tempPlanetList);
+        this.planets = tempPlanetList;
 
         this.catalogue = catalogue;
         this.stars = catalogue.stars();

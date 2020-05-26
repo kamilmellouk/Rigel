@@ -60,7 +60,6 @@ public class SkyCanvasManager {
                             ViewingParametersBean viewingParametersBean) {
 
         canvas = new Canvas();
-
         painter = new SkyCanvasPainter(canvas);
 
         //-----------------------------------------------------------------------------
@@ -169,11 +168,10 @@ public class SkyCanvasManager {
         );
 
         mouseHorPos = Bindings.createObjectBinding(
-                () ->
-                        projection.getValue().inverseApply(CartesianCoordinates.of(
-                                invertedMousePos().getX(),
-                                invertedMousePos().getY())
-                        ),
+                () -> projection.getValue().inverseApply(CartesianCoordinates.of(
+                        invertedMousePos().getX(),
+                        invertedMousePos().getY())
+                ),
                 planeToCanvas, projection, mousePosition
         );
 

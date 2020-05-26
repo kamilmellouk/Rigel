@@ -16,6 +16,7 @@ public final class Sun extends CelestialObject {
     // Attributes specific to the Sun
     private final EclipticCoordinates eclipticPos;
     private final float meanAnomaly;
+
     /**
      * Constructor of a Sun
      *

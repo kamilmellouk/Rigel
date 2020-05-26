@@ -1,6 +1,7 @@
 package ch.epfl.rigel.gui;
 
 import javafx.animation.AnimationTimer;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -17,7 +18,7 @@ public final class TimeAnimator extends AnimationTimer {
 
     private final DateTimeBean dateTimeBean;
     private final ObjectProperty<TimeAccelerator> accelerator = new SimpleObjectProperty<>(null);
-    private final SimpleBooleanProperty running = new SimpleBooleanProperty(false);
+    private final BooleanProperty running = new SimpleBooleanProperty(false);
     private ZonedDateTime initialTime;
     private long firstNanos;
     private boolean firstHandle;
@@ -73,7 +74,7 @@ public final class TimeAnimator extends AnimationTimer {
      *
      * @return running property
      */
-    public SimpleBooleanProperty runningProperty() {
+    public BooleanProperty runningProperty() {
         return running;
     }
 

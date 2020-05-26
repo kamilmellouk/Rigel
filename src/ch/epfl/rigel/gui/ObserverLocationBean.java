@@ -2,6 +2,7 @@ package ch.epfl.rigel.gui;
 
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 
@@ -14,8 +15,8 @@ import javafx.beans.value.ObservableValue;
  */
 public class ObserverLocationBean {
 
-    private final SimpleDoubleProperty lonDeg = new SimpleDoubleProperty();
-    private final SimpleDoubleProperty latDeg = new SimpleDoubleProperty();
+    private final DoubleProperty lonDeg = new SimpleDoubleProperty();
+    private final DoubleProperty latDeg = new SimpleDoubleProperty();
     private final ObservableValue<GeographicCoordinates> coordinates = Bindings.createObjectBinding(
             () -> GeographicCoordinates.ofDeg(lonDeg.get(), latDeg.get()),
             lonDeg, latDeg);
@@ -25,7 +26,7 @@ public class ObserverLocationBean {
      *
      * @return the property longitude in deg
      */
-    public SimpleDoubleProperty lonDegProperty() {
+    public DoubleProperty lonDegProperty() {
         return lonDeg;
     }
 
@@ -52,7 +53,7 @@ public class ObserverLocationBean {
      *
      * @return the property latitude in deg
      */
-    public SimpleDoubleProperty latDegProperty() {
+    public DoubleProperty latDegProperty() {
         return latDeg;
     }
 
