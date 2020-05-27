@@ -28,4 +28,9 @@ public final class City {
     public GeographicCoordinates coordinates() {
         return coordinates;
     }
+
+    @Override
+    public String toString() {
+        return name + ", " + country;
+    }
 }

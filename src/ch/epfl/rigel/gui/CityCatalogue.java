@@ -39,6 +39,7 @@ public final class CityCatalogue {
 
         public Builder addCity(City c) {
             cities.add(c);
+            System.out.println(c);
             return this;
         }
 
@@ -97,7 +98,7 @@ public final class CityCatalogue {
                 int nameIndex = 1;
                 int latIndex = 2;
                 int lonIndex = 3;
-                int countryIndex = 4;
+                int countryIndex = 6;
                 while ((s = bufferedReader.readLine()) != null) {
                     // Splitting the line into an array containing its different columns
                     String[] col = s.split(",");

@@ -47,6 +47,7 @@ public class Main extends Application {
     private final ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
     private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
     private SkyCanvasManager skyCanvasManager;
+    private CityCatalogue cityCatalogue;
 
     // Strings used for button icons
     private static final String RESET_ICON = "\uf0e2";
@@ -63,6 +64,7 @@ public class Main extends Application {
         viewingParametersBean.setFieldOfViewDeg(100);
 
         skyCanvasManager = createManager();
+        cityCatalogue = createCityCatalogue();
 
         BorderPane mainPane = new BorderPane(
                 new Pane(skyCanvasManager.canvas()),
@@ -77,7 +79,8 @@ public class Main extends Application {
         skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
         skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
 
-        Scene scene = new Scene(homePage);
+        Scene scene = new Scene(mainPane);
+        scene.getStylesheets().add("/darkmode.css");
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Rigel");
@@ -99,9 +102,20 @@ public class Main extends Application {
         //-----------------------------------------------------------------------------
         // Observation location
         //-----------------------------------------------------------------------------
+        TextField lonTextField = createLonLatTextField(true, 6.57);
+        TextField latTextField =createLonLatTextField(false, 46.52);
+
+        ChoiceBox<City> cityChoiceBox = new ChoiceBox<>();
+        cityChoiceBox.setItems(FXCollections.observableList(cityCatalogue.cities()));
+        cityChoiceBox.setOnAction(e -> {
+            GeographicCoordinates coordinates = cityChoiceBox.getValue().coordinates();
+            lonTextField.setText(String.format("%.2f", coordinates.lonDeg()));
+            latTextField.setText(String.format("%.2f", coordinates.latDeg()));
+        });
         HBox whereControl = new HBox(
-                new Label("Longitude (°) :"), createLonLatTextField(true, 6.57),
-                new Label("Latitude (°) :"), createLonLatTextField(false, 46.52)
+                new Label("Longitude (°) :"), lonTextField,
+                new Label("Latitude (°) :"), latTextField,
+                cityChoiceBox
         );
         whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
@@ -230,6 +244,20 @@ public class Main extends Application {
                     .loadFrom(as, AsterismLoader.INSTANCE)
                     .build();
             return new SkyCanvasManager(catalogue, dateTimeBean, observerLocationBean, viewingParametersBean);
+        }
+    }
+
+    /**
+     * Creating the CityCatalogue used in the control bar
+     *
+     * @return CityCatalogue
+     * @throws IOException if there is an input exception
+     */
+    private CityCatalogue createCityCatalogue() throws IOException {
+        try (InputStream cs = getClass().getResourceAsStream("/worldcities.csv")) {
+            return new CityCatalogue.Builder()
+                    .loadFrom(cs, CityCatalogue.CityLoader.INSTANCE)
+                    .build();
         }
     }
 
