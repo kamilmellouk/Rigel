@@ -80,13 +80,19 @@ public class Main extends Application {
                 null
         );
 
-        BorderPane homePage = new HomePage().getBorderPane();
-
         skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
         skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
 
-        Scene scene = new Scene(mainPane);
+        HomePage homePage = new HomePage();
+        BorderPane homePane = homePage.getBorderPane();
+
+        Scene scene = new Scene(homePane);
         scene.getStylesheets().add("/darkmode.css");
+
+        // launch the program by clicking on the button start
+        homePage.getStartButton().setOnAction(
+                e -> scene.setRoot(mainPane)
+        );
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Rigel");
@@ -145,8 +151,9 @@ public class Main extends Application {
         TextField lonTextField = createLonLatTextField(true, 6.57);
         TextField latTextField = createLonLatTextField(false, 46.52);
 
-        ChoiceBox<City> cityChoiceBox = new ChoiceBox<>();
+        ComboBox<City> cityChoiceBox = new ComboBox<>();
         cityChoiceBox.setItems(FXCollections.observableList(cityCatalogue.cities()));
+        cityChoiceBox.setValue(cityCatalogue.cities().get(0));
         cityChoiceBox.setOnAction(e -> {
             GeographicCoordinates coordinates = cityChoiceBox.getValue().coordinates();
             lonTextField.setText(String.format("%.2f", coordinates.lonDeg()));

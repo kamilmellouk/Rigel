@@ -3,9 +3,10 @@ package ch.epfl.rigel.gui;
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
 
 /**
- * @author Mohamed Kamil MELLOUK
- * 27.05.20
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk (312327)
  */
+
 public final class City {
     private String name;
     private String country;

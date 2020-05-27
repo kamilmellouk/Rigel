@@ -4,8 +4,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 /**
  * @author Bastien Faivre (310929)
@@ -15,24 +15,58 @@ import javafx.scene.text.Text;
 public class HomePage {
 
     private final Button startButton = new Button("Start");
-    private final BorderPane borderPane = new BorderPane(null, title(), null, startButton(), null);
+    private final BorderPane borderPane = new BorderPane(welcomMessage(), title(), null, startButton(), null);
 
-    public HomePage() {
-    }
-
+    /**
+     * Getter for the start button
+     *
+     * @return the start button
+     */
     public Button getStartButton() {
         return startButton;
     }
 
+    /**
+     * Getter for the border pane
+     *
+     * @return the border pane
+     */
     public BorderPane getBorderPane() {
         return borderPane;
     }
 
+    /**
+     * Create the title of the home page
+     *
+     * @return the title
+     */
     private GridPane title() {
         Text title = new Text("Rigel");
         title.setStyle("-fx-font-size: 100pt;");
         GridPane pane = new GridPane();
         pane.getChildren().add(title);
+        pane.setAlignment(Pos.CENTER);
+        return pane;
+    }
+
+    /**
+     * Create the welcome message of the home page
+     *
+     * @return the welcome message
+     */
+    private Text welcomMessage() {
+        Text welcomeMessage = new Text("Welcome ! Please press \"Start\" to launch the program.\n" +
+                "Note : settings are available after starting the program.");
+        welcomeMessage.setStyle("-fx-font-size: 20pt; -fx-padding: 100pt");
+        welcomeMessage.setTextAlignment(TextAlignment.CENTER);
+        return welcomeMessage;
+    }
+
+    private GridPane startButton() {
+        startButton.setStyle("-fx-font-size: 20pt; -fx-pref-width: 100pt;");
+        startButton.setAlignment(Pos.CENTER);
+        GridPane pane = new GridPane();
+        pane.getChildren().add(startButton);
         pane.setAlignment(Pos.CENTER);
         return pane;
     }
@@ -50,14 +84,5 @@ public class HomePage {
         pane.setAlignment(Pos.CENTER);
         return pane;
     }*/
-
-    private GridPane startButton() {
-        Text settings = new Text("Settings are avalaible after starting the program");
-        //Button startButton = new Button("Start");
-        GridPane pane = new GridPane();
-        pane.getChildren().add(new VBox(settings, startButton));
-        pane.setAlignment(Pos.CENTER);
-        return pane;
-    }
 
 }

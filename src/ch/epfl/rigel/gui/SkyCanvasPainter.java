@@ -17,7 +17,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Transform;
 
-import java.awt.*;
 import java.util.List;
 
 /**
@@ -190,7 +189,7 @@ public class SkyCanvasPainter {
         // TODO implement
         CartesianCoordinates center = projection.circleCenterForParallel(HorizontalCoordinates.of(0, 0));
         Point2D pos = planeToCanvas.transform(center.x(), center.y());
-        for(int az = 0; az < 360; az += 10) {
+        for (int az = 0; az < 360; az += 10) {
             double radius = projection.circleRadiusForParallel(HorizontalCoordinates.of(az, 0));
             double transformedRadius = planeToCanvas.deltaTransform(radius, 0).magnitude();
 
@@ -198,7 +197,7 @@ public class SkyCanvasPainter {
                     transformedRadius * 2, transformedRadius * 2);
         }
 
-        for(int alt = 0; alt < 360; alt += 10) {
+        for (int alt = 0; alt < 360; alt += 10) {
             double radius = projection.circleRadiusForParallel(HorizontalCoordinates.of(0, alt));
             double transformedRadius = planeToCanvas.deltaTransform(radius, 0).magnitude();
 
