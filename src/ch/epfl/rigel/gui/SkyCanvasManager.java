@@ -259,7 +259,7 @@ public class SkyCanvasManager {
         Transform planeToCanvas = this.planeToCanvas.getValue();
         painter.clear();
         painter.drawStars(observedSky, projection, planeToCanvas);
-        painter.drawEquatorialGrid(projection, planeToCanvas);
+        //painter.drawEquatorialGrid(projection, planeToCanvas);
         painter.drawPlanets(observedSky, projection, planeToCanvas);
         painter.drawSun(observedSky, projection, planeToCanvas);
         painter.drawMoon(observedSky, projection, planeToCanvas);

@@ -1,6 +1,7 @@
 package ch.epfl.rigel.gui;
 
 import ch.epfl.rigel.astronomy.AsterismLoader;
+import ch.epfl.rigel.astronomy.CelestialObject;
 import ch.epfl.rigel.astronomy.HygDatabaseLoader;
 import ch.epfl.rigel.astronomy.StarCatalogue;
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
@@ -10,10 +11,15 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -46,6 +52,7 @@ public class Main extends Application {
     private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
     private SkyCanvasManager skyCanvasManager;
     private CityCatalogue cityCatalogue;
+    private Canvas canvas;
 
     // Strings used for button icons
     private static final String RESET_ICON = "\uf0e2";
@@ -62,10 +69,11 @@ public class Main extends Application {
         viewingParametersBean.setFieldOfViewDeg(100);
 
         skyCanvasManager = createManager();
+        canvas = skyCanvasManager.canvas();
         cityCatalogue = createCityCatalogue();
 
         BorderPane mainPane = new BorderPane(
-                new Pane(skyCanvasManager.canvas()),
+                new Pane(canvas),
                 controlBar(),
                 null,
                 infoBar(),
@@ -87,6 +95,41 @@ public class Main extends Application {
         primaryStage.show();
 
         skyCanvasManager.canvas().requestFocus();
+
+        //-----------------------------------------------------------------------------
+        // Controls
+        //-----------------------------------------------------------------------------
+        canvas.setOnKeyPressed(k -> {
+            if(k.getCode() == KeyCode.P || k.getCode() == KeyCode.SPACE) {
+                if (timeAnimator.getRunning()) {
+                    timeAnimator.stop();
+                } else {
+                    timeAnimator.start();
+                }
+            }
+        });
+
+        canvas.setOnMouseClicked(m -> {
+            if(!canvas.isFocused()) canvas.requestFocus();
+            if(m.getButton() == MouseButton.MIDDLE) {
+                viewingParametersBean.setFieldOfViewDeg(100);
+            }
+            if(m.getButton() == MouseButton.SECONDARY) {
+                CelestialObject objUnderMouse = skyCanvasManager.getObjUnderMouse();
+                if (objUnderMouse != null) {
+                    GraphicsContext ctx = canvas.getGraphicsContext2D();
+                    ctx.setFill(Color.DARKBLUE);
+                    ctx.fillRect(m.getX(), m.getY(), 230, 65);
+                    ctx.setStroke(Color.WHITE);
+                    ctx.setLineWidth(1);
+                    ctx.strokeText(" Name : " + objUnderMouse.info() + "\n" +
+                                    " Position : " + objUnderMouse.equatorialPos() + "\n" +
+                                    " Angular Size : " + objUnderMouse.angularSize() + "\n" +
+                                    " Magnitude : " + objUnderMouse.magnitude(),
+                            m.getX(), m.getY());
+                }
+            }
+        });
     }
 
     /**
@@ -96,12 +139,11 @@ public class Main extends Application {
      * @throws IOException if IO exception when loading AwesomeFont
      */
     private HBox controlBar() throws IOException {
-
         //-----------------------------------------------------------------------------
         // Observation location
         //-----------------------------------------------------------------------------
         TextField lonTextField = createLonLatTextField(true, 6.57);
-        TextField latTextField =createLonLatTextField(false, 46.52);
+        TextField latTextField = createLonLatTextField(false, 46.52);
 
         ChoiceBox<City> cityChoiceBox = new ChoiceBox<>();
         cityChoiceBox.setItems(FXCollections.observableList(cityCatalogue.cities()));
@@ -151,7 +193,7 @@ public class Main extends Application {
                 new Label("Date :"), datePicker,
                 new Label("Time :"), timeField, zoneIdComboBox
         );
-        whenControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
+        whenControl.setStyle("-fx-spacing: inherit;");
         whenControl.disableProperty().bind(timeAnimator.runningProperty());
 
         //-----------------------------------------------------------------------------
@@ -224,7 +266,7 @@ public class Main extends Application {
                 skyCanvasManager.mouseAltDegProperty()));
 
         BorderPane infoBar = new BorderPane(objectInfo, null, mousePos, null, fovDisplay);
-        infoBar.setStyle("-fx-padding: 4; -fx-background-color: white;");
+        infoBar.setStyle("-fx-padding: 4; -fx-background-color: #373e43; -fx-text-fill: white;");
         return infoBar;
     }
 

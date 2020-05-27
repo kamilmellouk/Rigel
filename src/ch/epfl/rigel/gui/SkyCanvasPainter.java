@@ -13,6 +13,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Transform;
 
@@ -33,9 +34,6 @@ public class SkyCanvasPainter {
     // Constants used to compute the on-screen diameter of an object
     private static final ClosedInterval MAG_INTERVAL = ClosedInterval.of(-2, 5);
     private static final double ZERO_FIVE_DEG_TO_RAD = Angle.ofDeg(0.5);
-
-    private static final Color YELLOW_HALO_COLOR =
-            Color.YELLOW.deriveColor(0, 0, 1, 0.25);
 
     /**
      * Constructor of a Painter with a given canvas
@@ -149,10 +147,10 @@ public class SkyCanvasPainter {
         Point2D pos = planeToCanvas.transform(sky.sunPosition().x(), sky.sunPosition().y());
         double tempDiam = projection.applyToAngle(sky.sun().angularSize());
         double diameter = planeToCanvas.deltaTransform(tempDiam, 0).getX();
-        // yellow halo around the sun
-        fillDisk(pos.getX(), pos.getY(), diameter * 2.2, YELLOW_HALO_COLOR);
-        fillDisk(pos.getX(), pos.getY(), diameter + 2, Color.YELLOW);
-        fillDisk(pos.getX(), pos.getY(), diameter, Color.WHITE);
+        double haloDiameter = 2.2 * diameter;
+        Image sunImage = new Image(getClass().getResourceAsStream("/sun.png"),
+                haloDiameter, haloDiameter, true, true);
+        ctx.drawImage(sunImage, pos.getX() - haloDiameter/2, pos.getY() - haloDiameter/2);
 
     }
 
