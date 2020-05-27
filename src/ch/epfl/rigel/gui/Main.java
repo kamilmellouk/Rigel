@@ -70,6 +70,8 @@ public class Main extends Application {
                 null
         );
 
+        BorderPane homePage = new BorderPane(null, null, null, null, null);
+
         skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
         skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
 
