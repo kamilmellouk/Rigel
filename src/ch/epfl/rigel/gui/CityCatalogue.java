@@ -16,9 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Mohamed Kamil MELLOUK
- * 27.05.20
+ * @author Bastien Faivre (310929)
+ * @author Kamil Mellouk (312327)
  */
+
 public final class CityCatalogue {
     private final List<City> cities;
 
@@ -39,7 +40,6 @@ public final class CityCatalogue {
 
         public Builder addCity(City c) {
             cities.add(c);
-            System.out.println(c);
             return this;
         }
 
@@ -86,7 +86,7 @@ public final class CityCatalogue {
         void load(InputStream inputStream, CityCatalogue.Builder builder) throws IOException;
     }
 
-    public enum CityLoader implements CityCatalogue.Loader{
+    public enum CityLoader implements CityCatalogue.Loader {
         INSTANCE();
 
         @Override
@@ -116,7 +116,7 @@ public final class CityCatalogue {
         }
 
         private static String ignoreQuotes(String s) {
-            return s.substring(1, s.length()-1);
+            return s.substring(1, s.length() - 1);
         }
     }
 }
