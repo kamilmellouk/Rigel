@@ -43,9 +43,9 @@ public class Main extends Application {
     private final ObserverLocationBean observerLocationBean = new ObserverLocationBean();
     private final DateTimeBean dateTimeBean = new DateTimeBean();
     private final ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
-
-    private SkyCanvasManager skyCanvasManager;
     private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
+    private SkyCanvasManager skyCanvasManager;
+    private CityCatalogue cityCatalogue;
 
     // Strings used for button icons
     private static final String RESET_ICON = "\uf0e2";
@@ -60,7 +60,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         viewingParametersBean.setCenter(HorizontalCoordinates.ofDeg(180.000000000001, 15));
         viewingParametersBean.setFieldOfViewDeg(100);
+
         skyCanvasManager = createManager();
+        cityCatalogue = createCityCatalogue();
 
         BorderPane mainPane = new BorderPane(
                 new Pane(skyCanvasManager.canvas()),
@@ -75,7 +77,8 @@ public class Main extends Application {
         skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
         skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
 
-        Scene scene = new Scene(homePage);
+        Scene scene = new Scene(mainPane);
+        scene.getStylesheets().add("/darkmode.css");
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Rigel");
@@ -97,9 +100,20 @@ public class Main extends Application {
         //-----------------------------------------------------------------------------
         // Observation location
         //-----------------------------------------------------------------------------
+        TextField lonTextField = createLonLatTextField(true, 6.57);
+        TextField latTextField =createLonLatTextField(false, 46.52);
+
+        ChoiceBox<City> cityChoiceBox = new ChoiceBox<>();
+        cityChoiceBox.setItems(FXCollections.observableList(cityCatalogue.cities()));
+        cityChoiceBox.setOnAction(e -> {
+            GeographicCoordinates coordinates = cityChoiceBox.getValue().coordinates();
+            lonTextField.setText(String.format("%.2f", coordinates.lonDeg()));
+            latTextField.setText(String.format("%.2f", coordinates.latDeg()));
+        });
         HBox whereControl = new HBox(
-                new Label("Longitude (°) :"), createLonLatTextField(true, 6.57),
-                new Label("Latitude (°) :"), createLonLatTextField(false, 46.52)
+                new Label("Longitude (°) :"), lonTextField,
+                new Label("Latitude (°) :"), latTextField,
+                cityChoiceBox
         );
         whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
@@ -123,34 +137,33 @@ public class Main extends Application {
         dateTimeBean.timeProperty().bindBidirectional(timeFormatter.valueProperty());
 
         // Timezone selection
-        ComboBox<ZoneId> timeZone = new ComboBox<>();
+        ComboBox<ZoneId> zoneIdComboBox = new ComboBox<>();
         List<String> availableZoneIds = new ArrayList<>(ZoneId.getAvailableZoneIds());
         Collections.sort(availableZoneIds);
         List<ZoneId> zoneIdList = new ArrayList<>();
         availableZoneIds.forEach(e -> zoneIdList.add(ZoneId.of(e)));
-        timeZone.setItems(FXCollections.observableList(zoneIdList));
-        timeZone.setStyle("-fx-pref-width: 180");
-        timeZone.setValue(ZoneId.systemDefault());
-        dateTimeBean.zoneProperty().bindBidirectional(timeZone.valueProperty());
+        zoneIdComboBox.setItems(FXCollections.observableList(zoneIdList));
+        zoneIdComboBox.setStyle("-fx-pref-width: 180");
+        zoneIdComboBox.setValue(ZoneId.systemDefault());
+        dateTimeBean.zoneProperty().bindBidirectional(zoneIdComboBox.valueProperty());
 
         HBox whenControl = new HBox(
                 new Label("Date :"), datePicker,
-                new Label("Heure :"), timeField, timeZone
+                new Label("Heure :"), timeField, zoneIdComboBox
         );
         whenControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
         whenControl.disableProperty().bind(timeAnimator.runningProperty());
-
 
         //-----------------------------------------------------------------------------
         // Time flow control
         //-----------------------------------------------------------------------------
         // Time accelerator selection
-        ChoiceBox<NamedTimeAccelerator> acceleratorChoicer = new ChoiceBox<>();
-        acceleratorChoicer.setItems(FXCollections.observableList(List.of(NamedTimeAccelerator.values())));
-        acceleratorChoicer.setValue(NamedTimeAccelerator.TIMES_300);
-        timeAnimator.acceleratorProperty().bind(Bindings.select(acceleratorChoicer.valueProperty(),
+        ChoiceBox<NamedTimeAccelerator> acceleratorChoiceBox = new ChoiceBox<>();
+        acceleratorChoiceBox.setItems(FXCollections.observableList(List.of(NamedTimeAccelerator.values())));
+        acceleratorChoiceBox.setValue(NamedTimeAccelerator.TIMES_300);
+        timeAnimator.acceleratorProperty().bind(Bindings.select(acceleratorChoiceBox.valueProperty(),
                 "accelerator"));
-        acceleratorChoicer.disableProperty().bind(timeAnimator.runningProperty());
+        acceleratorChoiceBox.disableProperty().bind(timeAnimator.runningProperty());
 
         // Time reset
         Font fontAwesome = loadFontAwesome();
@@ -159,7 +172,7 @@ public class Main extends Application {
         resetButton.setOnAction(e -> {
             datePicker.setValue(LocalDate.now());
             timeFormatter.setValue(LocalTime.now());
-            timeZone.setValue(ZoneId.systemDefault());
+            zoneIdComboBox.setValue(ZoneId.systemDefault());
         });
         resetButton.disableProperty().bind(timeAnimator.runningProperty());
 
@@ -175,7 +188,7 @@ public class Main extends Application {
             }
         });
 
-        HBox timeFlowControl = new HBox(acceleratorChoicer, resetButton, playPauseButton);
+        HBox timeFlowControl = new HBox(acceleratorChoiceBox, resetButton, playPauseButton);
         timeFlowControl.setStyle("-fx-spacing: inherit");
 
         //-----------------------------------------------------------------------------
@@ -186,7 +199,6 @@ public class Main extends Application {
                 whenControl, verticalSeparator(),
                 timeFlowControl
         );
-
         controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
         return controlBar;
     }
@@ -234,6 +246,57 @@ public class Main extends Application {
     }
 
     /**
+     * Creating the CityCatalogue used in the control bar
+     *
+     * @return CityCatalogue
+     * @throws IOException if there is an input exception
+     */
+    private CityCatalogue createCityCatalogue() throws IOException {
+        try (InputStream cs = getClass().getResourceAsStream("/worldcities.csv")) {
+            return new CityCatalogue.Builder()
+                    .loadFrom(cs, CityCatalogue.CityLoader.INSTANCE)
+                    .build();
+        }
+    }
+
+    /**
+     * Creating a text field for lon or lat with the right formatting
+     *
+     * @param isLon        boolean indicating whether the TextField is for lon or lat
+     * @param defaultValue to assign to the TextField
+     * @return TextField with the right formatting
+     */
+    private TextField createLonLatTextField(boolean isLon, double defaultValue) {
+        TextField tf = new TextField();
+        tf.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
+        // Creating the right text formatter
+        NumberStringConverter stringConverter = new NumberStringConverter("#0.00");
+        UnaryOperator<TextFormatter.Change> filter = (change -> {
+            try {
+                String newText = change.getControlNewText();
+                double newValue = stringConverter.fromString(newText).doubleValue();
+                if (isLon) {
+                    return GeographicCoordinates.isValidLonDeg(newValue) ? change : null;
+                } else {
+                    return GeographicCoordinates.isValidLatDeg(newValue) ? change : null;
+                }
+            } catch (Exception e) {
+                return null;
+            }
+        });
+        TextFormatter<Number> textFormatter = new TextFormatter<>(stringConverter, 0, filter);
+        tf.setTextFormatter(textFormatter);
+        // Binding the TextField to the correct ObserverLocationBean property
+        if (isLon) {
+            observerLocationBean.lonDegProperty().bind(textFormatter.valueProperty());
+        } else {
+            observerLocationBean.latDegProperty().bind(textFormatter.valueProperty());
+        }
+        textFormatter.setValue(defaultValue);
+        return tf;
+    }
+
+    /**
      * @return a vertical separator
      */
     private Separator verticalSeparator() {
@@ -253,53 +316,4 @@ public class Main extends Application {
             return Font.loadFont(fs, 15);
         }
     }
-
-    /**
-     * Creating a text field for lon or lat with the right formatting
-     *
-     * @param isLon        boolean indicating whether the TextField is for lon or lat
-     * @param defaultValue to assign to the TextField
-     * @return TextField with the right formatting
-     */
-    private TextField createLonLatTextField(boolean isLon, double defaultValue) {
-        TextField tf = new TextField();
-        tf.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
-        TextFormatter<Number> textFormatter = getFormatter(isLon);
-        tf.setTextFormatter(textFormatter);
-        if (isLon) {
-            observerLocationBean.lonDegProperty().bind(textFormatter.valueProperty());
-        } else {
-            observerLocationBean.latDegProperty().bind(textFormatter.valueProperty());
-        }
-        textFormatter.setValue(defaultValue);
-        return tf;
-    }
-
-    /**
-     * Return the formatter
-     *
-     * @param isLon {@code true} iff this is the formatter for the longitude,
-     *              {@code false} iff this is the formatter for the latitude
-     * @return the formatter
-     */
-    private TextFormatter<Number> getFormatter(boolean isLon) {
-        NumberStringConverter stringConverter = new NumberStringConverter("#0.00");
-
-        UnaryOperator<TextFormatter.Change> filter = (change -> {
-            try {
-                String newText = change.getControlNewText();
-                double newValue = stringConverter.fromString(newText).doubleValue();
-                if (isLon) {
-                    return GeographicCoordinates.isValidLonDeg(newValue) ? change : null;
-                } else {
-                    return GeographicCoordinates.isValidLatDeg(newValue) ? change : null;
-                }
-            } catch (Exception e) {
-                return null;
-            }
-        });
-
-        return new TextFormatter<>(stringConverter, 0, filter);
-    }
-
 }

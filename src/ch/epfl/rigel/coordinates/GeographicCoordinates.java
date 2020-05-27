@@ -58,7 +58,7 @@ public final class GeographicCoordinates extends SphericalCoordinates {
      * Check if latDeg is contained in [-90, 90]
      *
      * @param latDeg latitude in deg to check
-     * @return {@code true} if and only if the longitude is contained in [-90, 90]
+     * @return {@code true} if and only if the latitude is contained in [-90, 90]
      */
     public static boolean isValidLatDeg(double latDeg) {
         return CLOSED_INTERVAL_SYM_180.contains(latDeg);
