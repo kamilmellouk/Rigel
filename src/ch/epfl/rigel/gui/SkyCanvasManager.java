@@ -16,6 +16,10 @@ import javafx.beans.value.ObservableDoubleValue;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 
@@ -103,6 +107,30 @@ public class SkyCanvasManager {
                     e.consume();
                 }
         );
+
+        canvas.setOnMouseClicked(m -> {
+            if(!canvas.isFocused()) canvas.requestFocus();
+            switch (m.getButton()) {
+                case MIDDLE:
+                    viewingParametersBean.setFieldOfViewDeg(100);
+                    break;
+                case SECONDARY:
+                    CelestialObject objUnderMouse = getObjUnderMouse();
+                    if (objUnderMouse != null) {
+                        GraphicsContext ctx = canvas.getGraphicsContext2D();
+                        ctx.setFill(Color.DARKBLUE);
+                        ctx.fillRect(m.getX(), m.getY(), 230, 65);
+                        ctx.setStroke(Color.WHITE);
+                        ctx.setLineWidth(1);
+                        ctx.strokeText(" Name : " + objUnderMouse.info() + "\n" +
+                                        " Position : " + objUnderMouse.equatorialPos() + "\n" +
+                                        " Angular Size : " + objUnderMouse.angularSize() + "\n" +
+                                        " Magnitude : " + objUnderMouse.magnitude(),
+                                m.getX(), m.getY());
+                    }
+                    break;
+            }
+        });
 
         //-----------------------------------------------------------------------------
         // Bindings and properties

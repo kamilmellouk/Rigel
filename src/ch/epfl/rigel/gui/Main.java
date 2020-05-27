@@ -96,8 +96,8 @@ public class Main extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Rigel");
-        primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(1125);
+        primaryStage.setMinHeight(700);
         primaryStage.show();
 
         skyCanvasManager.canvas().requestFocus();
@@ -105,34 +105,13 @@ public class Main extends Application {
         //-----------------------------------------------------------------------------
         // Controls
         //-----------------------------------------------------------------------------
+
         canvas.setOnKeyPressed(k -> {
-            if(k.getCode() == KeyCode.P || k.getCode() == KeyCode.SPACE) {
+            if(k.getCode() == KeyCode.SPACE) {
                 if (timeAnimator.getRunning()) {
                     timeAnimator.stop();
                 } else {
                     timeAnimator.start();
-                }
-            }
-        });
-
-        canvas.setOnMouseClicked(m -> {
-            if(!canvas.isFocused()) canvas.requestFocus();
-            if(m.getButton() == MouseButton.MIDDLE) {
-                viewingParametersBean.setFieldOfViewDeg(100);
-            }
-            if(m.getButton() == MouseButton.SECONDARY) {
-                CelestialObject objUnderMouse = skyCanvasManager.getObjUnderMouse();
-                if (objUnderMouse != null) {
-                    GraphicsContext ctx = canvas.getGraphicsContext2D();
-                    ctx.setFill(Color.DARKBLUE);
-                    ctx.fillRect(m.getX(), m.getY(), 230, 65);
-                    ctx.setStroke(Color.WHITE);
-                    ctx.setLineWidth(1);
-                    ctx.strokeText(" Name : " + objUnderMouse.info() + "\n" +
-                                    " Position : " + objUnderMouse.equatorialPos() + "\n" +
-                                    " Angular Size : " + objUnderMouse.angularSize() + "\n" +
-                                    " Magnitude : " + objUnderMouse.magnitude(),
-                            m.getX(), m.getY());
                 }
             }
         });
@@ -151,18 +130,19 @@ public class Main extends Application {
         TextField lonTextField = createLonLatTextField(true, 6.57);
         TextField latTextField = createLonLatTextField(false, 46.52);
 
-        ComboBox<City> cityChoiceBox = new ComboBox<>();
-        cityChoiceBox.setItems(FXCollections.observableList(cityCatalogue.cities()));
-        cityChoiceBox.setValue(cityCatalogue.cities().get(0));
-        cityChoiceBox.setOnAction(e -> {
-            GeographicCoordinates coordinates = cityChoiceBox.getValue().coordinates();
+        ComboBox<City> cityComboBox = new ComboBox<>();
+        cityComboBox.setItems(FXCollections.observableList(cityCatalogue.cities()));
+        cityComboBox.setValue(cityCatalogue.cities().get(0));
+        cityComboBox.setOnAction(e -> {
+            GeographicCoordinates coordinates = cityComboBox.getValue().coordinates();
             lonTextField.setText(String.format("%.2f", coordinates.lonDeg()));
             latTextField.setText(String.format("%.2f", coordinates.latDeg()));
         });
+        cityComboBox.setStyle("-fx-pref-width: 150");
         HBox whereControl = new HBox(
                 new Label("Longitude (°) :"), lonTextField,
                 new Label("Latitude (°) :"), latTextField,
-                cityChoiceBox
+                cityComboBox
         );
         whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 

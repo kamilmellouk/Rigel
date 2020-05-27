@@ -15,7 +15,7 @@ import javafx.scene.text.TextAlignment;
 public class HomePage {
 
     private final Button startButton = new Button("Start");
-    private final BorderPane borderPane = new BorderPane(welcomMessage(), title(), null, startButton(), null);
+    private final BorderPane borderPane = new BorderPane(welcomeMessage(), title(), null, startButton(), null);
 
     /**
      * Getter for the start button
@@ -54,7 +54,7 @@ public class HomePage {
      *
      * @return the welcome message
      */
-    private Text welcomMessage() {
+    private Text welcomeMessage() {
         Text welcomeMessage = new Text("Welcome ! Please press \"Start\" to launch the program.\n" +
                 "Note : settings are available after starting the program.");
         welcomeMessage.setStyle("-fx-font-size: 20pt; -fx-padding: 100pt");
