@@ -16,6 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Transform;
 
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -152,6 +153,7 @@ public class SkyCanvasPainter {
         fillDisk(pos.getX(), pos.getY(), diameter * 2.2, YELLOW_HALO_COLOR);
         fillDisk(pos.getX(), pos.getY(), diameter + 2, Color.YELLOW);
         fillDisk(pos.getX(), pos.getY(), diameter, Color.WHITE);
+
     }
 
     /**
@@ -182,6 +184,29 @@ public class SkyCanvasPainter {
 
         ctx.strokeOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,
                 transformedRadius * 2, transformedRadius * 2);
+    }
+
+    public void drawEquatorialGrid(StereographicProjection projection, Transform planeToCanvas) {
+        ctx.setStroke(Color.DARKGREEN);
+        ctx.setLineWidth(1);
+        // TODO implement
+        CartesianCoordinates center = projection.circleCenterForParallel(HorizontalCoordinates.of(0, 0));
+        Point2D pos = planeToCanvas.transform(center.x(), center.y());
+        for(int az = 0; az < 360; az += 10) {
+            double radius = projection.circleRadiusForParallel(HorizontalCoordinates.of(az, 0));
+            double transformedRadius = planeToCanvas.deltaTransform(radius, 0).magnitude();
+
+            ctx.strokeOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,
+                    transformedRadius * 2, transformedRadius * 2);
+        }
+
+        for(int alt = 0; alt < 360; alt += 10) {
+            double radius = projection.circleRadiusForParallel(HorizontalCoordinates.of(0, alt));
+            double transformedRadius = planeToCanvas.deltaTransform(radius, 0).magnitude();
+
+            ctx.strokeOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,
+                    transformedRadius * 2, transformedRadius * 2);
+        }
     }
 
     /**
