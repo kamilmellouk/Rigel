@@ -156,7 +156,7 @@ public class Main extends Application {
 
         HBox whenControl = new HBox(
                 new Label("Date :"), datePicker,
-                new Label("Heure :"), timeField, zoneIdComboBox
+                new Label("Time :"), timeField, zoneIdComboBox
         );
         whenControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
         whenControl.disableProperty().bind(timeAnimator.runningProperty());
@@ -217,7 +217,7 @@ public class Main extends Application {
      */
     private BorderPane infoBar() {
         Text fovDisplay = new Text();
-        fovDisplay.textProperty().bind(Bindings.format(Locale.ROOT, "Champ de vue : %.1f°",
+        fovDisplay.textProperty().bind(Bindings.format(Locale.ROOT, "Field of view : %.1f°",
                 viewingParametersBean.fieldOfViewDegProperty()));
 
         Text objectInfo = new Text();
@@ -226,7 +226,7 @@ public class Main extends Application {
                 skyCanvasManager.objUnderMouseProperty()));
 
         Text mousePos = new Text();
-        mousePos.textProperty().bind(Bindings.format(Locale.ROOT, "Azimut : %.2f°, hauteur : %.2f°",
+        mousePos.textProperty().bind(Bindings.format(Locale.ROOT, "Azimut : %.2f°, Altitude : %.2f°",
                 skyCanvasManager.mouseAzDegProperty(),
                 skyCanvasManager.mouseAltDegProperty()));
 
