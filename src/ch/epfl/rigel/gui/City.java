@@ -8,6 +8,7 @@ import ch.epfl.rigel.coordinates.GeographicCoordinates;
  */
 
 public final class City {
+
     private String name;
     private String country;
     private GeographicCoordinates coordinates;
@@ -18,14 +19,20 @@ public final class City {
         this.coordinates = coordinates;
     }
 
+    /**
+     * Getter for the name
+     *
+     * @return the name
+     */
     public String name() {
         return name;
     }
 
-    public String country() {
-        return country;
-    }
-
+    /**
+     * Getter for the coordinates
+     *
+     * @return the coordinates
+     */
     public GeographicCoordinates coordinates() {
         return coordinates;
     }

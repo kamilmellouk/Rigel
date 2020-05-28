@@ -68,6 +68,7 @@ public class HomePage {
         GridPane pane = new GridPane();
         pane.getChildren().add(startButton);
         pane.setAlignment(Pos.CENTER);
+        pane.setStyle("-fx-padding: 50pt");
         return pane;
     }
 

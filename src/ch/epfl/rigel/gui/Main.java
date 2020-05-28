@@ -1,7 +1,6 @@
 package ch.epfl.rigel.gui;
 
 import ch.epfl.rigel.astronomy.AsterismLoader;
-import ch.epfl.rigel.astronomy.CelestialObject;
 import ch.epfl.rigel.astronomy.HygDatabaseLoader;
 import ch.epfl.rigel.astronomy.StarCatalogue;
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
@@ -12,14 +11,11 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -100,20 +96,19 @@ public class Main extends Application {
         primaryStage.setMinHeight(700);
         primaryStage.show();
 
-        skyCanvasManager.canvas().requestFocus();
-
         //-----------------------------------------------------------------------------
         // Controls
         //-----------------------------------------------------------------------------
 
-        canvas.setOnKeyPressed(k -> {
-            if(k.getCode() == KeyCode.SPACE) {
+        mainPane.setOnKeyPressed(k -> {
+            /*if (k.getCode() == KeyCode.SPACE) {
                 if (timeAnimator.getRunning()) {
                     timeAnimator.stop();
                 } else {
                     timeAnimator.start();
                 }
-            }
+            }*/
+            System.out.println("pressed");
         });
     }
 
