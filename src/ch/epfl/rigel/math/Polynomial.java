@@ -60,7 +60,7 @@ public final class Polynomial {
      * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
      */
     @Override
-    public final int hashCode() throws UnsupportedOperationException {
+    public final int hashCode() {
         throw new UnsupportedOperationException();
     }
 
@@ -70,7 +70,7 @@ public final class Polynomial {
      * @throws UnsupportedOperationException to guarantee that no subclass redefines the method
      */
     @Override
-    public final boolean equals(Object obj) throws UnsupportedOperationException {
+    public final boolean equals(Object obj) {
         throw new UnsupportedOperationException();
     }
 

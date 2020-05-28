@@ -113,10 +113,6 @@ public class SkyCanvasManager {
                 viewingParametersBean.centerProperty()
         );
 
-        projection.addListener(
-                (p, o, n) -> updateSky()
-        );
-
         observedSky = Bindings.createObjectBinding(
                 () -> new ObservedSky(
                         dateTimeBean.getZonedDateTime(),

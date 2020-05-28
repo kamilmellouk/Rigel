@@ -119,21 +119,19 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @throws UnsupportedOperationException the exception to throw
      */
     @Override
-    public final int hashCode() throws UnsupportedOperationException {
+    public final int hashCode() {
         throw new UnsupportedOperationException();
     }
-
 
     /**
      * @param obj the object
      * @return nothing
      * @throws UnsupportedOperationException the exception to throw
      */
-    /*
     @Override
-    public final boolean equals(Object obj) throws UnsupportedOperationException {
+    public final boolean equals(Object obj) {
         throw new UnsupportedOperationException();
-    }*/
+    }
 
     @Override
     public String toString() {
