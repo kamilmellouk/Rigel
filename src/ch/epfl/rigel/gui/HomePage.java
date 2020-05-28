@@ -17,6 +17,10 @@ public class HomePage {
     private final Button startButton = new Button("Start");
     private final BorderPane borderPane = new BorderPane(welcomeMessage(), title(), null, startButton(), null);
 
+    public HomePage() {
+        borderPane.setId("homePage");
+    }
+
     /**
      * Getter for the start button
      *
@@ -42,10 +46,11 @@ public class HomePage {
      */
     private GridPane title() {
         Text title = new Text("Rigel");
-        title.setStyle("-fx-font-size: 100pt;");
+        title.setStyle("-fx-font-size: 100pt; -fx-fill: white;");
         GridPane pane = new GridPane();
         pane.getChildren().add(title);
         pane.setAlignment(Pos.CENTER);
+        pane.setStyle("-fx-padding: 20pt;");
         return pane;
     }
 
@@ -54,21 +59,25 @@ public class HomePage {
      *
      * @return the welcome message
      */
-    private Text welcomeMessage() {
+    private GridPane welcomeMessage() {
         Text welcomeMessage = new Text("Welcome ! Please press \"Start\" to launch the program.\n" +
                 "Note : settings are available after starting the program.");
-        welcomeMessage.setStyle("-fx-font-size: 20pt; -fx-padding: 100pt");
+        welcomeMessage.setStyle("-fx-font-size: 20pt; -fx-fill: white;");
         welcomeMessage.setTextAlignment(TextAlignment.CENTER);
-        return welcomeMessage;
+        GridPane pane = new GridPane();
+        pane.getChildren().add(welcomeMessage);
+        pane.setAlignment(Pos.CENTER);
+        pane.setStyle("-fx-padding: 20pt;");
+        return pane;
     }
 
     private GridPane startButton() {
-        startButton.setStyle("-fx-font-size: 20pt; -fx-pref-width: 100pt;");
+        startButton.setId("startButton");
         startButton.setAlignment(Pos.CENTER);
         GridPane pane = new GridPane();
         pane.getChildren().add(startButton);
         pane.setAlignment(Pos.CENTER);
-        pane.setStyle("-fx-padding: 50pt");
+        pane.setStyle("-fx-padding: 50pt;");
         return pane;
     }
 
