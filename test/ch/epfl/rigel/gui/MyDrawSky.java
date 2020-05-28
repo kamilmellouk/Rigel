@@ -57,8 +57,8 @@ public final class MyDrawSky extends Application {
             Transform planeToCanvas = Transform.affine(1300, 0, 0, -1300, 400, 300);
             SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
 
-            painter.clear();
-            painter.drawStars(sky, projection, planeToCanvas);
+            //painter.clear();
+            //painter.drawStars(sky, projection, planeToCanvas);
             painter.drawPlanets(sky, projection, planeToCanvas);
             painter.drawSun(sky, projection, planeToCanvas);
             painter.drawMoon(sky, projection, planeToCanvas);

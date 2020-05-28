@@ -17,12 +17,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 
+import java.time.LocalTime;
 import java.util.Optional;
 
 /**
@@ -50,6 +49,11 @@ public class SkyCanvasManager {
     private final ObservableDoubleValue mouseAzDeg;
     private final ObservableDoubleValue mouseAltDeg;
 
+    private boolean stars, asterisms, planets, sun, moon, horizon, cardinalPoints;
+
+    private boolean isNight;
+
+
     /**
      * Constructor of a sky canvas manager
      *
@@ -65,6 +69,14 @@ public class SkyCanvasManager {
 
         canvas = new Canvas();
         painter = new SkyCanvasPainter(canvas);
+
+        stars = true;
+        asterisms = true;
+        planets = true;
+        sun = true;
+        moon = true;
+        horizon = true;
+        cardinalPoints = true;
 
         //-----------------------------------------------------------------------------
         // Events
@@ -103,13 +115,41 @@ public class SkyCanvasManager {
                         case DOWN:
                             viewingParametersBean.setCenter(centerWithAltDiff(center, -5));
                             break;
+                        case DIGIT1:
+                            stars = !stars;
+                            updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight);
+                            break;
+                        case DIGIT2:
+                            asterisms = !asterisms;
+                            updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight);
+                            break;
+                        case DIGIT3:
+                            planets = !planets;
+                            updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight);
+                            break;
+                        case DIGIT4:
+                            sun = !sun;
+                            updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight);
+                            break;
+                        case DIGIT5:
+                            moon = !moon;
+                            updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight);
+                            break;
+                        case DIGIT6:
+                            horizon = !horizon;
+                            updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight);
+                            break;
+                        case DIGIT7:
+                            cardinalPoints = !cardinalPoints;
+                            updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight);
+                            break;
                     }
                     e.consume();
                 }
         );
 
         canvas.setOnMouseClicked(m -> {
-            if(!canvas.isFocused()) canvas.requestFocus();
+            if (!canvas.isFocused()) canvas.requestFocus();
             switch (m.getButton()) {
                 case MIDDLE:
                     viewingParametersBean.setFieldOfViewDeg(100);
@@ -142,7 +182,7 @@ public class SkyCanvasManager {
         );
 
         projection.addListener(
-                (p, o, n) -> updateSky()
+                (p, o, n) -> updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight)
         );
 
         observedSky = Bindings.createObjectBinding(
@@ -158,8 +198,11 @@ public class SkyCanvasManager {
                 projection
         );
 
-        observedSky.addListener(
-                (p, o, n) -> updateSky()
+        observedSky.addListener((p, o, n) -> {
+                    if(n.sunHorPos().alt() < 0) isNight = true;
+                    else isNight = false;
+                    updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight);
+                }
         );
 
         planeToCanvas = Bindings.createObjectBinding(
@@ -177,7 +220,7 @@ public class SkyCanvasManager {
         );
 
         planeToCanvas.addListener(
-                (p, o, n) -> updateSky()
+                (p, o, n) -> updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight)
         );
 
         objUnderMouse = Bindings.createObjectBinding(
@@ -281,18 +324,19 @@ public class SkyCanvasManager {
     /**
      * Update/draw all elements of the sky
      */
-    private void updateSky() {
+    private void updateSky(boolean stars, boolean asterisms, boolean planets, boolean sun, boolean moon,
+                           boolean horizon, boolean cardinalPoints, boolean isNight) {
         ObservedSky observedSky = this.observedSky.getValue();
         StereographicProjection projection = this.projection.getValue();
         Transform planeToCanvas = this.planeToCanvas.getValue();
-        painter.clear();
-        painter.drawStars(observedSky, projection, planeToCanvas);
+        painter.clear(isNight);
+        painter.drawStarsAsterisms(observedSky, projection, planeToCanvas, stars, asterisms);
         //painter.drawEquatorialGrid(projection, planeToCanvas);
-        painter.drawPlanets(observedSky, projection, planeToCanvas);
-        painter.drawSun(observedSky, projection, planeToCanvas);
-        painter.drawMoon(observedSky, projection, planeToCanvas);
-        painter.drawHorizon(projection, planeToCanvas);
-        painter.drawCardinalPoints(projection, planeToCanvas);
+        if (planets) painter.drawPlanets(observedSky, projection, planeToCanvas);
+        if (sun) painter.drawSun(observedSky, projection, planeToCanvas);
+        if (moon) painter.drawMoon(observedSky, projection, planeToCanvas);
+        if (horizon) painter.drawHorizon(projection, planeToCanvas);
+        if (cardinalPoints) painter.drawCardinalPoints(projection, planeToCanvas);
     }
 
     /**

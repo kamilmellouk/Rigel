@@ -60,8 +60,8 @@ public final class DrawSky extends Application {
             SkyCanvasPainter painter =
                     new SkyCanvasPainter(canvas);
 
-            painter.clear();
-            painter.drawStars(sky, projection, planeToCanvas);
+            //painter.clear();
+            //painter.drawStars(sky, projection, planeToCanvas);
 
             WritableImage fxImage =
                     canvas.snapshot(null, null);

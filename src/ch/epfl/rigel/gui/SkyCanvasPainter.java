@@ -47,10 +47,34 @@ public class SkyCanvasPainter {
     /**
      * Clear the canvas then filling it in black
      */
-    public void clear() {
+    public void clear(boolean isNight) {
         ctx.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        ctx.setFill(Color.BLACK);
+        if(isNight) {
+            ctx.setFill(Color.BLACK);
+        } else {
+            ctx.setFill(Color.SKYBLUE);
+        }
         ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    }
+
+    /**
+     * Drawing the stars and asterisms, used to manage drawStars() and drawAsterisms() with the same position array
+     *
+     * @param sky           to represent
+     * @param projection    used
+     * @param planeToCanvas transformation
+     * @param stars         boolean indicating whether to draw the stars or not
+     * @param asterisms     boolean indicating whether to draw the asterisms or not
+     */
+    public void drawStarsAsterisms(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas,
+                                   boolean stars, boolean asterisms) {
+        // transform all positions of the stars
+        double[] starPositions = sky.starPositions();
+        double[] transformedPos = new double[starPositions.length];
+        planeToCanvas.transform2DPoints(starPositions, 0, transformedPos, 0, sky.stars().size());
+
+        if (asterisms) drawAsterisms(sky, transformedPos);
+        if (stars) drawStars(sky, projection, planeToCanvas, transformedPos);
     }
 
     /**
@@ -60,18 +84,26 @@ public class SkyCanvasPainter {
      * @param projection    used
      * @param planeToCanvas transformation
      */
-    public void drawStars(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
-        // transform all positions of the stars
-        double[] starPositions = sky.starPositions();
-        double[] transformedPos = new double[starPositions.length];
-        planeToCanvas.transform2DPoints(starPositions, 0, transformedPos, 0, sky.stars().size());
+    public void drawStars(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas,
+                          double[] transformedPos) {
+        int index = 0;
+        for (Star star : sky.stars()) {
+            double diameter = transformedDiameter(star.magnitude(), projection, planeToCanvas);
+            fillDisk(transformedPos[index], transformedPos[index + 1], diameter,
+                    BlackBodyColor.colorForTemperature(star.colorTemperature()));
+            index += 2;
+        }
+    }
 
-        //-----------------------------------------------------------------------------
-        // Drawing asterisms
-        //-----------------------------------------------------------------------------
-
+    /**
+     * Represent the asterisms by linking their stars on the canvas
+     *
+     * @param sky to represent
+     */
+    public void drawAsterisms(ObservedSky sky, double[] transformedPos) {
         ctx.setStroke(Color.BLUE);
         ctx.setLineWidth(1);
+
         var bounds = canvas.getBoundsInLocal();
         for (Asterism asterism : sky.asterisms()) {
             ctx.beginPath();
@@ -99,18 +131,6 @@ public class SkyCanvasPainter {
             }
 
             ctx.stroke();
-        }
-
-        //-----------------------------------------------------------------------------
-        // Drawing stars
-        //-----------------------------------------------------------------------------
-
-        int index = 0;
-        for (Star star : sky.stars()) {
-            double diameter = transformedDiameter(star.magnitude(), projection, planeToCanvas);
-            fillDisk(transformedPos[index], transformedPos[index + 1], diameter,
-                    BlackBodyColor.colorForTemperature(star.colorTemperature()));
-            index += 2;
         }
     }
 
@@ -149,7 +169,7 @@ public class SkyCanvasPainter {
         double haloDiameter = 2.2 * diameter;
         Image sunImage = new Image(getClass().getResourceAsStream("/sun.png"),
                 haloDiameter, haloDiameter, true, true);
-        ctx.drawImage(sunImage, pos.getX() - haloDiameter/2, pos.getY() - haloDiameter/2);
+        ctx.drawImage(sunImage, pos.getX() - haloDiameter / 2, pos.getY() - haloDiameter / 2);
 
     }
 

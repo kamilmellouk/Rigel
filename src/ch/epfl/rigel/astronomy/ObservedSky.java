@@ -25,6 +25,8 @@ public final class ObservedSky {
     private final List<Star> stars;
     private final Set<Asterism> asterisms;
 
+    private final HorizontalCoordinates sunHorPos;
+
     /**
      * Constructor of the observed sky
      *
@@ -40,7 +42,8 @@ public final class ObservedSky {
 
         // add sun
         this.sun = SunModel.SUN.at(daysFromJ2010UntilWhen, eclToEquConversion);
-        CartesianCoordinates sunPosition = stereographicProjection.apply(equToHorConversion.apply(this.sun.equatorialPos()));
+        sunHorPos = equToHorConversion.apply(this.sun.equatorialPos());
+        CartesianCoordinates sunPosition = stereographicProjection.apply(sunHorPos);
         this.objectPosMap.put(CelestialObjectType.SUN, new double[]{sunPosition.x(), sunPosition.y()});
 
         // add moon
@@ -101,6 +104,15 @@ public final class ObservedSky {
                 objectPosMap.get(CelestialObjectType.SUN)[0],
                 objectPosMap.get(CelestialObjectType.SUN)[1]
         );
+    }
+
+    /**
+     * Getter for the horizontal position of the sun, used to cycle through day and night
+     *
+     * @return the horizontal coordinates of the sun
+     */
+    public HorizontalCoordinates sunHorPos() {
+        return sunHorPos;
     }
 
     /**

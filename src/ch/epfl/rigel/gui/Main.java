@@ -101,7 +101,8 @@ public class Main extends Application {
         //-----------------------------------------------------------------------------
 
         mainPane.setOnKeyPressed(k -> {
-            /*if (k.getCode() == KeyCode.SPACE) {
+            /*
+            if (k.getCode() == KeyCode.SPACE) {
                 if (timeAnimator.getRunning()) {
                     timeAnimator.stop();
                 } else {
