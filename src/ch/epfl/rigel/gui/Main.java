@@ -133,7 +133,7 @@ public class Main extends Application {
             lonTextField.setText(String.format("%.2f", coordinates.lonDeg()));
             latTextField.setText(String.format("%.2f", coordinates.latDeg()));
         });
-        cityComboBox.setStyle("-fx-pref-width: 150");
+        cityComboBox.setStyle("-fx-pref-width: 180");
         HBox whereControl = new HBox(
                 new Label("Longitude (°) :"), lonTextField,
                 new Label("Latitude (°) :"), latTextField,

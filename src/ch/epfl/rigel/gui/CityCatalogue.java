@@ -91,14 +91,14 @@ public final class CityCatalogue {
 
         @Override
         public void load(InputStream inputStream, CityCatalogue.Builder builder) throws IOException {
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.US_ASCII))) {
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
                 // skipping the first line (column headers)
                 bufferedReader.readLine();
                 String s;
                 int nameIndex = 1;
                 int latIndex = 2;
                 int lonIndex = 3;
-                int countryIndex = 6;
+                int countryIndex = 4;
                 while ((s = bufferedReader.readLine()) != null) {
                     // Splitting the line into an array containing its different columns
                     String[] col = s.split(",");
