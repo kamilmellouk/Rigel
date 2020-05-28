@@ -15,6 +15,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
 import javafx.scene.transform.Transform;
 
 import java.util.List;
@@ -192,13 +193,19 @@ public class SkyCanvasPainter {
      * @param projection used
      */
     public void drawHorizon(StereographicProjection projection, Transform planeToCanvas) {
-        ctx.setStroke(Color.RED);
-        ctx.setLineWidth(2);
         CartesianCoordinates center = projection.circleCenterForParallel(HorizontalCoordinates.of(0, 0));
         Point2D pos = planeToCanvas.transform(center.x(), center.y());
         double radius = projection.circleRadiusForParallel(HorizontalCoordinates.of(0, 0));
-        double transformedRadius = planeToCanvas.deltaTransform(radius, 0).magnitude();
+        double transformedRadius = planeToCanvas.deltaTransform(radius, 0).getX();
 
+        // TODO draw the earth, everything on screen but the horizon disk
+        ctx.setFill(Color.FORESTGREEN);
+        //ctx.fillOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,
+          //      transformedRadius * 2, transformedRadius * 2);
+        //ctx.fillArc(pos.getX() - transformedRadius, pos.getY() - transformedRadius, 40, 40,
+          //      15, 14, ArcType.ROUND);
+        ctx.setStroke(Color.RED);
+        ctx.setLineWidth(2);
         ctx.strokeOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,
                 transformedRadius * 2, transformedRadius * 2);
     }
