@@ -322,7 +322,16 @@ public class SkyCanvasManager {
     }
 
     /**
-     * Update/draw all elements of the sky
+     * Updating all drawable elements of the sky
+     *
+     * @param stars boolean indicating whether to draw stars
+     * @param asterisms boolean indicating whether to draw asterisms
+     * @param planets boolean indicating whether to draw planets
+     * @param sun boolean indicating whether to draw the sun
+     * @param moon boolean indicating whether to draw the moon
+     * @param horizon boolean indicating whether to draw the horizon
+     * @param cardinalPoints boolean indicating whether to draw cardinal points
+     * @param isNight boolean indicating whether to draw the sky blue or black
      */
     private void updateSky(boolean stars, boolean asterisms, boolean planets, boolean sun, boolean moon,
                            boolean horizon, boolean cardinalPoints, boolean isNight) {

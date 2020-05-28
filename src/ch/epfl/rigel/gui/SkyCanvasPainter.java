@@ -200,10 +200,12 @@ public class SkyCanvasPainter {
 
         // TODO draw the earth, everything on screen but the horizon disk
         ctx.setFill(Color.FORESTGREEN);
-        //ctx.fillOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,
-          //      transformedRadius * 2, transformedRadius * 2);
-        //ctx.fillArc(pos.getX() - transformedRadius, pos.getY() - transformedRadius, 40, 40,
-          //      15, 14, ArcType.ROUND);
+        ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        ctx.setFill(Color.TRANSPARENT);
+        ctx.fillOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,
+                transformedRadius * 2, transformedRadius * 2);
+        ctx.fillArc(pos.getX() - transformedRadius, pos.getY() - transformedRadius, 100, 100,
+                100, 100, ArcType.ROUND);
         ctx.setStroke(Color.RED);
         ctx.setLineWidth(2);
         ctx.strokeOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,
