@@ -40,17 +40,17 @@ import static javafx.beans.binding.Bindings.when;
  */
 public class Main extends Application {
 
+    // Strings used for button icons
+    private static final String RESET_ICON = "\uf0e2";
+    private static final String PLAY_ICON = "\uf04b";
+    private static final String PAUSE_ICON = "\uf04c";
+
     private final ObserverLocationBean observerLocationBean = new ObserverLocationBean();
     private final DateTimeBean dateTimeBean = new DateTimeBean();
     private final ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
 
     private SkyCanvasManager skyCanvasManager;
     private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
-
-    // Strings used for button icons
-    private static final String RESET_ICON = "\uf0e2";
-    private static final String PLAY_ICON = "\uf04b";
-    private static final String PAUSE_ICON = "\uf04c";
 
     public static void main(String[] args) {
         launch(args);

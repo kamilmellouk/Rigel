@@ -20,6 +20,7 @@ public final class TimeAnimator extends AnimationTimer {
     private final ObjectProperty<TimeAccelerator> accelerator = new SimpleObjectProperty<>(null);
     private final BooleanProperty running = new SimpleBooleanProperty(false);
     private ZonedDateTime initialTime;
+    // TODO: 29/05/2020 comment this variable
     private long firstNanos;
     private boolean firstHandle;
 

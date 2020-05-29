@@ -26,15 +26,16 @@ import java.util.List;
  */
 public class SkyCanvasPainter {
 
-    private final Canvas canvas;
-    private final GraphicsContext ctx;
-
     // Constants used to compute the on-screen diameter of an object
     private static final ClosedInterval MAG_INTERVAL = ClosedInterval.of(-2, 5);
     private static final double ZERO_FIVE_DEG_TO_RAD = Angle.ofDeg(0.5);
 
+    // Constant for the halo of the sun
     private static final Color YELLOW_HALO_COLOR =
             Color.YELLOW.deriveColor(0, 0, 1, 0.25);
+
+    private final Canvas canvas;
+    private final GraphicsContext ctx;
 
     /**
      * Constructor of a Painter with a given canvas
