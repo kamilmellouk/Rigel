@@ -199,35 +199,31 @@ public class SkyCanvasPainter {
         double transformedRadius = planeToCanvas.deltaTransform(radius, 0).getX();
 
         // TODO draw the earth, everything on screen but the horizon disk
-        ctx.setFill(Color.FORESTGREEN);
+        // TODO use shapes, substract
+        /*ctx.setFill(Color.FORESTGREEN);
         ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         ctx.setFill(Color.TRANSPARENT);
         ctx.fillOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,
                 transformedRadius * 2, transformedRadius * 2);
         ctx.fillArc(pos.getX() - transformedRadius, pos.getY() - transformedRadius, 100, 100,
                 100, 100, ArcType.ROUND);
+         */
         ctx.setStroke(Color.RED);
         ctx.setLineWidth(2);
         ctx.strokeOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,
                 transformedRadius * 2, transformedRadius * 2);
     }
 
-    public void drawEquatorialGrid(StereographicProjection projection, Transform planeToCanvas) {
-        ctx.setStroke(Color.DARKGREEN);
+    public void drawHorizontalGrid(StereographicProjection projection, Transform planeToCanvas) {
+        ctx.setStroke(Color.INDIANRED);
         ctx.setLineWidth(1);
         // TODO implement
+        // TODO meridian
         CartesianCoordinates center = projection.circleCenterForParallel(HorizontalCoordinates.of(0, 0));
         Point2D pos = planeToCanvas.transform(center.x(), center.y());
-        for (int az = 0; az < 360; az += 10) {
-            double radius = projection.circleRadiusForParallel(HorizontalCoordinates.of(az, 0));
-            double transformedRadius = planeToCanvas.deltaTransform(radius, 0).magnitude();
 
-            ctx.strokeOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,
-                    transformedRadius * 2, transformedRadius * 2);
-        }
-
-        for (int alt = 0; alt < 360; alt += 10) {
-            double radius = projection.circleRadiusForParallel(HorizontalCoordinates.of(0, alt));
+        for (int alt = -90; alt < 91; alt += 10) {
+            double radius = projection.circleRadiusForParallel(HorizontalCoordinates.ofDeg(0, alt));
             double transformedRadius = planeToCanvas.deltaTransform(radius, 0).magnitude();
 
             ctx.strokeOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,

@@ -81,4 +81,5 @@
 
 #homePage {
     -fx-background-image: url("constellation.png");
+    -fx-opacity: 23;
 }

@@ -340,7 +340,7 @@ public class SkyCanvasManager {
         Transform planeToCanvas = this.planeToCanvas.getValue();
         painter.clear(isNight);
         painter.drawStarsAsterisms(observedSky, projection, planeToCanvas, stars, asterisms);
-        //painter.drawEquatorialGrid(projection, planeToCanvas);
+        painter.drawHorizontalGrid(projection, planeToCanvas);
         if (planets) painter.drawPlanets(observedSky, projection, planeToCanvas);
         if (sun) painter.drawSun(observedSky, projection, planeToCanvas);
         if (moon) painter.drawMoon(observedSky, projection, planeToCanvas);
