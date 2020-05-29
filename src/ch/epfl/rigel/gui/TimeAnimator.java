@@ -1,10 +1,7 @@
 package ch.epfl.rigel.gui;
 
 import javafx.animation.AnimationTimer;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 
 import java.time.ZonedDateTime;
 
@@ -67,7 +64,7 @@ public final class TimeAnimator extends AnimationTimer {
      * @return running boolean value
      */
     public boolean getRunning() {
-        return running.getValue();
+        return runningProperty().getValue();
     }
 
     /**
@@ -75,9 +72,11 @@ public final class TimeAnimator extends AnimationTimer {
      *
      * @return running property
      */
-    public BooleanProperty runningProperty() {
+    public ReadOnlyBooleanProperty runningProperty() {
         return running;
     }
+    // TODO readOnlyBooleanproperty
+    // TODO method start/stop
 
     @Override
     public void start() {
