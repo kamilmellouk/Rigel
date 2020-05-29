@@ -60,6 +60,11 @@ public final class TimeAnimator extends AnimationTimer {
         this.accelerator.setValue(accelerator);
     }
 
+    public void startStop() {
+        if(running.getValue()) stop();
+        else start();
+    }
+
     /**
      * Getter for the running boolean
      *
