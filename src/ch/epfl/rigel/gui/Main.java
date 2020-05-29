@@ -42,8 +42,8 @@ public class Main extends Application {
 
     // Strings used for button icons
     private static final String RESET_ICON = "\uf0e2";
-    private static final String PLAY_ICON = "\uf04b";
-    private static final String PAUSE_ICON = "\uf04c";
+    private static final String START_ICON = "\uf04b";
+    private static final String STOP_ICON = "\uf04c";
 
     private final ObserverLocationBean observerLocationBean = new ObserverLocationBean();
     private final DateTimeBean dateTimeBean = new DateTimeBean();
@@ -160,18 +160,12 @@ public class Main extends Application {
         resetButton.disableProperty().bind(timeAnimator.runningProperty());
 
         // Time play/pause
-        Button playPauseButton = new Button(PLAY_ICON);
-        playPauseButton.setFont(fontAwesome);
-        playPauseButton.textProperty().bind(when(timeAnimator.runningProperty()).then(PAUSE_ICON).otherwise(PLAY_ICON));
-        playPauseButton.setOnAction(e -> {
-            if (!timeAnimator.getRunning()) {
-                timeAnimator.start();
-            } else {
-                timeAnimator.stop();
-            }
-        });
+        Button startStopButton = new Button(START_ICON);
+        startStopButton.setFont(fontAwesome);
+        startStopButton.textProperty().bind(when(timeAnimator.runningProperty()).then(STOP_ICON).otherwise(START_ICON));
+        startStopButton.setOnAction(e -> timeAnimator.startStop());
 
-        HBox timeFlowControl = new HBox(acceleratorChoicer, resetButton, playPauseButton);
+        HBox timeFlowControl = new HBox(acceleratorChoicer, resetButton, startStopButton);
         timeFlowControl.setStyle("-fx-spacing: inherit");
 
         //-----------------------------------------------------------------------------

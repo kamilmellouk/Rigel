@@ -59,15 +59,6 @@ public final class TimeAnimator extends AnimationTimer {
     }
 
     /**
-     * Getter for the running boolean
-     *
-     * @return running boolean value
-     */
-    public boolean getRunning() {
-        return runningProperty().getValue();
-    }
-
-    /**
      * Getter for the running property
      *
      * @return running property
@@ -75,8 +66,14 @@ public final class TimeAnimator extends AnimationTimer {
     public ReadOnlyBooleanProperty runningProperty() {
         return running;
     }
-    // TODO readOnlyBooleanproperty
-    // TODO method start/stop
+
+    /**
+     * Starting the time Animation if it is not already started, and stopping it if it is
+     */
+    public void startStop() {
+        if(running.getValue()) stop();
+        else start();
+    }
 
     @Override
     public void start() {
