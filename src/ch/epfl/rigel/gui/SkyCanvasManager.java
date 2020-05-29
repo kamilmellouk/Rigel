@@ -250,16 +250,16 @@ public class SkyCanvasManager {
      * Update/draw all elements of the sky
      */
     private void updateSky() {
-        ObservedSky observedSkyValue = observedSky.getValue();
-        StereographicProjection projectionValue = projection.getValue();
-        Transform planeToCanvasValue = planeToCanvas.getValue();
+        ObservedSky observedSky = this.observedSky.getValue();
+        StereographicProjection projection = this.projection.getValue();
+        Transform planeToCanvas = this.planeToCanvas.getValue();
         painter.clear();
-        painter.drawStars(observedSkyValue, projectionValue, planeToCanvasValue);
-        painter.drawPlanets(observedSkyValue, projectionValue, planeToCanvasValue);
-        painter.drawSun(observedSkyValue, projectionValue, planeToCanvasValue);
-        painter.drawMoon(observedSkyValue, projectionValue, planeToCanvasValue);
-        painter.drawHorizon(projectionValue, planeToCanvasValue);
-        painter.drawCardinalPoints(projectionValue, planeToCanvasValue);
+        painter.drawStars(observedSky, projection, planeToCanvas);
+        painter.drawPlanets(observedSky, projection, planeToCanvas);
+        painter.drawSun(observedSky, projection, planeToCanvas);
+        painter.drawMoon(observedSky, projection, planeToCanvas);
+        painter.drawHorizon(projection, planeToCanvas);
+        painter.drawCardinalPoints(projection, planeToCanvas);
     }
 
     /**
