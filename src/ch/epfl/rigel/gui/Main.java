@@ -94,22 +94,6 @@ public class Main extends Application {
         primaryStage.setMinWidth(1125);
         primaryStage.setMinHeight(700);
         primaryStage.show();
-
-        //-----------------------------------------------------------------------------
-        // Controls
-        //-----------------------------------------------------------------------------
-
-        mainPane.setOnKeyPressed(k -> {
-            /*
-            if (k.getCode() == KeyCode.SPACE) {
-                if (timeAnimator.getRunning()) {
-                    timeAnimator.stop();
-                } else {
-                    timeAnimator.start();
-                }
-            }*/
-            System.out.println("pressed");
-        });
     }
 
     /**
@@ -169,6 +153,7 @@ public class Main extends Application {
         zoneIdComboBox.setItems(FXCollections.observableList(zoneIdList));
         zoneIdComboBox.setStyle("-fx-pref-width: 180");
         zoneIdComboBox.setValue(ZoneId.systemDefault());
+        zoneIdComboBox.setTooltip(new Tooltip("Time zone"));
         dateTimeBean.zoneProperty().bindBidirectional(zoneIdComboBox.valueProperty());
 
         HBox whenControl = new HBox(
@@ -187,6 +172,7 @@ public class Main extends Application {
         acceleratorChoiceBox.setValue(NamedTimeAccelerator.TIMES_300);
         timeAnimator.acceleratorProperty().bind(Bindings.select(acceleratorChoiceBox.valueProperty(),
                 "accelerator"));
+        acceleratorChoiceBox.setTooltip(new Tooltip("Time acceleration"));
         acceleratorChoiceBox.disableProperty().bind(timeAnimator.runningProperty());
 
         // Time reset
@@ -198,6 +184,7 @@ public class Main extends Application {
             timeFormatter.setValue(LocalTime.now());
             zoneIdComboBox.setValue(ZoneId.systemDefault());
         });
+        resetButton.setTooltip(new Tooltip("Reset"));
         resetButton.disableProperty().bind(timeAnimator.runningProperty());
 
         // Time play/pause
@@ -211,7 +198,7 @@ public class Main extends Application {
                 timeAnimator.stop();
             }
         });
-
+        playPauseButton.setTooltip(new Tooltip("Start/Stop"));
         HBox timeFlowControl = new HBox(acceleratorChoiceBox, resetButton, playPauseButton);
         timeFlowControl.setStyle("-fx-spacing: inherit");
 

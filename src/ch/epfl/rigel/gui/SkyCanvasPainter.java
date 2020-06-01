@@ -87,11 +87,16 @@ public class SkyCanvasPainter {
      */
     public void drawStars(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas,
                           double[] transformedPos) {
+        ctx.setStroke(Color.RED);
+        ctx.setLineWidth(1);
+        ctx.setTextBaseline(VPos.BOTTOM);
         int index = 0;
         for (Star star : sky.stars()) {
             double diameter = transformedDiameter(star.magnitude(), projection, planeToCanvas);
             fillDisk(transformedPos[index], transformedPos[index + 1], diameter,
                     BlackBodyColor.colorForTemperature(star.colorTemperature()));
+            if(star.colorTemperature() > 20000)
+                ctx.strokeText(star.info(), transformedPos[index], transformedPos[index+1]);
             index += 2;
         }
     }
