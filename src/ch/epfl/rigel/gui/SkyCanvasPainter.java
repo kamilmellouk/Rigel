@@ -47,13 +47,9 @@ public class SkyCanvasPainter {
     /**
      * Clear the canvas then filling it in black
      */
-    public void clear(boolean isNight) {
+    public void clear(Color color) {
         ctx.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        if(isNight) {
-            ctx.setFill(Color.BLACK);
-        } else {
-            ctx.setFill(Color.SKYBLUE);
-        }
+        ctx.setFill(color);
         ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
@@ -94,8 +90,8 @@ public class SkyCanvasPainter {
             double diameter = transformedDiameter(star.magnitude(), projection, planeToCanvas);
             fillDisk(transformedPos[index], transformedPos[index + 1], diameter,
                     BlackBodyColor.colorForTemperature(star.colorTemperature()));
-            if(star.colorTemperature() > 20000)
-                ctx.strokeText(star.info(), transformedPos[index], transformedPos[index+1]);
+            if (star.colorTemperature() > 20000)
+                ctx.strokeText(star.info(), transformedPos[index], transformedPos[index + 1]);
             index += 2;
         }
     }
