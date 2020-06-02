@@ -254,7 +254,22 @@ public class Main extends Application {
         Text text = new Text("Display settings");
         text.setId("settingsText");
         CheckBox starsCheckBox = new CheckBox("Stars");
-        VBox vBox = new VBox(text, new Separator(), starsCheckBox);
+        starsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawStarsProperty());
+        CheckBox asterismsCheckBox = new CheckBox("Asterisms");
+        asterismsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAsterismsProperty());
+        CheckBox planetsCheckBox = new CheckBox("Planets");
+        planetsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawPlanetsProperty());
+        CheckBox sunCheckBox = new CheckBox("Sun");
+        sunCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawSunProperty());
+        CheckBox moonCheckBox = new CheckBox("Moon");
+        moonCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawMoonProperty());
+        CheckBox horizonCheckBox = new CheckBox("Horizon");
+        horizonCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawHorizonProperty());
+        CheckBox cardinalPointsCheckBox = new CheckBox("Cardinal points");
+        cardinalPointsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawCardinalPointsProperty());
+        CheckBox atmosphereCheckBox = new CheckBox("Atmosphere");
+        atmosphereCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAtmosphereProperty());
+        VBox vBox = new VBox(text, new Separator(), starsCheckBox, asterismsCheckBox, planetsCheckBox, sunCheckBox, moonCheckBox, horizonCheckBox, cardinalPointsCheckBox, atmosphereCheckBox);
         vBox.setId("settingsBar");
         return vBox;
     }

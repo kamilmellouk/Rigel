@@ -71,6 +71,9 @@ public class SkyCanvasManager {
 
         // all display are initially active
         drawStars = new SimpleBooleanProperty(true);
+        drawStars.addListener(e -> {
+
+        });
         drawAsterisms = new SimpleBooleanProperty(true);
         drawPlanets = new SimpleBooleanProperty(true);
         drawSun = new SimpleBooleanProperty(true);
