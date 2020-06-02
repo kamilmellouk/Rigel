@@ -252,8 +252,8 @@ public class Main extends Application {
     }
 
     private VBox settingsBar() {
-        Text text = new Text("Display settings");
-        text.setId("settingsText");
+        Text displaySettingText = new Text("Display settings:");
+        displaySettingText.setId("settingsText");
         CheckBox starsCheckBox = new CheckBox("Stars");
         starsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawStarsProperty());
         CheckBox asterismsCheckBox = new CheckBox("Asterisms");
@@ -270,7 +270,17 @@ public class Main extends Application {
         cardinalPointsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawCardinalPointsProperty());
         CheckBox atmosphereCheckBox = new CheckBox("Atmosphere");
         atmosphereCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAtmosphereProperty());
-        VBox vBox = new VBox(text, new Separator(), starsCheckBox, asterismsCheckBox, planetsCheckBox, sunCheckBox, moonCheckBox, horizonCheckBox, cardinalPointsCheckBox, atmosphereCheckBox);
+
+        Text fovSliderText = new Text("Field of view (°):");
+        fovSliderText.setId("fovSliderText");
+        Slider fovSlider = new Slider(30, 150, 100);
+        fovSlider.setShowTickMarks(true);
+        fovSlider.setShowTickLabels(true);
+        fovSlider.valueProperty().bindBidirectional(viewingParametersBean.fieldOfViewDegProperty());
+
+        VBox vBox = new VBox(displaySettingText, starsCheckBox, asterismsCheckBox, planetsCheckBox,
+                sunCheckBox, moonCheckBox, horizonCheckBox, cardinalPointsCheckBox, atmosphereCheckBox, new Separator(),
+                fovSliderText, fovSlider);
         vBox.setId("settingsBar");
         return vBox;
     }

@@ -113,3 +113,7 @@
 #settingsText {
     -fx-fill: white;
 }
+
+#fovSliderText {
+    -fx-fill: white;
+}
