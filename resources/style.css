@@ -44,7 +44,17 @@
 
 #homePage {
     -fx-background-image: url("constellation.png");
-    -fx-opacity: 23;
+}
+
+#title {
+    -fx-font-size: 100pt;
+    -fx-fill: white;
+}
+
+#welcomeMessage {
+    -fx-font-size: 20pt;
+    -fx-fill: white;
+    -fx-background-color: black;
 }
 
 #infoBar {
