@@ -45,7 +45,6 @@ public class Main extends Application {
     private static final String PAUSE_ICON = "\uf04c";
     private static final String FORWARD_ICON = "\uf04e";
     private static final String SKIP_ICON = "\uf051";
-    private static final String EXPAND_ICON = "\uf065";
 
     private final ObserverLocationBean observerLocationBean = new ObserverLocationBean();
     private final DateTimeBean dateTimeBean = new DateTimeBean();
@@ -53,8 +52,6 @@ public class Main extends Application {
     private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
     private SkyCanvasManager skyCanvasManager;
     private CityCatalogue cityCatalogue;
-
-    private Button expandCompressButton;
 
     public static void main(String[] args) {
         launch(args);
@@ -68,10 +65,9 @@ public class Main extends Application {
         skyCanvasManager = createManager();
         Canvas canvas = skyCanvasManager.canvas();
         cityCatalogue = createCityCatalogue();
-        Pane canvasPane = new Pane(canvas);
 
         BorderPane mainPane = new BorderPane(
-                canvasPane,
+                new Pane(canvas),
                 controlBar(),
                 null,
                 infoBar(),
@@ -82,17 +78,16 @@ public class Main extends Application {
         skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
 
         HomePage homePage = new HomePage();
-        BorderPane homePane = homePage.getBorderPane();
+        VBox homePane = homePage.getPane();
 
         Scene scene = new Scene(homePane);
         scene.getStylesheets().add("/style.css");
 
-        // launch the program by clicking on the button start
-        homePage.getStartButton().setOnAction(e -> scene.setRoot(mainPane));
-
-        expandCompressButton.setOnAction(e -> {
-            scene.setRoot(canvasPane);
-        });
+        // launch the program by clicking any key
+        homePane.setOnKeyPressed(
+                e -> scene.setRoot(mainPane)
+        );
+        homePane.requestFocus();
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Rigel");
@@ -217,20 +212,12 @@ public class Main extends Application {
         timeFlowControl.setId("timeFlowControl");
 
         //-----------------------------------------------------------------------------
-        // Display settings
-        //-----------------------------------------------------------------------------
-        expandCompressButton = new Button(EXPAND_ICON);
-        expandCompressButton.setFont(fontAwesome);
-
-        HBox displaySettings = new HBox(expandCompressButton);
-        //-----------------------------------------------------------------------------
         // Control bar
         //-----------------------------------------------------------------------------
         HBox controlBar = new HBox(
                 whereControl, verticalSeparator(),
                 whenControl, verticalSeparator(),
-                timeFlowControl, verticalSeparator(),
-                displaySettings
+                timeFlowControl
         );
         controlBar.setId("controlBar");
         return controlBar;
@@ -269,35 +256,20 @@ public class Main extends Application {
         text.setId("settingsText");
         CheckBox starsCheckBox = new CheckBox("Stars");
         starsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawStarsProperty());
-        starsCheckBox.setTooltip(new Tooltip("Show stars - 1"));
-
         CheckBox asterismsCheckBox = new CheckBox("Asterisms");
         asterismsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAsterismsProperty());
-        asterismsCheckBox.setTooltip(new Tooltip("Show asterisms - 2"));
-
         CheckBox planetsCheckBox = new CheckBox("Planets");
         planetsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawPlanetsProperty());
-        planetsCheckBox.setTooltip(new Tooltip("Show planets - 3"));
-
         CheckBox sunCheckBox = new CheckBox("Sun");
         sunCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawSunProperty());
-        sunCheckBox.setTooltip(new Tooltip("Show sun - 3"));
-
         CheckBox moonCheckBox = new CheckBox("Moon");
         moonCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawMoonProperty());
-        moonCheckBox.setTooltip(new Tooltip("Show moon - 4"));
-
         CheckBox horizonCheckBox = new CheckBox("Horizon");
         horizonCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawHorizonProperty());
-        horizonCheckBox.setTooltip(new Tooltip("Show horizon - 5"));
-
         CheckBox cardinalPointsCheckBox = new CheckBox("Cardinal points");
         cardinalPointsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawCardinalPointsProperty());
-        cardinalPointsCheckBox.setTooltip(new Tooltip("Show cardinal points - 6"));
-
         CheckBox atmosphereCheckBox = new CheckBox("Atmosphere");
         atmosphereCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAtmosphereProperty());
-        atmosphereCheckBox.setTooltip(new Tooltip("Show atmosphere - 7"));
         VBox vBox = new VBox(text, new Separator(), starsCheckBox, asterismsCheckBox, planetsCheckBox, sunCheckBox, moonCheckBox, horizonCheckBox, cardinalPointsCheckBox, atmosphereCheckBox);
         vBox.setId("settingsBar");
         return vBox;
