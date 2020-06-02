@@ -45,6 +45,7 @@ public class Main extends Application {
     private static final String PAUSE_ICON = "\uf04c";
     private static final String FORWARD_ICON = "\uf04e";
     private static final String SKIP_ICON = "\uf051";
+    private static final String EXPAND_ICON = "\uf065";
 
     private final ObserverLocationBean observerLocationBean = new ObserverLocationBean();
     private final DateTimeBean dateTimeBean = new DateTimeBean();
@@ -52,6 +53,8 @@ public class Main extends Application {
     private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
     private SkyCanvasManager skyCanvasManager;
     private CityCatalogue cityCatalogue;
+
+    private Button expandCompressButton;
 
     public static void main(String[] args) {
         launch(args);
@@ -65,9 +68,10 @@ public class Main extends Application {
         skyCanvasManager = createManager();
         Canvas canvas = skyCanvasManager.canvas();
         cityCatalogue = createCityCatalogue();
+        Pane canvasPane = new Pane(canvas);
 
         BorderPane mainPane = new BorderPane(
-                new Pane(canvas),
+                canvasPane,
                 controlBar(),
                 null,
                 infoBar(),
@@ -84,9 +88,11 @@ public class Main extends Application {
         scene.getStylesheets().add("/style.css");
 
         // launch the program by clicking on the button start
-        homePage.getStartButton().setOnAction(
-                e -> scene.setRoot(mainPane)
-        );
+        homePage.getStartButton().setOnAction(e -> scene.setRoot(mainPane));
+
+        expandCompressButton.setOnAction(e -> {
+            scene.setRoot(canvasPane);
+        });
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Rigel");
@@ -211,12 +217,20 @@ public class Main extends Application {
         timeFlowControl.setId("timeFlowControl");
 
         //-----------------------------------------------------------------------------
+        // Display settings
+        //-----------------------------------------------------------------------------
+        expandCompressButton = new Button(EXPAND_ICON);
+        expandCompressButton.setFont(fontAwesome);
+
+        HBox displaySettings = new HBox(expandCompressButton);
+        //-----------------------------------------------------------------------------
         // Control bar
         //-----------------------------------------------------------------------------
         HBox controlBar = new HBox(
                 whereControl, verticalSeparator(),
                 whenControl, verticalSeparator(),
-                timeFlowControl
+                timeFlowControl, verticalSeparator(),
+                displaySettings
         );
         controlBar.setId("controlBar");
         return controlBar;

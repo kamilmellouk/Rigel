@@ -2,6 +2,7 @@ package ch.epfl.rigel.gui;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
