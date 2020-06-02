@@ -1,7 +1,6 @@
 package ch.epfl.rigel.gui;
 
 import javafx.geometry.Pos;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
