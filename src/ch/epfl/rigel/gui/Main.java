@@ -12,9 +12,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -54,7 +52,6 @@ public class Main extends Application {
     private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
     private SkyCanvasManager skyCanvasManager;
     private CityCatalogue cityCatalogue;
-    private Canvas canvas;
 
     public static void main(String[] args) {
         launch(args);
@@ -66,7 +63,7 @@ public class Main extends Application {
         viewingParametersBean.setFieldOfViewDeg(100);
 
         skyCanvasManager = createManager();
-        canvas = skyCanvasManager.canvas();
+        Canvas canvas = skyCanvasManager.canvas();
         cityCatalogue = createCityCatalogue();
 
         BorderPane mainPane = new BorderPane(
@@ -74,7 +71,7 @@ public class Main extends Application {
                 controlBar(),
                 null,
                 infoBar(),
-                null
+                settingsBar()
         );
 
         skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
@@ -199,9 +196,9 @@ public class Main extends Application {
         Button forwardButton = new Button(FORWARD_ICON);
         forwardButton.setFont(fontAwesome);
         forwardButton.setOnAction(e ->
-            acceleratorChoiceBox.setValue(NamedTimeAccelerator.values()[
-                    acceleratorChoiceBox.getValue().ordinal()+1 != NamedTimeAccelerator.values().length ?
-                            acceleratorChoiceBox.getValue().ordinal()+1 : 0])
+                acceleratorChoiceBox.setValue(NamedTimeAccelerator.values()[
+                        acceleratorChoiceBox.getValue().ordinal() + 1 != NamedTimeAccelerator.values().length ?
+                                acceleratorChoiceBox.getValue().ordinal() + 1 : 0])
         );
         forwardButton.setTooltip(new Tooltip("Fast forward"));
 
@@ -251,6 +248,15 @@ public class Main extends Application {
         BorderPane infoBar = new BorderPane(objectInfo, null, mousePos, null, fovDisplay);
         infoBar.setId("infoBar");
         return infoBar;
+    }
+
+    private VBox settingsBar() {
+        Text text = new Text("Display settings");
+        text.setId("settingsText");
+        CheckBox starsCheckBox = new CheckBox("Stars");
+        VBox vBox = new VBox(text, new Separator(), starsCheckBox);
+        vBox.setId("settingsBar");
+        return vBox;
     }
 
     /**

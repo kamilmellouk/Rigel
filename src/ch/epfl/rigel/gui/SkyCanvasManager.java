@@ -10,7 +10,9 @@ import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 import ch.epfl.rigel.math.RightOpenInterval;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.beans.value.ObservableValue;
@@ -48,7 +50,7 @@ public class SkyCanvasManager {
     private final ObservableDoubleValue mouseAzDeg;
     private final ObservableDoubleValue mouseAltDeg;
 
-    private boolean drawStars, drawAsterisms, drawPlanets, drawSun, drawMoon, drawHorizon, drawCardinalPoints, drawAtmosphere;
+    private BooleanProperty drawStars, drawAsterisms, drawPlanets, drawSun, drawMoon, drawHorizon, drawCardinalPoints, drawAtmosphere;
     private Color skyColor;
 
     /**
@@ -68,14 +70,14 @@ public class SkyCanvasManager {
         painter = new SkyCanvasPainter(canvas);
 
         // all display are initially active
-        drawStars = true;
-        drawAsterisms = true;
-        drawPlanets = true;
-        drawSun = true;
-        drawMoon = true;
-        drawHorizon = true;
-        drawCardinalPoints = true;
-        drawAtmosphere = true;
+        drawStars = new SimpleBooleanProperty(true);
+        drawAsterisms = new SimpleBooleanProperty(true);
+        drawPlanets = new SimpleBooleanProperty(true);
+        drawSun = new SimpleBooleanProperty(true);
+        drawMoon = new SimpleBooleanProperty(true);
+        drawHorizon = new SimpleBooleanProperty(true);
+        drawCardinalPoints = new SimpleBooleanProperty(true);
+        drawAtmosphere = new SimpleBooleanProperty(true);
 
         //-----------------------------------------------------------------------------
         // Events
@@ -115,28 +117,28 @@ public class SkyCanvasManager {
                             viewingParametersBean.setCenter(centerWithAltDiff(center, -5));
                             break;
                         case DIGIT1:
-                            drawStars = !drawStars;
+                            drawStars.set(!drawStars.get());
                             break;
                         case DIGIT2:
-                            drawAsterisms = !drawAsterisms;
+                            drawAsterisms.set(!drawAsterisms.get());
                             break;
                         case DIGIT3:
-                            drawPlanets = !drawPlanets;
+                            drawPlanets.set(!drawPlanets.get());
                             break;
                         case DIGIT4:
-                            drawSun = !drawSun;
+                            drawSun.set(!drawSun.get());
                             break;
                         case DIGIT5:
-                            drawMoon = !drawMoon;
+                            drawMoon.set(!drawMoon.get());
                             break;
                         case DIGIT6:
-                            drawHorizon = !drawHorizon;
+                            drawHorizon.set(!drawHorizon.get());
                             break;
                         case DIGIT7:
-                            drawCardinalPoints = !drawCardinalPoints;
+                            drawCardinalPoints.set(!drawCardinalPoints.get());
                             break;
                         case DIGIT8:
-                            drawAtmosphere = !drawAtmosphere;
+                            drawAtmosphere.set(!drawAtmosphere.get());
                             break;
                     }
                     updateSky();
@@ -334,15 +336,15 @@ public class SkyCanvasManager {
         ObservedSky observedSky = this.observedSky.getValue();
         StereographicProjection projection = this.projection.getValue();
         Transform planeToCanvas = this.planeToCanvas.getValue();
-        if (drawAtmosphere) painter.clear(skyColor);
+        if (drawAtmosphere.get()) painter.clear(skyColor);
         else painter.clear(Color.BLACK);
-        painter.drawStarsAsterisms(observedSky, projection, planeToCanvas, drawStars, drawAsterisms);
+        painter.drawStarsAsterisms(observedSky, projection, planeToCanvas, drawStars.get(), drawAsterisms.get());
         //painter.drawHorizontalGrid(projection, planeToCanvas);
-        if (drawPlanets) painter.drawPlanets(observedSky, projection, planeToCanvas);
-        if (drawSun) painter.drawSun(observedSky, projection, planeToCanvas);
-        if (drawMoon) painter.drawMoon(observedSky, projection, planeToCanvas);
-        if (drawHorizon) painter.drawHorizon(projection, planeToCanvas);
-        if (drawCardinalPoints) painter.drawCardinalPoints(projection, planeToCanvas);
+        if (drawPlanets.get()) painter.drawPlanets(observedSky, projection, planeToCanvas);
+        if (drawSun.get()) painter.drawSun(observedSky, projection, planeToCanvas);
+        if (drawMoon.get()) painter.drawMoon(observedSky, projection, planeToCanvas);
+        if (drawHorizon.get()) painter.drawHorizon(projection, planeToCanvas);
+        if (drawCardinalPoints.get()) painter.drawCardinalPoints(projection, planeToCanvas);
     }
 
     /**
@@ -386,4 +388,35 @@ public class SkyCanvasManager {
         }
     }
 
+    public BooleanProperty drawStarsProperty() {
+        return drawStars;
+    }
+
+    public BooleanProperty drawAsterismsProperty() {
+        return drawAsterisms;
+    }
+
+    public BooleanProperty drawPlanetsProperty() {
+        return drawPlanets;
+    }
+
+    public BooleanProperty drawSunProperty() {
+        return drawSun;
+    }
+
+    public BooleanProperty drawMoonProperty() {
+        return drawMoon;
+    }
+
+    public BooleanProperty drawHorizonProperty() {
+        return drawHorizon;
+    }
+
+    public BooleanProperty drawCardinalPointsProperty() {
+        return drawCardinalPoints;
+    }
+
+    public BooleanProperty drawAtmosphereProperty() {
+        return drawAtmosphere;
+    }
 }

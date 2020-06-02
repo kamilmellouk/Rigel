@@ -102,4 +102,14 @@
 #controlBar {
     -fx-spacing: 4;
     -fx-padding: 4;
+    -fx-background-color: #373e43;
+}
+
+#settingsBar {
+    -fx-spacing: 4;
+    -fx-padding: 4;
+}
+
+#settingsText {
+    -fx-fill: white;
 }
