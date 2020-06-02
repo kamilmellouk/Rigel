@@ -78,15 +78,16 @@ public class Main extends Application {
         skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
 
         HomePage homePage = new HomePage();
-        BorderPane homePane = homePage.getBorderPane();
+        VBox homePane = homePage.getPane();
 
         Scene scene = new Scene(homePane);
         scene.getStylesheets().add("/style.css");
 
-        // launch the program by clicking on the button start
-        homePage.getStartButton().setOnAction(
+        // launch the program by clicking any key
+        homePane.setOnKeyPressed(
                 e -> scene.setRoot(mainPane)
         );
+        homePane.requestFocus();
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Rigel");
