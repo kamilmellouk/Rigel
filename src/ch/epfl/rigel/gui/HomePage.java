@@ -1,8 +1,8 @@
 package ch.epfl.rigel.gui;
 
 import javafx.geometry.Pos;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -35,7 +35,7 @@ public class HomePage {
      */
     private GridPane title() {
         Text title = new Text("Rigel");
-        title.setStyle("-fx-font-size: 100pt; -fx-fill: white;");
+        title.setId("title");
         GridPane pane = new GridPane();
         pane.getChildren().add(title);
         pane.setAlignment(Pos.CENTER);
@@ -50,7 +50,7 @@ public class HomePage {
      */
     private GridPane welcomeMessage() {
         Text welcomeMessage = new Text("Welcome ! Please press any key to launch the program.");
-        welcomeMessage.setStyle("-fx-font-size: 20pt; -fx-fill: white;");
+        welcomeMessage.setId("welcomeMessage");
         welcomeMessage.setTextAlignment(TextAlignment.CENTER);
         GridPane pane = new GridPane();
         pane.getChildren().add(welcomeMessage);
