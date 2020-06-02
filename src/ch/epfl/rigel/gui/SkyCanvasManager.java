@@ -49,9 +49,7 @@ public class SkyCanvasManager {
     private final ObservableDoubleValue mouseAltDeg;
 
     private boolean stars, asterisms, planets, sun, moon, horizon, cardinalPoints, atmosphere;
-
-    private boolean isNight;
-
+    private Color color;
 
     /**
      * Constructor of a sky canvas manager
@@ -117,37 +115,30 @@ public class SkyCanvasManager {
                             break;
                         case DIGIT1:
                             stars = !stars;
-                            updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight, atmosphere);
                             break;
                         case DIGIT2:
                             asterisms = !asterisms;
-                            updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight, atmosphere);
                             break;
                         case DIGIT3:
                             planets = !planets;
-                            updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight, atmosphere);
                             break;
                         case DIGIT4:
                             sun = !sun;
-                            updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight, atmosphere);
                             break;
                         case DIGIT5:
                             moon = !moon;
-                            updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight, atmosphere);
                             break;
                         case DIGIT6:
                             horizon = !horizon;
-                            updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight, atmosphere);
                             break;
                         case DIGIT7:
                             cardinalPoints = !cardinalPoints;
-                            updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight, atmosphere);
                             break;
                         case DIGIT8:
                             atmosphere = !atmosphere;
-                            updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight, atmosphere);
                             break;
                     }
+                    updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, atmosphere, color);
                     e.consume();
                 }
         );
@@ -162,7 +153,7 @@ public class SkyCanvasManager {
                     CelestialObject objUnderMouse = getObjUnderMouse();
                     if (objUnderMouse != null) {
                         GraphicsContext ctx = canvas.getGraphicsContext2D();
-                        ctx.setFill(Color.web("#373e43"));
+                        ctx.setFill(Color.DARKBLUE);
                         ctx.fillRect(m.getX(), m.getY(), 230, 65);
                         ctx.setStroke(Color.WHITE);
                         ctx.setLineWidth(1);
@@ -186,7 +177,7 @@ public class SkyCanvasManager {
         );
 
         projection.addListener(
-                (p, o, n) -> updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight, atmosphere)
+                (p, o, n) -> updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, atmosphere, color)
         );
 
         observedSky = Bindings.createObjectBinding(
@@ -203,8 +194,17 @@ public class SkyCanvasManager {
         );
 
         observedSky.addListener((p, o, n) -> {
-                    isNight = n.sunHorPos().alt() < 0;
-                    updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight, atmosphere);
+                    double altDeg = n.sunHorPos().altDeg();
+                    if (altDeg <= -15) {
+                        color = Color.BLACK;
+                    } else if (altDeg >= 15) {
+                        color = Color.rgb(0, 195, 255);
+                    } else {
+                        int greenValue = (int) ((195 * (altDeg + 15)) / 30d);
+                        int blueValue = (int) ((255 * (altDeg + 15)) / 30d);
+                        color = Color.rgb(0, greenValue, blueValue);
+                    }
+                    updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, atmosphere, color);
                 }
         );
 
@@ -223,7 +223,7 @@ public class SkyCanvasManager {
         );
 
         planeToCanvas.addListener(
-                (p, o, n) -> updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight, atmosphere)
+                (p, o, n) -> updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, atmosphere, color)
         );
 
         objUnderMouse = Bindings.createObjectBinding(
@@ -334,16 +334,15 @@ public class SkyCanvasManager {
      * @param moon           boolean indicating whether to draw the moon
      * @param horizon        boolean indicating whether to draw the horizon
      * @param cardinalPoints boolean indicating whether to draw cardinal points
-     * @param isNight        boolean indicating whether to draw the sky blue or black
      * @param atmosphere     boolean inditating whether to ignore or not the atmosphere
      */
     private void updateSky(boolean stars, boolean asterisms, boolean planets, boolean sun, boolean moon,
-                           boolean horizon, boolean cardinalPoints, boolean isNight, boolean atmosphere) {
+                           boolean horizon, boolean cardinalPoints, boolean atmosphere, Color color) {
         ObservedSky observedSky = this.observedSky.getValue();
         StereographicProjection projection = this.projection.getValue();
         Transform planeToCanvas = this.planeToCanvas.getValue();
-        if(atmosphere) painter.clear(isNight);
-        else painter.clear(true);
+        if (atmosphere) painter.clear(color);
+        else painter.clear(Color.BLACK);
         painter.drawStarsAsterisms(observedSky, projection, planeToCanvas, stars, asterisms);
         painter.drawHorizontalGrid(projection, planeToCanvas);
         if (planets) painter.drawPlanets(observedSky, projection, planeToCanvas);
