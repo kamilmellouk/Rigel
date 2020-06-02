@@ -203,8 +203,7 @@ public class SkyCanvasManager {
         );
 
         observedSky.addListener((p, o, n) -> {
-                    if (n.sunHorPos().alt() < 0) isNight = true;
-                    else isNight = false;
+                    isNight = n.sunHorPos().alt() < 0;
                     updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, isNight, atmosphere);
                 }
         );
