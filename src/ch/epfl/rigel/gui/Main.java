@@ -269,20 +269,35 @@ public class Main extends Application {
         text.setId("settingsText");
         CheckBox starsCheckBox = new CheckBox("Stars");
         starsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawStarsProperty());
+        starsCheckBox.setTooltip(new Tooltip("Show stars - 1"));
+
         CheckBox asterismsCheckBox = new CheckBox("Asterisms");
         asterismsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAsterismsProperty());
+        asterismsCheckBox.setTooltip(new Tooltip("Show asterisms - 2"));
+
         CheckBox planetsCheckBox = new CheckBox("Planets");
         planetsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawPlanetsProperty());
+        planetsCheckBox.setTooltip(new Tooltip("Show planets - 3"));
+
         CheckBox sunCheckBox = new CheckBox("Sun");
         sunCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawSunProperty());
+        sunCheckBox.setTooltip(new Tooltip("Show sun - 3"));
+
         CheckBox moonCheckBox = new CheckBox("Moon");
         moonCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawMoonProperty());
+        moonCheckBox.setTooltip(new Tooltip("Show moon - 4"));
+
         CheckBox horizonCheckBox = new CheckBox("Horizon");
         horizonCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawHorizonProperty());
+        horizonCheckBox.setTooltip(new Tooltip("Show horizon - 5"));
+
         CheckBox cardinalPointsCheckBox = new CheckBox("Cardinal points");
         cardinalPointsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawCardinalPointsProperty());
+        cardinalPointsCheckBox.setTooltip(new Tooltip("Show cardinal points - 6"));
+
         CheckBox atmosphereCheckBox = new CheckBox("Atmosphere");
         atmosphereCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAtmosphereProperty());
+        atmosphereCheckBox.setTooltip(new Tooltip("Show atmosphere - 7"));
         VBox vBox = new VBox(text, new Separator(), starsCheckBox, asterismsCheckBox, planetsCheckBox, sunCheckBox, moonCheckBox, horizonCheckBox, cardinalPointsCheckBox, atmosphereCheckBox);
         vBox.setId("settingsBar");
         return vBox;
