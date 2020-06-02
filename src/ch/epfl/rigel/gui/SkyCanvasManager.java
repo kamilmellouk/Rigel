@@ -50,7 +50,14 @@ public class SkyCanvasManager {
     private final ObservableDoubleValue mouseAzDeg;
     private final ObservableDoubleValue mouseAltDeg;
 
-    private BooleanProperty drawStars, drawAsterisms, drawPlanets, drawSun, drawMoon, drawHorizon, drawCardinalPoints, drawAtmosphere;
+    private final BooleanProperty drawStars = new SimpleBooleanProperty(true);
+    private final BooleanProperty drawAsterisms = new SimpleBooleanProperty(true);
+    private final BooleanProperty drawPlanets = new SimpleBooleanProperty(true);
+    private final BooleanProperty drawSun = new SimpleBooleanProperty(true);
+    private final BooleanProperty drawMoon = new SimpleBooleanProperty(true);
+    private final BooleanProperty drawHorizon = new SimpleBooleanProperty(true);
+    private final BooleanProperty drawCardinalPoints = new SimpleBooleanProperty(true);
+    private final BooleanProperty drawAtmosphere = new SimpleBooleanProperty(false);
     private Color skyColor;
 
     /**
@@ -68,19 +75,6 @@ public class SkyCanvasManager {
 
         canvas = new Canvas();
         painter = new SkyCanvasPainter(canvas);
-
-        // all display are initially active
-        drawStars = new SimpleBooleanProperty(true);
-        drawStars.addListener(e -> {
-
-        });
-        drawAsterisms = new SimpleBooleanProperty(true);
-        drawPlanets = new SimpleBooleanProperty(true);
-        drawSun = new SimpleBooleanProperty(true);
-        drawMoon = new SimpleBooleanProperty(true);
-        drawHorizon = new SimpleBooleanProperty(true);
-        drawCardinalPoints = new SimpleBooleanProperty(true);
-        drawAtmosphere = new SimpleBooleanProperty(true);
 
         //-----------------------------------------------------------------------------
         // Events
@@ -149,26 +143,27 @@ public class SkyCanvasManager {
                 }
         );
 
-        canvas.setOnMouseClicked(m -> {
+        canvas.setOnMouseClicked(e -> {
             if (!canvas.isFocused()) canvas.requestFocus();
             updateSky();
-            switch (m.getButton()) {
+            switch (e.getButton()) {
                 case MIDDLE:
                     viewingParametersBean.setFieldOfViewDeg(100);
                     break;
                 case SECONDARY:
+                    // display information of the object under mouse
                     CelestialObject objUnderMouse = getObjUnderMouse();
                     if (objUnderMouse != null) {
                         GraphicsContext ctx = canvas.getGraphicsContext2D();
                         ctx.setFill(Color.valueOf("#373e43"));
-                        ctx.fillRect(m.getX(), m.getY(), 230, 65);
+                        ctx.fillRect(e.getX(), e.getY(), 230, 65);
                         ctx.setStroke(Color.WHITE);
                         ctx.setLineWidth(1);
                         ctx.strokeText(" Name : " + objUnderMouse.info() + "\n" +
                                         " Position : " + objUnderMouse.equatorialPos() + "\n" +
                                         " Angular Size : " + objUnderMouse.angularSize() + "\n" +
                                         " Magnitude : " + objUnderMouse.magnitude(),
-                                m.getX(), m.getY());
+                                e.getX(), e.getY());
                     }
                     break;
             }
@@ -266,6 +261,15 @@ public class SkyCanvasManager {
                 () -> mouseHorPos.getValue().altDeg(),
                 mouseHorPos
         );
+
+        drawStars.addListener((p, o, n) -> updateSky());
+        drawAsterisms.addListener((p, o, n) -> updateSky());
+        drawPlanets.addListener((p, o, n) -> updateSky());
+        drawSun.addListener((p, o, n) -> updateSky());
+        drawMoon.addListener((p, o, n) -> updateSky());
+        drawHorizon.addListener((p, o, n) -> updateSky());
+        drawCardinalPoints.addListener((p, o, n) -> updateSky());
+        drawAtmosphere.addListener((p, o, n) -> updateSky());
     }
 
     /**
