@@ -206,6 +206,7 @@ public class Main extends Application {
         Button skipButton = new Button(SKIP_ICON);
         skipButton.setFont(fontAwesome);
         skipButton.setOnAction(e -> dateTimeBean.setDate(dateTimeBean.getDate().plusYears(1)));
+        skipButton.disableProperty().bind(timeAnimator.runningProperty());
         skipButton.setTooltip(new Tooltip("Skip forward"));
 
         HBox timeFlowControl = new HBox(acceleratorChoiceBox, resetButton, playPauseButton, forwardButton, skipButton);
@@ -254,22 +255,31 @@ public class Main extends Application {
     private VBox settingsBar() {
         Text displaySettingText = new Text("Display settings:");
         displaySettingText.setId("settingsText");
+
         CheckBox starsCheckBox = new CheckBox("Stars");
         starsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawStarsProperty());
+        starsCheckBox.setTooltip(new Tooltip("Show stars - 1"));
         CheckBox asterismsCheckBox = new CheckBox("Asterisms");
         asterismsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAsterismsProperty());
+        asterismsCheckBox.setTooltip(new Tooltip("Show asterisms - 2"));
         CheckBox planetsCheckBox = new CheckBox("Planets");
         planetsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawPlanetsProperty());
+        planetsCheckBox.setTooltip(new Tooltip("Show planets - 3"));
         CheckBox sunCheckBox = new CheckBox("Sun");
         sunCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawSunProperty());
+        sunCheckBox.setTooltip(new Tooltip("Show sun - 4"));
         CheckBox moonCheckBox = new CheckBox("Moon");
         moonCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawMoonProperty());
+        moonCheckBox.setTooltip(new Tooltip("Show moon - 5"));
         CheckBox horizonCheckBox = new CheckBox("Horizon");
         horizonCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawHorizonProperty());
+        horizonCheckBox.setTooltip(new Tooltip("Show horizon - 6"));
         CheckBox cardinalPointsCheckBox = new CheckBox("Cardinal points");
         cardinalPointsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawCardinalPointsProperty());
+        cardinalPointsCheckBox.setTooltip(new Tooltip("Show cardinal points - 7"));
         CheckBox atmosphereCheckBox = new CheckBox("Atmosphere");
         atmosphereCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAtmosphereProperty());
+        atmosphereCheckBox.setTooltip(new Tooltip("Show atmosphere - 8"));
 
         Text fovSliderText = new Text("Field of view (°):");
         fovSliderText.setId("fovSliderText");
