@@ -48,8 +48,8 @@ public class SkyCanvasManager {
     private final ObservableDoubleValue mouseAzDeg;
     private final ObservableDoubleValue mouseAltDeg;
 
-    private boolean stars, asterisms, planets, sun, moon, horizon, cardinalPoints, atmosphere;
-    private Color color;
+    private boolean drawStars, drawAsterisms, drawPlanets, drawSun, drawMoon, drawHorizon, drawCardinalPoints, drawAtmosphere;
+    private Color skyColor;
 
     /**
      * Constructor of a sky canvas manager
@@ -67,14 +67,15 @@ public class SkyCanvasManager {
         canvas = new Canvas();
         painter = new SkyCanvasPainter(canvas);
 
-        stars = true;
-        asterisms = true;
-        planets = true;
-        sun = true;
-        moon = true;
-        horizon = true;
-        cardinalPoints = true;
-        atmosphere = true;
+        // all display are initially active
+        drawStars = true;
+        drawAsterisms = true;
+        drawPlanets = true;
+        drawSun = true;
+        drawMoon = true;
+        drawHorizon = true;
+        drawCardinalPoints = true;
+        drawAtmosphere = true;
 
         //-----------------------------------------------------------------------------
         // Events
@@ -114,31 +115,31 @@ public class SkyCanvasManager {
                             viewingParametersBean.setCenter(centerWithAltDiff(center, -5));
                             break;
                         case DIGIT1:
-                            stars = !stars;
+                            drawStars = !drawStars;
                             break;
                         case DIGIT2:
-                            asterisms = !asterisms;
+                            drawAsterisms = !drawAsterisms;
                             break;
                         case DIGIT3:
-                            planets = !planets;
+                            drawPlanets = !drawPlanets;
                             break;
                         case DIGIT4:
-                            sun = !sun;
+                            drawSun = !drawSun;
                             break;
                         case DIGIT5:
-                            moon = !moon;
+                            drawMoon = !drawMoon;
                             break;
                         case DIGIT6:
-                            horizon = !horizon;
+                            drawHorizon = !drawHorizon;
                             break;
                         case DIGIT7:
-                            cardinalPoints = !cardinalPoints;
+                            drawCardinalPoints = !drawCardinalPoints;
                             break;
                         case DIGIT8:
-                            atmosphere = !atmosphere;
+                            drawAtmosphere = !drawAtmosphere;
                             break;
                     }
-                    updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, atmosphere, color);
+                    updateSky(drawStars, drawAsterisms, drawPlanets, drawSun, drawMoon, drawHorizon, drawCardinalPoints, drawAtmosphere, skyColor);
                     e.consume();
                 }
         );
@@ -177,7 +178,7 @@ public class SkyCanvasManager {
         );
 
         projection.addListener(
-                (p, o, n) -> updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, atmosphere, color)
+                (p, o, n) -> updateSky(drawStars, drawAsterisms, drawPlanets, drawSun, drawMoon, drawHorizon, drawCardinalPoints, drawAtmosphere, skyColor)
         );
 
         observedSky = Bindings.createObjectBinding(
@@ -194,17 +195,18 @@ public class SkyCanvasManager {
         );
 
         observedSky.addListener((p, o, n) -> {
+                    // define the color of the sky depending on the vertical position of the sun
                     double altDeg = n.sunHorPos().altDeg();
-                    if (altDeg <= -15) {
-                        color = Color.BLACK;
-                    } else if (altDeg >= 15) {
-                        color = Color.rgb(0, 195, 255);
+                    if (altDeg <= -20) {
+                        skyColor = Color.BLACK;
+                    } else if (altDeg >= 20) {
+                        skyColor = Color.rgb(0, 195, 255);
                     } else {
-                        int greenValue = (int) ((195 * (altDeg + 15)) / 30d);
-                        int blueValue = (int) ((255 * (altDeg + 15)) / 30d);
-                        color = Color.rgb(0, greenValue, blueValue);
+                        int greenValue = (int) ((195 * (altDeg + 20)) / 40d);
+                        int blueValue = (int) ((255 * (altDeg + 20)) / 40d);
+                        skyColor = Color.rgb(0, greenValue, blueValue);
                     }
-                    updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, atmosphere, color);
+                    updateSky(drawStars, drawAsterisms, drawPlanets, drawSun, drawMoon, drawHorizon, drawCardinalPoints, drawAtmosphere, skyColor);
                 }
         );
 
@@ -223,7 +225,7 @@ public class SkyCanvasManager {
         );
 
         planeToCanvas.addListener(
-                (p, o, n) -> updateSky(stars, asterisms, planets, sun, moon, horizon, cardinalPoints, atmosphere, color)
+                (p, o, n) -> updateSky(drawStars, drawAsterisms, drawPlanets, drawSun, drawMoon, drawHorizon, drawCardinalPoints, drawAtmosphere, skyColor)
         );
 
         objUnderMouse = Bindings.createObjectBinding(
@@ -344,7 +346,7 @@ public class SkyCanvasManager {
         if (atmosphere) painter.clear(color);
         else painter.clear(Color.BLACK);
         painter.drawStarsAsterisms(observedSky, projection, planeToCanvas, stars, asterisms);
-        painter.drawHorizontalGrid(projection, planeToCanvas);
+        //painter.drawHorizontalGrid(projection, planeToCanvas);
         if (planets) painter.drawPlanets(observedSky, projection, planeToCanvas);
         if (sun) painter.drawSun(observedSky, projection, planeToCanvas);
         if (moon) painter.drawMoon(observedSky, projection, planeToCanvas);
