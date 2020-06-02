@@ -162,7 +162,7 @@ public class SkyCanvasManager {
                     CelestialObject objUnderMouse = getObjUnderMouse();
                     if (objUnderMouse != null) {
                         GraphicsContext ctx = canvas.getGraphicsContext2D();
-                        ctx.setFill(Color.DARKBLUE);
+                        ctx.setFill(Color.web("#373e43"));
                         ctx.fillRect(m.getX(), m.getY(), 230, 65);
                         ctx.setStroke(Color.WHITE);
                         ctx.setLineWidth(1);

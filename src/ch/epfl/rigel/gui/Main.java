@@ -45,6 +45,8 @@ public class Main extends Application {
     private static final String RESET_ICON = "\uf0e2";
     private static final String PLAY_ICON = "\uf04b";
     private static final String PAUSE_ICON = "\uf04c";
+    private static final String FORWARD_ICON = "\uf04e";
+    private static final String SKIP_ICON = "\uf051";
 
     private final ObserverLocationBean observerLocationBean = new ObserverLocationBean();
     private final DateTimeBean dateTimeBean = new DateTimeBean();
@@ -91,7 +93,7 @@ public class Main extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Rigel");
-        primaryStage.setMinWidth(1125);
+        primaryStage.setMinWidth(1200);
         primaryStage.setMinHeight(700);
         primaryStage.show();
     }
@@ -191,16 +193,24 @@ public class Main extends Application {
         Button playPauseButton = new Button(PLAY_ICON);
         playPauseButton.setFont(fontAwesome);
         playPauseButton.textProperty().bind(when(timeAnimator.runningProperty()).then(PAUSE_ICON).otherwise(PLAY_ICON));
-        playPauseButton.setOnAction(e -> {
-            if (!timeAnimator.getRunning()) {
-                timeAnimator.start();
-            } else {
-                timeAnimator.stop();
-            }
-        });
+        playPauseButton.setOnAction(e -> timeAnimator.startStop());
         playPauseButton.setTooltip(new Tooltip("Start/Stop"));
 
-        HBox timeFlowControl = new HBox(acceleratorChoiceBox, resetButton, playPauseButton);
+        Button forwardButton = new Button(FORWARD_ICON);
+        forwardButton.setFont(fontAwesome);
+        forwardButton.setOnAction(e ->
+            acceleratorChoiceBox.setValue(NamedTimeAccelerator.values()[
+                    acceleratorChoiceBox.getValue().ordinal()+1 != NamedTimeAccelerator.values().length ?
+                            acceleratorChoiceBox.getValue().ordinal()+1 : 0])
+        );
+        forwardButton.setTooltip(new Tooltip("Fast forward"));
+
+        Button skipButton = new Button(SKIP_ICON);
+        skipButton.setFont(fontAwesome);
+        skipButton.setOnAction(e -> dateTimeBean.setDate(dateTimeBean.getDate().plusYears(1)));
+        skipButton.setTooltip(new Tooltip("Skip forward"));
+
+        HBox timeFlowControl = new HBox(acceleratorChoiceBox, resetButton, playPauseButton, forwardButton, skipButton);
         timeFlowControl.setId("timeFlowControl");
 
         //-----------------------------------------------------------------------------
