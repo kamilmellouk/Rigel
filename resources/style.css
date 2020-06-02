@@ -50,5 +50,56 @@
 #infoBar {
     -fx-padding: 4;
     -fx-background-color: #373e43;
-    -fx-text-fill: white;
+}
+
+#fovDisplay {
+    -fx-fill: white;
+}
+
+#objectInfo {
+    -fx-fill: white;
+}
+
+#mousePos {
+    -fx-fill: white;
+}
+
+#cityComboBox {
+    -fx-pref-width: 180;
+}
+
+#tf {
+    -fx-pref-width: 60;
+    -fx-alignment: baseline-right;
+}
+
+#whereControl {
+    -fx-spacing: inherit;
+    -fx-alignment: baseline-left;
+}
+
+#datePicker {
+    -fx-pref-width: 120;
+}
+
+#timeField {
+    -fx-pref-width: 75;
+    -fx-alignment: baseline-right;
+}
+
+#zoneIdComboBox {
+    -fx-pref-width: 180;
+}
+
+#whenControl {
+    -fx-spacing: inherit;
+}
+
+#timeFlowControl {
+    -fx-spacing: inherit;
+}
+
+#controlBar {
+    -fx-spacing: 4;
+    -fx-padding: 4;
 }

@@ -41,6 +41,11 @@ import static javafx.beans.binding.Bindings.when;
  */
 public class Main extends Application {
 
+    // Strings used for button icons
+    private static final String RESET_ICON = "\uf0e2";
+    private static final String PLAY_ICON = "\uf04b";
+    private static final String PAUSE_ICON = "\uf04c";
+
     private final ObserverLocationBean observerLocationBean = new ObserverLocationBean();
     private final DateTimeBean dateTimeBean = new DateTimeBean();
     private final ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
@@ -48,11 +53,6 @@ public class Main extends Application {
     private SkyCanvasManager skyCanvasManager;
     private CityCatalogue cityCatalogue;
     private Canvas canvas;
-
-    // Strings used for button icons
-    private static final String RESET_ICON = "\uf0e2";
-    private static final String PLAY_ICON = "\uf04b";
-    private static final String PAUSE_ICON = "\uf04c";
 
     public static void main(String[] args) {
         launch(args);
@@ -82,7 +82,7 @@ public class Main extends Application {
         BorderPane homePane = homePage.getBorderPane();
 
         Scene scene = new Scene(homePane);
-        scene.getStylesheets().add("/darkmode.css");
+        scene.getStylesheets().add("/style.css");
 
         // launch the program by clicking on the button start
         homePage.getStartButton().setOnAction(
@@ -110,6 +110,7 @@ public class Main extends Application {
         TextField latTextField = createLonLatTextField(false, 46.52);
 
         ComboBox<City> cityComboBox = new ComboBox<>();
+        cityComboBox.setId("cityComboBox");
         cityComboBox.setItems(FXCollections.observableList(cityCatalogue.cities()));
         cityComboBox.setValue(cityCatalogue.cities().get(0));
         cityComboBox.setOnAction(e -> {
@@ -117,26 +118,25 @@ public class Main extends Application {
             lonTextField.setText(String.format("%.2f", coordinates.lonDeg()));
             latTextField.setText(String.format("%.2f", coordinates.latDeg()));
         });
-        cityComboBox.setStyle("-fx-pref-width: 180");
         HBox whereControl = new HBox(
                 new Label("Longitude (°) :"), lonTextField,
                 new Label("Latitude (°) :"), latTextField,
                 cityComboBox
         );
-        whereControl.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
+        whereControl.setId("whereControl");
 
         //-----------------------------------------------------------------------------
         // Observation instant
         //-----------------------------------------------------------------------------
         // Date selection
         DatePicker datePicker = new DatePicker();
-        datePicker.setStyle("-fx-pref-width: 120");
+        datePicker.setId("datePicker");
         datePicker.setValue(LocalDate.now());
         dateTimeBean.dateProperty().bindBidirectional(datePicker.valueProperty());
 
         // Time selection
         TextField timeField = new TextField();
-        timeField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
+        timeField.setId("timeField");
         DateTimeFormatter hmsFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalTimeStringConverter stringConverter = new LocalTimeStringConverter(hmsFormatter, hmsFormatter);
         TextFormatter<LocalTime> timeFormatter = new TextFormatter<>(stringConverter);
@@ -146,12 +146,12 @@ public class Main extends Application {
 
         // Timezone selection
         ComboBox<ZoneId> zoneIdComboBox = new ComboBox<>();
+        zoneIdComboBox.setId("zoneIdComboBox");
         List<String> availableZoneIds = new ArrayList<>(ZoneId.getAvailableZoneIds());
         Collections.sort(availableZoneIds);
         List<ZoneId> zoneIdList = new ArrayList<>();
         availableZoneIds.forEach(e -> zoneIdList.add(ZoneId.of(e)));
         zoneIdComboBox.setItems(FXCollections.observableList(zoneIdList));
-        zoneIdComboBox.setStyle("-fx-pref-width: 180");
         zoneIdComboBox.setValue(ZoneId.systemDefault());
         zoneIdComboBox.setTooltip(new Tooltip("Time zone"));
         dateTimeBean.zoneProperty().bindBidirectional(zoneIdComboBox.valueProperty());
@@ -160,7 +160,7 @@ public class Main extends Application {
                 new Label("Date :"), datePicker,
                 new Label("Time :"), timeField, zoneIdComboBox
         );
-        whenControl.setStyle("-fx-spacing: inherit;");
+        whenControl.setId("whenControl");
         whenControl.disableProperty().bind(timeAnimator.runningProperty());
 
         //-----------------------------------------------------------------------------
@@ -199,8 +199,9 @@ public class Main extends Application {
             }
         });
         playPauseButton.setTooltip(new Tooltip("Start/Stop"));
+
         HBox timeFlowControl = new HBox(acceleratorChoiceBox, resetButton, playPauseButton);
-        timeFlowControl.setStyle("-fx-spacing: inherit");
+        timeFlowControl.setId("timeFlowControl");
 
         //-----------------------------------------------------------------------------
         // Control bar
@@ -210,7 +211,7 @@ public class Main extends Application {
                 whenControl, verticalSeparator(),
                 timeFlowControl
         );
-        controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
+        controlBar.setId("controlBar");
         return controlBar;
     }
 
@@ -221,21 +222,24 @@ public class Main extends Application {
      */
     private BorderPane infoBar() {
         Text fovDisplay = new Text();
+        fovDisplay.setId("fovDisplay");
         fovDisplay.textProperty().bind(Bindings.format(Locale.ROOT, "Field of view : %.1f°",
                 viewingParametersBean.fieldOfViewDegProperty()));
 
         Text objectInfo = new Text();
+        objectInfo.setId("objectInfo");
         objectInfo.textProperty().bind(Bindings.createStringBinding(
                 () -> skyCanvasManager.getObjUnderMouse() != null ? skyCanvasManager.getObjUnderMouse().info() : "",
                 skyCanvasManager.objUnderMouseProperty()));
 
         Text mousePos = new Text();
+        mousePos.setId("mousePos");
         mousePos.textProperty().bind(Bindings.format(Locale.ROOT, "Azimut : %.2f°, Altitude : %.2f°",
                 skyCanvasManager.mouseAzDegProperty(),
                 skyCanvasManager.mouseAltDegProperty()));
 
         BorderPane infoBar = new BorderPane(objectInfo, null, mousePos, null, fovDisplay);
-        infoBar.setStyle("-fx-padding: 4; -fx-background-color: #373e43; -fx-text-fill: white;");
+        infoBar.setId("infoBar");
         return infoBar;
     }
 
@@ -279,7 +283,7 @@ public class Main extends Application {
      */
     private TextField createLonLatTextField(boolean isLon, double defaultValue) {
         TextField tf = new TextField();
-        tf.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
+        tf.setId("tf");
         // Creating the right text formatter
         NumberStringConverter stringConverter = new NumberStringConverter("#0.00");
         UnaryOperator<TextFormatter.Change> filter = (change -> {
