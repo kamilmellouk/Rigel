@@ -139,13 +139,14 @@ public class SkyCanvasManager {
                             drawAtmosphere = !drawAtmosphere;
                             break;
                     }
-                    updateSky(drawStars, drawAsterisms, drawPlanets, drawSun, drawMoon, drawHorizon, drawCardinalPoints, drawAtmosphere, skyColor);
+                    updateSky();
                     e.consume();
                 }
         );
 
         canvas.setOnMouseClicked(m -> {
             if (!canvas.isFocused()) canvas.requestFocus();
+            updateSky();
             switch (m.getButton()) {
                 case MIDDLE:
                     viewingParametersBean.setFieldOfViewDeg(100);
@@ -154,7 +155,7 @@ public class SkyCanvasManager {
                     CelestialObject objUnderMouse = getObjUnderMouse();
                     if (objUnderMouse != null) {
                         GraphicsContext ctx = canvas.getGraphicsContext2D();
-                        ctx.setFill(Color.DARKBLUE);
+                        ctx.setFill(Color.valueOf("#373e43"));
                         ctx.fillRect(m.getX(), m.getY(), 230, 65);
                         ctx.setStroke(Color.WHITE);
                         ctx.setLineWidth(1);
@@ -178,7 +179,7 @@ public class SkyCanvasManager {
         );
 
         projection.addListener(
-                (p, o, n) -> updateSky(drawStars, drawAsterisms, drawPlanets, drawSun, drawMoon, drawHorizon, drawCardinalPoints, drawAtmosphere, skyColor)
+                (p, o, n) -> updateSky()
         );
 
         observedSky = Bindings.createObjectBinding(
@@ -206,7 +207,7 @@ public class SkyCanvasManager {
                         int blueValue = (int) ((255 * (altDeg + 20)) / 40d);
                         skyColor = Color.rgb(0, greenValue, blueValue);
                     }
-                    updateSky(drawStars, drawAsterisms, drawPlanets, drawSun, drawMoon, drawHorizon, drawCardinalPoints, drawAtmosphere, skyColor);
+                    updateSky();
                 }
         );
 
@@ -225,7 +226,7 @@ public class SkyCanvasManager {
         );
 
         planeToCanvas.addListener(
-                (p, o, n) -> updateSky(drawStars, drawAsterisms, drawPlanets, drawSun, drawMoon, drawHorizon, drawCardinalPoints, drawAtmosphere, skyColor)
+                (p, o, n) -> updateSky()
         );
 
         objUnderMouse = Bindings.createObjectBinding(
@@ -328,30 +329,20 @@ public class SkyCanvasManager {
 
     /**
      * Updating all drawable elements of the sky
-     *
-     * @param stars          boolean indicating whether to draw stars
-     * @param asterisms      boolean indicating whether to draw asterisms
-     * @param planets        boolean indicating whether to draw planets
-     * @param sun            boolean indicating whether to draw the sun
-     * @param moon           boolean indicating whether to draw the moon
-     * @param horizon        boolean indicating whether to draw the horizon
-     * @param cardinalPoints boolean indicating whether to draw cardinal points
-     * @param atmosphere     boolean inditating whether to ignore or not the atmosphere
      */
-    private void updateSky(boolean stars, boolean asterisms, boolean planets, boolean sun, boolean moon,
-                           boolean horizon, boolean cardinalPoints, boolean atmosphere, Color color) {
+    private void updateSky() {
         ObservedSky observedSky = this.observedSky.getValue();
         StereographicProjection projection = this.projection.getValue();
         Transform planeToCanvas = this.planeToCanvas.getValue();
-        if (atmosphere) painter.clear(color);
+        if (drawAtmosphere) painter.clear(skyColor);
         else painter.clear(Color.BLACK);
-        painter.drawStarsAsterisms(observedSky, projection, planeToCanvas, stars, asterisms);
+        painter.drawStarsAsterisms(observedSky, projection, planeToCanvas, drawStars, drawAsterisms);
         //painter.drawHorizontalGrid(projection, planeToCanvas);
-        if (planets) painter.drawPlanets(observedSky, projection, planeToCanvas);
-        if (sun) painter.drawSun(observedSky, projection, planeToCanvas);
-        if (moon) painter.drawMoon(observedSky, projection, planeToCanvas);
-        if (horizon) painter.drawHorizon(projection, planeToCanvas);
-        if (cardinalPoints) painter.drawCardinalPoints(projection, planeToCanvas);
+        if (drawPlanets) painter.drawPlanets(observedSky, projection, planeToCanvas);
+        if (drawSun) painter.drawSun(observedSky, projection, planeToCanvas);
+        if (drawMoon) painter.drawMoon(observedSky, projection, planeToCanvas);
+        if (drawHorizon) painter.drawHorizon(projection, planeToCanvas);
+        if (drawCardinalPoints) painter.drawCardinalPoints(projection, planeToCanvas);
     }
 
     /**
