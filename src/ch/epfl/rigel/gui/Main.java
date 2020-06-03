@@ -200,10 +200,13 @@ public class Main extends Application {
         // Select the next accelerator
         Button forwardButton = new Button(FORWARD_ICON);
         forwardButton.setFont(fontAwesome);
-        forwardButton.setOnAction(e ->
-                acceleratorChoiceBox.setValue(NamedTimeAccelerator.values()[
-                        acceleratorChoiceBox.getValue().ordinal() + 1 != NamedTimeAccelerator.values().length ?
-                                acceleratorChoiceBox.getValue().ordinal() + 1 : 0])
+        forwardButton.setOnAction(e -> {
+                    timeAnimator.startStop();
+                    acceleratorChoiceBox.setValue(NamedTimeAccelerator.values()[
+                            acceleratorChoiceBox.getValue().ordinal() + 1 != NamedTimeAccelerator.values().length ?
+                                    acceleratorChoiceBox.getValue().ordinal() + 1 : 0]);
+                    timeAnimator.startStop();
+                }
         );
         forwardButton.setTooltip(new Tooltip("Fast forward"));
 
