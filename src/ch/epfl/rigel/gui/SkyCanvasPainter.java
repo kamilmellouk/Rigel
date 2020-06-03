@@ -15,9 +15,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.scene.transform.Transform;
 
 import java.util.List;
@@ -30,12 +27,12 @@ import java.util.List;
  */
 public class SkyCanvasPainter {
 
-    private final Canvas canvas;
-    private final GraphicsContext ctx;
-
     // Constants used to compute the on-screen diameter of an object
     private static final ClosedInterval MAG_INTERVAL = ClosedInterval.of(-2, 5);
     private static final double ZERO_FIVE_DEG_TO_RAD = Angle.ofDeg(0.5);
+
+    private final Canvas canvas;
+    private final GraphicsContext ctx;
 
     /**
      * Constructor of a Painter with a given canvas

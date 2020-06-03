@@ -51,7 +51,6 @@ public class Main extends Application {
     private final ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
     private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
     private SkyCanvasManager skyCanvasManager;
-    private CityCatalogue cityCatalogue;
 
     public static void main(String[] args) {
         launch(args);
@@ -64,7 +63,6 @@ public class Main extends Application {
 
         skyCanvasManager = createManager();
         Canvas canvas = skyCanvasManager.canvas();
-        cityCatalogue = createCityCatalogue();
 
         BorderPane mainPane = new BorderPane(
                 new Pane(canvas),
@@ -81,6 +79,7 @@ public class Main extends Application {
         VBox homePane = homePage.getPane();
 
         Scene scene = new Scene(homePane);
+        // add the reference for the style
         scene.getStylesheets().add("/style.css");
 
         // launch the program by clicking any key
@@ -106,9 +105,12 @@ public class Main extends Application {
         //-----------------------------------------------------------------------------
         // Observation location
         //-----------------------------------------------------------------------------
+        // Coordinates fields
         TextField lonTextField = createLonLatTextField(true, 6.57);
         TextField latTextField = createLonLatTextField(false, 46.52);
 
+        // city selection
+        CityCatalogue cityCatalogue = createCityCatalogue();
         ComboBox<City> cityComboBox = new ComboBox<>();
         cityComboBox.setId("cityComboBox");
         cityComboBox.setItems(FXCollections.observableList(cityCatalogue.cities()));
@@ -118,6 +120,7 @@ public class Main extends Application {
             lonTextField.setText(String.format("%.2f", coordinates.lonDeg()));
             latTextField.setText(String.format("%.2f", coordinates.latDeg()));
         });
+
         HBox whereControl = new HBox(
                 new Label("Longitude (°) :"), lonTextField,
                 new Label("Latitude (°) :"), latTextField,
@@ -194,6 +197,7 @@ public class Main extends Application {
         playPauseButton.setOnAction(e -> timeAnimator.startStop());
         playPauseButton.setTooltip(new Tooltip("Start/Stop"));
 
+        // Select the next accelerator
         Button forwardButton = new Button(FORWARD_ICON);
         forwardButton.setFont(fontAwesome);
         forwardButton.setOnAction(e ->
@@ -203,6 +207,7 @@ public class Main extends Application {
         );
         forwardButton.setTooltip(new Tooltip("Fast forward"));
 
+        // Add one year to the current date
         Button skipButton = new Button(SKIP_ICON);
         skipButton.setFont(fontAwesome);
         skipButton.setOnAction(e -> dateTimeBean.setDate(dateTimeBean.getDate().plusYears(1)));
@@ -255,7 +260,7 @@ public class Main extends Application {
     private VBox settingsBar() {
         Text displaySettingText = new Text("Display settings:");
         displaySettingText.setId("settingsText");
-
+        // checkboxes for each elements of the canvas
         CheckBox starsCheckBox = new CheckBox("Stars");
         starsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawStarsProperty());
         starsCheckBox.setTooltip(new Tooltip("Show stars - 1"));
@@ -281,6 +286,7 @@ public class Main extends Application {
         atmosphereCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAtmosphereProperty());
         atmosphereCheckBox.setTooltip(new Tooltip("Show atmosphere - 8"));
 
+        // slider for the field of view
         Text fovSliderText = new Text("Field of view (°):");
         fovSliderText.setId("fovSliderText");
         Slider fovSlider = new Slider(30, 150, 100);

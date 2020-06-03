@@ -13,6 +13,13 @@ public final class City {
     private String country;
     private GeographicCoordinates coordinates;
 
+    /**
+     * Constructor of a city
+     *
+     * @param name        the name
+     * @param country     the corresponding country
+     * @param coordinates the coordinates
+     */
     public City(String name, String country, GeographicCoordinates coordinates) {
         this.name = name;
         this.country = country;

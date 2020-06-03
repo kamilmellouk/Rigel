@@ -343,6 +343,7 @@ public class SkyCanvasManager {
         ObservedSky observedSky = this.observedSky.getValue();
         StereographicProjection projection = this.projection.getValue();
         Transform planeToCanvas = this.planeToCanvas.getValue();
+        // draw elements depending on the display settings
         if (drawAtmosphere.get()) painter.clear(skyColor);
         else painter.clear(Color.BLACK);
         painter.drawStarsAsterisms(observedSky, projection, planeToCanvas, drawStars.get(), drawAsterisms.get());
@@ -395,34 +396,74 @@ public class SkyCanvasManager {
         }
     }
 
+    /**
+     * Getter for the drawStarsProperty
+     *
+     * @return the drawStarsProperty
+     */
     public BooleanProperty drawStarsProperty() {
         return drawStars;
     }
 
+    /**
+     * Getter for the drawAsterismsProperty
+     *
+     * @return the drawAsterismsProperty
+     */
     public BooleanProperty drawAsterismsProperty() {
         return drawAsterisms;
     }
 
+    /**
+     * Getter for the drawPlanetsProperty
+     *
+     * @return the drawPlanetsProperty
+     */
     public BooleanProperty drawPlanetsProperty() {
         return drawPlanets;
     }
 
+    /**
+     * Getter for the drawSunProperty
+     *
+     * @return the drawSunProperty
+     */
     public BooleanProperty drawSunProperty() {
         return drawSun;
     }
 
+    /**
+     * Getter for the drawMoonProperty
+     *
+     * @return the drawMoonProperty
+     */
     public BooleanProperty drawMoonProperty() {
         return drawMoon;
     }
 
+    /**
+     * Getter for the drawHorizonProperty
+     *
+     * @return the drawHorizonProperty
+     */
     public BooleanProperty drawHorizonProperty() {
         return drawHorizon;
     }
 
+    /**
+     * Getter for the drawCardinalPointsProperty
+     *
+     * @return the drawCardinalPointsProperty
+     */
     public BooleanProperty drawCardinalPointsProperty() {
         return drawCardinalPoints;
     }
 
+    /**
+     * Getter for the drawAtmosphereProperty
+     *
+     * @return the drawAtmosphereProperty
+     */
     public BooleanProperty drawAtmosphereProperty() {
         return drawAtmosphere;
     }
