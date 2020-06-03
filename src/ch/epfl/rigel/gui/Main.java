@@ -91,6 +91,7 @@ public class Main extends Application {
         settingsButton.toFront();
         settingsButton.textProperty().bind(when(showSettings).then(LEFT_ARROW_ICON).otherwise(RIGHT_ARROW_ICON));
         settingsButton.setOnAction(e -> showSettings.set(!showSettings.get()));
+        settingsButton.disableProperty().bind(fullScreen);
 
         BorderPane mainPane = new BorderPane(
                 sky,
@@ -100,11 +101,15 @@ public class Main extends Application {
                 null
         );
 
-        // display the settings depending on the button
+        // display depending on state
         mainPane.leftProperty().bind(when(showSettings).then(settingsBar()).otherwise(new VBox()));
+        mainPane.topProperty().bind(when(fullScreen).then(new HBox()).otherwise(controlBar()));
+        mainPane.bottomProperty().bind(when(fullScreen).then(new BorderPane()).otherwise(infoBar()));
 
         skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
         skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
+
+        fullScreenButton.layoutXProperty().bind(settingsButton.widthProperty());
 
         HomePage homePage = new HomePage();
         VBox homePane = homePage.getPane();
