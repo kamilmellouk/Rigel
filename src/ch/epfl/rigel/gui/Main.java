@@ -100,7 +100,10 @@ public class Main extends Application {
 
         // launch the program by clicking any key
         homePane.setOnKeyPressed(
-                e -> scene.setRoot(mainPane)
+                e -> {
+                    scene.setRoot(mainPane);
+                    canvas.requestFocus();
+                }
         );
         homePane.requestFocus();
 
