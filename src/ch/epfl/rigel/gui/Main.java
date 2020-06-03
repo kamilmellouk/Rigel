@@ -334,9 +334,11 @@ public class Main extends Application {
         countryTableColumn.setCellValueFactory(city -> city.getValue().countryProperty());
         cityTableView.getColumns().setAll(cityTableColumn, countryTableColumn);
         cityTableView.getSelectionModel().selectedItemProperty().addListener((p, o, n) -> {
-            GeographicCoordinates coordinates = n.coordinates();
-            lonTextField.setText(String.format("%.2f", coordinates.lonDeg()));
-            latTextField.setText(String.format("%.2f", coordinates.latDeg()));
+            if (n != null) {
+                GeographicCoordinates coordinates = n.coordinates();
+                lonTextField.setText(String.format("%.2f", coordinates.lonDeg()));
+                latTextField.setText(String.format("%.2f", coordinates.latDeg()));
+            }
         });
 
         VBox vBox = new VBox(displaySettingText, starsCheckBox, asterismsCheckBox, planetsCheckBox,
