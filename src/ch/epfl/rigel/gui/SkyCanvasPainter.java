@@ -63,14 +63,14 @@ public class SkyCanvasPainter {
      * @param asterisms     boolean indicating whether to draw the asterisms or not
      */
     public void drawStarsAsterisms(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas,
-                                   boolean stars, boolean asterisms) {
+                                   boolean stars, boolean asterisms, boolean biggestStarsName) {
         // transform all positions of the stars
         double[] starPositions = sky.starPositions();
         double[] transformedPos = new double[starPositions.length];
         planeToCanvas.transform2DPoints(starPositions, 0, transformedPos, 0, sky.stars().size());
 
         if (asterisms) drawAsterisms(sky, transformedPos);
-        if (stars) drawStars(sky, projection, planeToCanvas, transformedPos);
+        if (stars) drawStars(sky, projection, planeToCanvas, transformedPos, biggestStarsName);
     }
 
     /**
@@ -81,8 +81,8 @@ public class SkyCanvasPainter {
      * @param planeToCanvas transformation
      */
     public void drawStars(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas,
-                          double[] transformedPos) {
-        ctx.setStroke(Color.RED);
+                          double[] transformedPos, boolean drawBiggestStarsName) {
+        ctx.setStroke(Color.YELLOW);
         ctx.setLineWidth(1);
         ctx.setTextBaseline(VPos.BOTTOM);
         int index = 0;
@@ -90,7 +90,7 @@ public class SkyCanvasPainter {
             double diameter = transformedDiameter(star.magnitude(), projection, planeToCanvas);
             fillDisk(transformedPos[index], transformedPos[index + 1], diameter,
                     BlackBodyColor.colorForTemperature(star.colorTemperature()));
-            if (star.colorTemperature() > 20000)
+            if (star.magnitude() < 1.5 && drawBiggestStarsName)
                 ctx.strokeText(star.info(), transformedPos[index], transformedPos[index + 1]);
             index += 2;
         }
