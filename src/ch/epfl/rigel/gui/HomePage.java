@@ -12,8 +12,12 @@ import javafx.scene.text.TextAlignment;
 
 public class HomePage {
 
+    // the pane containing the title and the welcome message
     private final VBox pane = new VBox(title(), welcomeMessage());
 
+    /**
+     * Constructor of a home page
+     */
     public HomePage() {
         pane.setId("homePage");
     }

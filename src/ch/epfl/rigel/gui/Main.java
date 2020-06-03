@@ -7,7 +7,10 @@ import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -45,13 +48,20 @@ public class Main extends Application {
     private static final String PAUSE_ICON = "\uf04c";
     private static final String FORWARD_ICON = "\uf04e";
     private static final String SKIP_ICON = "\uf051";
+    private static final String RIGHT_ARROW_ICON = "\uf0a9";
+    private static final String LEFT_ARROW_ICON = "\uf0a8";
 
     private final ObserverLocationBean observerLocationBean = new ObserverLocationBean();
     private final DateTimeBean dateTimeBean = new DateTimeBean();
     private final ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
     private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
     private SkyCanvasManager skyCanvasManager;
-    private CityCatalogue cityCatalogue;
+
+    private final Button settingsButton = new Button();
+    private final BooleanProperty showSettings = new SimpleBooleanProperty(false);
+
+    private TextField lonTextField;
+    private TextField latTextField;
 
     public static void main(String[] args) {
         launch(args);
@@ -64,15 +74,22 @@ public class Main extends Application {
 
         skyCanvasManager = createManager();
         Canvas canvas = skyCanvasManager.canvas();
-        cityCatalogue = createCityCatalogue();
+
+        Pane sky = new Pane(canvas, settingsButton);
+        settingsButton.toFront();
+        settingsButton.textProperty().bind(when(showSettings).then(LEFT_ARROW_ICON).otherwise(RIGHT_ARROW_ICON));
+        settingsButton.setOnAction(e -> showSettings.set(!showSettings.get()));
 
         BorderPane mainPane = new BorderPane(
-                new Pane(canvas),
+                sky,
                 controlBar(),
                 null,
                 infoBar(),
-                settingsBar()
+                null
         );
+
+        // display the settings depending on the button
+        mainPane.leftProperty().bind(when(showSettings).then(settingsBar()).otherwise(new VBox()));
 
         skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
         skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
@@ -81,11 +98,15 @@ public class Main extends Application {
         VBox homePane = homePage.getPane();
 
         Scene scene = new Scene(homePane);
+        // add the reference for the style
         scene.getStylesheets().add("/style.css");
 
         // launch the program by clicking any key
         homePane.setOnKeyPressed(
-                e -> scene.setRoot(mainPane)
+                e -> {
+                    scene.setRoot(mainPane);
+                    canvas.requestFocus();
+                }
         );
         homePane.requestFocus();
 
@@ -106,22 +127,13 @@ public class Main extends Application {
         //-----------------------------------------------------------------------------
         // Observation location
         //-----------------------------------------------------------------------------
-        TextField lonTextField = createLonLatTextField(true, 6.57);
-        TextField latTextField = createLonLatTextField(false, 46.52);
+        // Coordinates fields
+        lonTextField = createLonLatTextField(true, 6.57);
+        latTextField = createLonLatTextField(false, 46.52);
 
-        ComboBox<City> cityComboBox = new ComboBox<>();
-        cityComboBox.setId("cityComboBox");
-        cityComboBox.setItems(FXCollections.observableList(cityCatalogue.cities()));
-        cityComboBox.setValue(cityCatalogue.cities().get(0));
-        cityComboBox.setOnAction(e -> {
-            GeographicCoordinates coordinates = cityComboBox.getValue().coordinates();
-            lonTextField.setText(String.format("%.2f", coordinates.lonDeg()));
-            latTextField.setText(String.format("%.2f", coordinates.latDeg()));
-        });
         HBox whereControl = new HBox(
                 new Label("Longitude (°) :"), lonTextField,
-                new Label("Latitude (°) :"), latTextField,
-                cityComboBox
+                new Label("Latitude (°) :"), latTextField
         );
         whereControl.setId("whereControl");
 
@@ -177,6 +189,8 @@ public class Main extends Application {
 
         // Time reset
         Font fontAwesome = loadFontAwesome();
+        settingsButton.setFont(fontAwesome);
+
         Button resetButton = new Button(RESET_ICON);
         resetButton.setFont(fontAwesome);
         resetButton.setOnAction(e -> {
@@ -194,15 +208,20 @@ public class Main extends Application {
         playPauseButton.setOnAction(e -> timeAnimator.startStop());
         playPauseButton.setTooltip(new Tooltip("Start/Stop"));
 
+        // Select the next accelerator
         Button forwardButton = new Button(FORWARD_ICON);
         forwardButton.setFont(fontAwesome);
-        forwardButton.setOnAction(e ->
-                acceleratorChoiceBox.setValue(NamedTimeAccelerator.values()[
-                        acceleratorChoiceBox.getValue().ordinal() + 1 != NamedTimeAccelerator.values().length ?
-                                acceleratorChoiceBox.getValue().ordinal() + 1 : 0])
+        forwardButton.setOnAction(e -> {
+                    timeAnimator.startStop();
+                    acceleratorChoiceBox.setValue(NamedTimeAccelerator.values()[
+                            acceleratorChoiceBox.getValue().ordinal() + 1 != NamedTimeAccelerator.values().length ?
+                                    acceleratorChoiceBox.getValue().ordinal() + 1 : 0]);
+                    timeAnimator.startStop();
+                }
         );
         forwardButton.setTooltip(new Tooltip("Fast forward"));
 
+        // Add one year to the current date
         Button skipButton = new Button(SKIP_ICON);
         skipButton.setFont(fontAwesome);
         skipButton.setOnAction(e -> dateTimeBean.setDate(dateTimeBean.getDate().plusYears(1)));
@@ -252,10 +271,10 @@ public class Main extends Application {
         return infoBar;
     }
 
-    private VBox settingsBar() {
+    private VBox settingsBar() throws IOException {
         Text displaySettingText = new Text("Display settings:");
         displaySettingText.setId("settingsText");
-
+        // checkboxes for each elements of the canvas
         CheckBox starsCheckBox = new CheckBox("Stars");
         starsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawStarsProperty());
         starsCheckBox.setTooltip(new Tooltip("Show stars - 1"));
@@ -280,10 +299,8 @@ public class Main extends Application {
         CheckBox atmosphereCheckBox = new CheckBox("Atmosphere");
         atmosphereCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAtmosphereProperty());
         atmosphereCheckBox.setTooltip(new Tooltip("Show atmosphere - 8"));
-        CheckBox starNameCheckBox = new CheckBox("Star names");
-        starNameCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawBiggestStarsNameProperty());
-        starNameCheckBox.setTooltip(new Tooltip("Show biggest star names - 9"));
 
+        // slider for the field of view
         Text fovSliderText = new Text("Field of view (°):");
         fovSliderText.setId("fovSliderText");
         Slider fovSlider = new Slider(30, 150, 100);
@@ -291,9 +308,40 @@ public class Main extends Application {
         fovSlider.setShowTickLabels(true);
         fovSlider.valueProperty().bindBidirectional(viewingParametersBean.fieldOfViewDegProperty());
 
-        VBox vBox = new VBox(displaySettingText, starsCheckBox, asterismsCheckBox, planetsCheckBox, sunCheckBox,
-                moonCheckBox, horizonCheckBox, cardinalPointsCheckBox, atmosphereCheckBox, starNameCheckBox, new Separator(),
-                fovSliderText, fovSlider);
+        // city selection
+        Text citySelectionText = new Text("Search or select a city:");
+        citySelectionText.setId("citySelectionText");
+
+        CityCatalogue cityCatalogue = createCityCatalogue();
+        FilteredList<City> filteredCities = new FilteredList<>(FXCollections.observableList(cityCatalogue.cities()), c -> true);
+
+        TextField searchBar = new TextField();
+        // modify the list of the cities depending on the research
+        searchBar.textProperty().addListener((p, o, n) -> filteredCities.setPredicate(city -> {
+            if (n == null || n.isEmpty()) {
+                return true;
+            }
+            String searchText = n.toLowerCase();
+            return city.getName().toLowerCase().contains(searchText) || city.getCountry().toLowerCase().contains(searchText);
+        }));
+
+        // list of the cities matching the research
+        TableView<City> cityTableView = new TableView<>();
+        cityTableView.setItems(filteredCities);
+        TableColumn<City, String> cityTableColumn = new TableColumn<>("City");
+        cityTableColumn.setCellValueFactory(city -> city.getValue().nameProperty());
+        TableColumn<City, String> countryTableColumn = new TableColumn<>("Country");
+        countryTableColumn.setCellValueFactory(city -> city.getValue().countryProperty());
+        cityTableView.getColumns().setAll(cityTableColumn, countryTableColumn);
+        cityTableView.getSelectionModel().selectedItemProperty().addListener((p, o, n) -> {
+            GeographicCoordinates coordinates = n.coordinates();
+            lonTextField.setText(String.format("%.2f", coordinates.lonDeg()));
+            latTextField.setText(String.format("%.2f", coordinates.latDeg()));
+        });
+
+        VBox vBox = new VBox(displaySettingText, starsCheckBox, asterismsCheckBox, planetsCheckBox,
+                sunCheckBox, moonCheckBox, horizonCheckBox, cardinalPointsCheckBox, atmosphereCheckBox, new Separator(),
+                fovSliderText, fovSlider, new Separator(), citySelectionText, searchBar, cityTableView);
         vBox.setId("settingsBar");
         return vBox;
     }
