@@ -127,3 +127,7 @@
 #fovSliderText {
     -fx-fill: white;
 }
+
+#citySelectionText {
+    -fx-fill: white;
+}

@@ -10,8 +10,8 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Orientation;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -128,22 +128,9 @@ public class Main extends Application {
         TextField lonTextField = createLonLatTextField(true, 6.57);
         TextField latTextField = createLonLatTextField(false, 46.52);
 
-        // city selection
-        CityCatalogue cityCatalogue = createCityCatalogue();
-        ComboBox<City> cityComboBox = new ComboBox<>();
-        cityComboBox.setId("cityComboBox");
-        cityComboBox.setItems(FXCollections.observableList(cityCatalogue.cities()));
-        cityComboBox.setValue(cityCatalogue.cities().get(0));
-        cityComboBox.setOnAction(e -> {
-            GeographicCoordinates coordinates = cityComboBox.getValue().coordinates();
-            lonTextField.setText(String.format("%.2f", coordinates.lonDeg()));
-            latTextField.setText(String.format("%.2f", coordinates.latDeg()));
-        });
-
         HBox whereControl = new HBox(
                 new Label("Longitude (°) :"), lonTextField,
-                new Label("Latitude (°) :"), latTextField,
-                cityComboBox
+                new Label("Latitude (°) :"), latTextField
         );
         whereControl.setId("whereControl");
 
@@ -281,7 +268,7 @@ public class Main extends Application {
         return infoBar;
     }
 
-    private VBox settingsBar() {
+    private VBox settingsBar() throws IOException {
         Text displaySettingText = new Text("Display settings:");
         displaySettingText.setId("settingsText");
         // checkboxes for each elements of the canvas
@@ -318,9 +305,35 @@ public class Main extends Application {
         fovSlider.setShowTickLabels(true);
         fovSlider.valueProperty().bindBidirectional(viewingParametersBean.fieldOfViewDegProperty());
 
+        // city selection
+        Text citySelectionText = new Text("Search or select a city:");
+        citySelectionText.setId("citySelectionText");
+
+        CityCatalogue cityCatalogue = createCityCatalogue();
+        FilteredList<City> filteredCities = new FilteredList<>(FXCollections.observableList(cityCatalogue.cities()), c -> true);
+
+        TextField searchBar = new TextField();
+        // modify the list of the cities depending on the research
+        searchBar.textProperty().addListener((p, o, n) -> filteredCities.setPredicate(city -> {
+            if (n == null || n.isEmpty()) {
+                return true;
+            }
+            String searchText = n.toLowerCase();
+            return city.getName().toLowerCase().contains(searchText) || city.getCountry().toLowerCase().contains(searchText);
+        }));
+
+        // list of the cities matching the research
+        TableView<City> cityTableView = new TableView<>();
+        cityTableView.setItems(filteredCities);
+        TableColumn<City, String> cityTableColumn = new TableColumn<>("City");
+        cityTableColumn.setCellValueFactory(city -> city.getValue().nameProperty());
+        TableColumn<City, String> countryTableColumn = new TableColumn<>("Country");
+        countryTableColumn.setCellValueFactory(city -> city.getValue().countryProperty());
+        cityTableView.getColumns().setAll(cityTableColumn, countryTableColumn);
+
         VBox vBox = new VBox(displaySettingText, starsCheckBox, asterismsCheckBox, planetsCheckBox,
                 sunCheckBox, moonCheckBox, horizonCheckBox, cardinalPointsCheckBox, atmosphereCheckBox, new Separator(),
-                fovSliderText, fovSlider);
+                fovSliderText, fovSlider, new Separator(), citySelectionText, searchBar, cityTableView);
         vBox.setId("settingsBar");
         return vBox;
     }
