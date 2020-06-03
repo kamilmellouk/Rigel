@@ -60,6 +60,9 @@ public class Main extends Application {
     private final Button settingsButton = new Button();
     private final BooleanProperty showSettings = new SimpleBooleanProperty(false);
 
+    private TextField lonTextField;
+    private TextField latTextField;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -125,8 +128,8 @@ public class Main extends Application {
         // Observation location
         //-----------------------------------------------------------------------------
         // Coordinates fields
-        TextField lonTextField = createLonLatTextField(true, 6.57);
-        TextField latTextField = createLonLatTextField(false, 46.52);
+        lonTextField = createLonLatTextField(true, 6.57);
+        latTextField = createLonLatTextField(false, 46.52);
 
         HBox whereControl = new HBox(
                 new Label("Longitude (°) :"), lonTextField,
@@ -330,6 +333,11 @@ public class Main extends Application {
         TableColumn<City, String> countryTableColumn = new TableColumn<>("Country");
         countryTableColumn.setCellValueFactory(city -> city.getValue().countryProperty());
         cityTableView.getColumns().setAll(cityTableColumn, countryTableColumn);
+        cityTableView.getSelectionModel().selectedItemProperty().addListener((p, o, n) -> {
+            GeographicCoordinates coordinates = n.coordinates();
+            lonTextField.setText(String.format("%.2f", coordinates.lonDeg()));
+            latTextField.setText(String.format("%.2f", coordinates.latDeg()));
+        });
 
         VBox vBox = new VBox(displaySettingText, starsCheckBox, asterismsCheckBox, planetsCheckBox,
                 sunCheckBox, moonCheckBox, horizonCheckBox, cardinalPointsCheckBox, atmosphereCheckBox, new Separator(),
