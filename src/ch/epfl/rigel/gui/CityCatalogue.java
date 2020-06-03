@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -26,6 +28,7 @@ public final class CityCatalogue {
      * @param cities the list of cities
      */
     public CityCatalogue(List<City> cities) {
+        cities.sort(Comparator.comparing(City::getCountry));
         this.cities = List.copyOf(cities);
     }
 
