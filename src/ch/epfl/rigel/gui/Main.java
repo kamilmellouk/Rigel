@@ -12,6 +12,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -50,6 +51,8 @@ public class Main extends Application {
     private static final String SKIP_ICON = "\uf051";
     private static final String RIGHT_ARROW_ICON = "\uf0a9";
     private static final String LEFT_ARROW_ICON = "\uf0a8";
+    private static final String INCREASE_ICON = "\uF065";
+    private static final String DECREASE_ICON = "\uF066";
 
     private final ObserverLocationBean observerLocationBean = new ObserverLocationBean();
     private final DateTimeBean dateTimeBean = new DateTimeBean();
@@ -59,6 +62,9 @@ public class Main extends Application {
 
     private final Button settingsButton = new Button();
     private final BooleanProperty showSettings = new SimpleBooleanProperty(false);
+
+    private final Button fullScreenButton = new Button();
+    private final BooleanProperty fullScreen = new SimpleBooleanProperty(false);
 
     private TextField lonTextField;
     private TextField latTextField;
@@ -75,7 +81,13 @@ public class Main extends Application {
         skyCanvasManager = createManager();
         Canvas canvas = skyCanvasManager.canvas();
 
-        Pane sky = new Pane(canvas, settingsButton);
+        fullScreenButton.textProperty().bind(when(fullScreen).then(DECREASE_ICON).otherwise(INCREASE_ICON));
+        fullScreenButton.setOnAction(e -> fullScreen.set(!fullScreen.get()));
+        fullScreen.addListener((p, o, n) -> {
+            if (n) showSettings.set(false);
+        });
+
+        Pane sky = new Pane(canvas, settingsButton, fullScreenButton);
         settingsButton.toFront();
         settingsButton.textProperty().bind(when(showSettings).then(LEFT_ARROW_ICON).otherwise(RIGHT_ARROW_ICON));
         settingsButton.setOnAction(e -> showSettings.set(!showSettings.get()));
@@ -190,6 +202,7 @@ public class Main extends Application {
         // Time reset
         Font fontAwesome = loadFontAwesome();
         settingsButton.setFont(fontAwesome);
+        fullScreenButton.setFont(fontAwesome);
 
         Button resetButton = new Button(RESET_ICON);
         resetButton.setFont(fontAwesome);
