@@ -280,6 +280,9 @@ public class Main extends Application {
         CheckBox atmosphereCheckBox = new CheckBox("Atmosphere");
         atmosphereCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAtmosphereProperty());
         atmosphereCheckBox.setTooltip(new Tooltip("Show atmosphere - 8"));
+        CheckBox starNameCheckBox = new CheckBox("Star names");
+        starNameCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawBiggestStarsNameProperty());
+        starNameCheckBox.setTooltip(new Tooltip("Show biggest star names - 9"));
 
         Text fovSliderText = new Text("Field of view (°):");
         fovSliderText.setId("fovSliderText");
@@ -288,8 +291,8 @@ public class Main extends Application {
         fovSlider.setShowTickLabels(true);
         fovSlider.valueProperty().bindBidirectional(viewingParametersBean.fieldOfViewDegProperty());
 
-        VBox vBox = new VBox(displaySettingText, starsCheckBox, asterismsCheckBox, planetsCheckBox,
-                sunCheckBox, moonCheckBox, horizonCheckBox, cardinalPointsCheckBox, atmosphereCheckBox, new Separator(),
+        VBox vBox = new VBox(displaySettingText, starsCheckBox, asterismsCheckBox, planetsCheckBox, sunCheckBox,
+                moonCheckBox, horizonCheckBox, cardinalPointsCheckBox, atmosphereCheckBox, starNameCheckBox, new Separator(),
                 fovSliderText, fovSlider);
         vBox.setId("settingsBar");
         return vBox;

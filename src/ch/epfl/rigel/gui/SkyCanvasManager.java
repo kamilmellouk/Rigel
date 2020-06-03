@@ -51,13 +51,14 @@ public class SkyCanvasManager {
     private final ObservableDoubleValue mouseAltDeg;
 
     private final BooleanProperty drawStars = new SimpleBooleanProperty(true);
-    private final BooleanProperty drawAsterisms = new SimpleBooleanProperty(true);
+    private final BooleanProperty drawAsterisms = new SimpleBooleanProperty(false);
     private final BooleanProperty drawPlanets = new SimpleBooleanProperty(true);
     private final BooleanProperty drawSun = new SimpleBooleanProperty(true);
     private final BooleanProperty drawMoon = new SimpleBooleanProperty(true);
     private final BooleanProperty drawHorizon = new SimpleBooleanProperty(true);
     private final BooleanProperty drawCardinalPoints = new SimpleBooleanProperty(true);
     private final BooleanProperty drawAtmosphere = new SimpleBooleanProperty(false);
+    private final BooleanProperty drawBiggestStarsName = new SimpleBooleanProperty(true);
     private Color skyColor;
 
     /**
@@ -136,6 +137,9 @@ public class SkyCanvasManager {
                             break;
                         case DIGIT8:
                             drawAtmosphere.set(!drawAtmosphere.get());
+                            break;
+                        case DIGIT9:
+                            drawBiggestStarsName.set(!drawBiggestStarsName.get());
                             break;
                     }
                     updateSky();
@@ -345,7 +349,8 @@ public class SkyCanvasManager {
         Transform planeToCanvas = this.planeToCanvas.getValue();
         if (drawAtmosphere.get()) painter.clear(skyColor);
         else painter.clear(Color.BLACK);
-        painter.drawStarsAsterisms(observedSky, projection, planeToCanvas, drawStars.get(), drawAsterisms.get());
+        painter.drawStarsAsterisms(observedSky, projection, planeToCanvas,
+                drawStars.get(), drawAsterisms.get(), drawBiggestStarsName.get());
         //painter.drawHorizontalGrid(projection, planeToCanvas);
         if (drawPlanets.get()) painter.drawPlanets(observedSky, projection, planeToCanvas);
         if (drawSun.get()) painter.drawSun(observedSky, projection, planeToCanvas);
@@ -426,4 +431,6 @@ public class SkyCanvasManager {
     public BooleanProperty drawAtmosphereProperty() {
         return drawAtmosphere;
     }
+
+    public BooleanProperty drawBiggestStarsNameProperty() { return drawBiggestStarsName; }
 }
