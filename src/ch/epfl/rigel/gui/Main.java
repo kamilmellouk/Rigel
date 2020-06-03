@@ -7,8 +7,11 @@ import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -45,12 +48,17 @@ public class Main extends Application {
     private static final String PAUSE_ICON = "\uf04c";
     private static final String FORWARD_ICON = "\uf04e";
     private static final String SKIP_ICON = "\uf051";
+    private static final String RIGHT_ARROW_ICON = "\uf0a9";
+    private static final String LEFT_ARROW_ICON = "\uf0a8";
 
     private final ObserverLocationBean observerLocationBean = new ObserverLocationBean();
     private final DateTimeBean dateTimeBean = new DateTimeBean();
     private final ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
     private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
     private SkyCanvasManager skyCanvasManager;
+
+    private final Button settingsButton = new Button();
+    private final BooleanProperty showSettings = new SimpleBooleanProperty(false);
 
     public static void main(String[] args) {
         launch(args);
@@ -64,13 +72,21 @@ public class Main extends Application {
         skyCanvasManager = createManager();
         Canvas canvas = skyCanvasManager.canvas();
 
+        Pane sky = new Pane(canvas, settingsButton);
+        settingsButton.toFront();
+        settingsButton.textProperty().bind(when(showSettings).then(LEFT_ARROW_ICON).otherwise(RIGHT_ARROW_ICON));
+        settingsButton.setOnAction(e -> showSettings.set(!showSettings.get()));
+
         BorderPane mainPane = new BorderPane(
-                new Pane(canvas),
+                sky,
                 controlBar(),
                 null,
                 infoBar(),
-                settingsBar()
+                null
         );
+
+        // display the settings depending on the button
+        mainPane.leftProperty().bind(when(showSettings).then(settingsBar()).otherwise(new VBox()));
 
         skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
         skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
@@ -180,6 +196,8 @@ public class Main extends Application {
 
         // Time reset
         Font fontAwesome = loadFontAwesome();
+        settingsButton.setFont(fontAwesome);
+
         Button resetButton = new Button(RESET_ICON);
         resetButton.setFont(fontAwesome);
         resetButton.setOnAction(e -> {
