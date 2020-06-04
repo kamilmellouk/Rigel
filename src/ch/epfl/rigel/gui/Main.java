@@ -63,6 +63,7 @@ public class Main extends Application {
     private final ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
     private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
     private SkyCanvasManager skyCanvasManager;
+    private Canvas canvas;
 
     private Button resetButton;
     private static final String RESET_ICON = "\uf0e2";
@@ -94,9 +95,57 @@ public class Main extends Application {
         viewingParametersBean.setFieldOfViewDeg(100);
 
         skyCanvasManager = createManager();
-        Canvas canvas = skyCanvasManager.canvas();
+        canvas = skyCanvasManager.canvas();
 
-        // Mouse Controls
+        initialiseMouseControls();
+        initialiseKeyboardControls();
+        initialiseButtons();
+
+        Pane sky = new Pane(canvas, settingsButton, fullScreenButton);
+
+        BorderPane mainPane = new BorderPane(
+                sky,
+                controlBar(),
+                null,
+                infoBar(),
+                null
+        );
+
+        // display depending on state
+        mainPane.leftProperty().bind(when(showSettings).then(settingsBar()).otherwise(new VBox()));
+        mainPane.topProperty().bind(when(fullScreen).then(new HBox()).otherwise(controlBar()));
+        mainPane.bottomProperty().bind(when(fullScreen).then(new BorderPane()).otherwise(infoBar()));
+
+        skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
+        skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
+
+        HomePage homePage = new HomePage();
+        VBox homePane = homePage.getPane();
+
+        Scene scene = new Scene(homePane);
+        // add the reference for the style
+        scene.getStylesheets().add("/style.css");
+
+        // launch the program by clicking any key
+        homePane.setOnKeyPressed(
+                e -> {
+                    scene.setRoot(mainPane);
+                    canvas.requestFocus();
+                }
+        );
+        homePane.requestFocus();
+
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Rigel");
+        primaryStage.setMinWidth(1025);
+        primaryStage.setMinHeight(700);
+        primaryStage.show();
+    }
+
+    /**
+     * initialise mouse controls
+     */
+    private void initialiseMouseControls() {
         canvas.setOnMouseClicked(m -> {
             if (!canvas.isFocused()) canvas.requestFocus();
             skyCanvasManager.updateSky();
@@ -145,8 +194,12 @@ public class Main extends Application {
                     break;
             }
         });
+    }
 
-        // Keyboard shortcuts
+    /**
+     * initialise keyboard controls
+     */
+    private void initialiseKeyboardControls() {
         canvas.setOnKeyPressed(
                 e -> {
                     HorizontalCoordinates center = viewingParametersBean.getCenter();
@@ -211,7 +264,12 @@ public class Main extends Application {
                     e.consume();
                 }
         );
+    }
 
+    /**
+     * initialise buttons
+     */
+    private void initialiseButtons() {
         fullScreenButton.textProperty().bind(when(fullScreen).then(DECREASE_ICON).otherwise(INCREASE_ICON));
         fullScreenButton.setOnAction(e -> fullScreen.set(!fullScreen.get()));
         fullScreenButton.setTooltip(new Tooltip("Full screen - F"));
@@ -219,55 +277,14 @@ public class Main extends Application {
         fullScreen.addListener((p, o, n) -> {
             if (n) showSettings.set(false);
         });
+        // place the full screen button just next to the settings button
+        fullScreenButton.layoutXProperty().bind(settingsButton.widthProperty());
 
-        Pane sky = new Pane(canvas, settingsButton, fullScreenButton);
-        settingsButton.toFront();
         settingsButton.textProperty().bind(when(showSettings).then(LEFT_ARROW_ICON).otherwise(RIGHT_ARROW_ICON));
         settingsButton.setTooltip(new Tooltip("Settings - TAB"));
         settingsButton.setOnAction(e -> showSettings.set(!showSettings.get()));
         // the settings pane is disabled in full screen
         settingsButton.disableProperty().bind(fullScreen);
-
-        BorderPane mainPane = new BorderPane(
-                sky,
-                controlBar(),
-                null,
-                infoBar(),
-                null
-        );
-
-        // display depending on state
-        mainPane.leftProperty().bind(when(showSettings).then(settingsBar()).otherwise(new VBox()));
-        mainPane.topProperty().bind(when(fullScreen).then(new HBox()).otherwise(controlBar()));
-        mainPane.bottomProperty().bind(when(fullScreen).then(new BorderPane()).otherwise(infoBar()));
-
-        skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
-        skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
-
-        // place the full screen button just next to the settings button
-        fullScreenButton.layoutXProperty().bind(settingsButton.widthProperty());
-
-        HomePage homePage = new HomePage();
-        VBox homePane = homePage.getPane();
-
-        Scene scene = new Scene(homePane);
-        // add the reference for the style
-        scene.getStylesheets().add("/style.css");
-
-        // launch the program by clicking any key
-        homePane.setOnKeyPressed(
-                e -> {
-                    scene.setRoot(mainPane);
-                    canvas.requestFocus();
-                }
-        );
-        homePane.requestFocus();
-
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Rigel");
-        primaryStage.setMinWidth(1025);
-        primaryStage.setMinHeight(700);
-        primaryStage.show();
     }
 
     /**
@@ -599,14 +616,14 @@ public class Main extends Application {
 
         File file = new File("sky_" +
                 observerLocationBean.getCoordinates() + "_" +
-                dateTimeBean.getDate()+ "_" +
+                dateTimeBean.getDate() + "_" +
                 dateTimeBean.getTime().truncatedTo(ChronoUnit.SECONDS) +
                 ".png");
 
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
         } catch (IOException e) {
-           throw new UncheckedIOException(e);
+            throw new UncheckedIOException(e);
         }
     }
 }

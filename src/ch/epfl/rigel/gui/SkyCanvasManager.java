@@ -35,6 +35,7 @@ public class SkyCanvasManager {
 
     private static final RightOpenInterval RIGHT_OPEN_INTERVAL_0_TO_360 = RightOpenInterval.of(0, 360);
     private static final ClosedInterval CLOSED_INTERVAL_5_TO_90 = ClosedInterval.of(5, 90);
+    private static final Color BLUE_COLOR_OF_THE_SKY = Color.rgb(0, 195, 255);
 
     private final Canvas canvas;
     private final SkyCanvasPainter painter;
@@ -125,7 +126,7 @@ public class SkyCanvasManager {
                     if (altDeg <= -20) {
                         skyColor = Color.BLACK;
                     } else if (altDeg >= 20) {
-                        skyColor = Color.rgb(0, 195, 255);
+                        skyColor = BLUE_COLOR_OF_THE_SKY;
                     } else {
                         int greenValue = (int) ((195 * (altDeg + 20)) / 40d);
                         int blueValue = (int) ((255 * (altDeg + 20)) / 40d);
