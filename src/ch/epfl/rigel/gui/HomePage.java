@@ -77,14 +77,17 @@ public class HomePage {
                         "SPACE/ENTER : start/stop animation" + "\n" +
                         "R           : reset animation" + "\n" +
                         "S           : take a screenshot of the sky" + "\n" +
-                        "1           : show stars" + "\n" +
-                        "2           : show asterisms"
+                        "LEFT CLICK  : wikipedia page of the element" + "\n" +
+                        "RIGHT CLICK : information window" + "\n" +
+                        "MIDDLE CLICK : reset field of view"
         );
         shortcuts1.setId("shortcutsList1");
         shortcuts1.setTextAlignment(TextAlignment.LEFT);
         // column 2
         Text shortcuts2 = new Text(
-                "3           : show planets" + "\n" +
+                "1           : show stars" + "\n" +
+                        "2           : show asterisms" + "\n" +
+                        "3           : show planets" + "\n" +
                         "4           : show the sun" + "\n" +
                         "5           : show the moon" + "\n" +
                         "6           : show the horizon" + "\n" +

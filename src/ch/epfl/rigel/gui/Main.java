@@ -43,8 +43,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static javafx.beans.binding.Bindings.when;
 
@@ -139,8 +137,7 @@ public class Main extends Application {
         scene.getStylesheets().add("/style.css");
 
         // launch the program by clicking any key
-        homePane.setOnKeyPressed(
-                e -> {
+        homePane.setOnKeyPressed(k -> {
                     scene.setRoot(mainPane);
                     canvas.requestFocus();
                 }
@@ -155,7 +152,7 @@ public class Main extends Application {
     }
 
     /**
-     * initialise mouse controls
+     * Initialising mouse controls
      */
     private void initialiseMouseControls() {
         canvas.setOnMouseClicked(m -> {
@@ -209,13 +206,12 @@ public class Main extends Application {
     }
 
     /**
-     * initialise keyboard controls
+     * Initialising keyboard controls
      */
     private void initialiseKeyboardControls() {
-        canvas.setOnKeyPressed(
-                e -> {
+        canvas.setOnKeyPressed(k -> {
                     HorizontalCoordinates center = viewingParametersBean.getCenter();
-                    switch (e.getCode()) {
+                    switch (k.getCode()) {
                         case LEFT:
                             viewingParametersBean.setCenter(skyCanvasManager.centerWithAzDiff(center, -10));
                             break;
@@ -273,13 +269,13 @@ public class Main extends Application {
                             break;
                     }
                     skyCanvasManager.updateSky();
-                    e.consume();
+                    k.consume();
                 }
         );
     }
 
     /**
-     * initialise buttons
+     * Initialising buttons
      */
     private void initialiseButtons() {
         fullScreenButton.textProperty().bind(when(fullScreen).then(DECREASE_ICON).otherwise(INCREASE_ICON));
