@@ -47,6 +47,8 @@ import java.util.function.UnaryOperator;
 import static javafx.beans.binding.Bindings.when;
 
 /**
+ * Main program
+ *
  * @author Bastien Faivre (310929)
  * @author Kamil Mellouk (312327)
  */
@@ -450,6 +452,13 @@ public class Main extends Application {
         return infoBar;
     }
 
+    /**
+     * Creating the settings bar
+     *
+     * @return VBox of the settings bar
+     * @throws IOException if CityCatalogue loading exception
+     */
+    @SuppressWarnings("unchecked")
     private VBox settingsBar() throws IOException {
         Text displaySettingText = new Text("Display settings:");
         displaySettingText.setId("settingsText");
@@ -493,6 +502,7 @@ public class Main extends Application {
         cityTableColumn.setCellValueFactory(city -> city.getValue().nameProperty());
         TableColumn<City, String> countryTableColumn = new TableColumn<>("Country");
         countryTableColumn.setCellValueFactory(city -> city.getValue().countryProperty());
+        // The line below causes a varargs warning, which is why we added @SuppressWarnings("unchecked")
         cityTableView.getColumns().setAll(cityTableColumn, countryTableColumn);
         cityTableView.getSelectionModel().selectedItemProperty().addListener((p, o, n) -> {
             if (n != null) {
