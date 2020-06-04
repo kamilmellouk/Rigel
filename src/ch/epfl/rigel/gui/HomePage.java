@@ -74,6 +74,7 @@ public class HomePage {
                 "F           : enable/disable fullscreen mode" + "\n" +
                 "SPACE/ENTER : start/stop animation" + "\n" +
                 "R           : reset animation" + "\n" +
+                "S           : take a screenshot of the sky" + "\n" +
                 "1           : show stars" + "\n" +
                 "2           : show asterisms" + "\n" +
                 "3           : show planets" + "\n" +

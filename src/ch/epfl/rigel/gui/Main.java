@@ -12,11 +12,14 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -28,12 +31,16 @@ import javafx.stage.Stage;
 import javafx.util.converter.LocalTimeStringConverter;
 import javafx.util.converter.NumberStringConverter;
 
+import javax.imageio.ImageIO;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -195,6 +202,9 @@ public class Main extends Application {
                             break;
                         case DIGIT9:
                             skyCanvasManager.drawNamesProperty().set(!skyCanvasManager.drawNamesProperty().get());
+                            break;
+                        case S:
+                            saveScreenshot();
                             break;
                     }
                     skyCanvasManager.updateSky();
@@ -578,6 +588,25 @@ public class Main extends Application {
     private Font loadFontAwesome() throws IOException {
         try (InputStream fs = getClass().getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
             return Font.loadFont(fs, 15);
+        }
+    }
+
+    /**
+     * Saving the current sky as a png file, with the name containing the positon and time of observation
+     */
+    private void saveScreenshot() {
+        WritableImage image = skyCanvasManager.canvas().snapshot(new SnapshotParameters(), null);
+
+        File file = new File("sky_" +
+                observerLocationBean.getCoordinates() + "_" +
+                dateTimeBean.getDate()+ "_" +
+                dateTimeBean.getTime().truncatedTo(ChronoUnit.SECONDS) +
+                ".png");
+
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+        } catch (IOException e) {
+           throw new UncheckedIOException(e);
         }
     }
 }
