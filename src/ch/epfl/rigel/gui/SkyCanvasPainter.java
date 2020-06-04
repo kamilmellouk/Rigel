@@ -61,16 +61,17 @@ public class SkyCanvasPainter {
      * @param planeToCanvas transformation
      * @param stars         boolean indicating whether to draw the stars or not
      * @param asterisms     boolean indicating whether to draw the asterisms or not
+     * @param drawNames     boolean indicating whether to draw the names of the stars
      */
     public void drawStarsAsterisms(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas,
-                                   boolean stars, boolean asterisms, boolean biggestStarsName) {
+                                   boolean stars, boolean asterisms, boolean drawNames) {
         // transform all positions of the stars
         double[] starPositions = sky.starPositions();
         double[] transformedPos = new double[starPositions.length];
         planeToCanvas.transform2DPoints(starPositions, 0, transformedPos, 0, sky.stars().size());
 
         if (asterisms) drawAsterisms(sky, transformedPos);
-        if (stars) drawStars(sky, projection, planeToCanvas, transformedPos, biggestStarsName);
+        if (stars) drawStars(sky, projection, planeToCanvas, transformedPos, drawNames);
     }
 
     /**
@@ -79,19 +80,23 @@ public class SkyCanvasPainter {
      * @param sky           to represent
      * @param projection    used
      * @param planeToCanvas transformation
+     * @param drawNames     boolean indicating whether to draw the names of the stars
      */
     public void drawStars(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas,
-                          double[] transformedPos, boolean drawBiggestStarsName) {
-        ctx.setStroke(Color.YELLOW);
+                          double[] transformedPos, boolean drawNames) {
         ctx.setLineWidth(1);
         ctx.setTextBaseline(VPos.BOTTOM);
         int index = 0;
         for (Star star : sky.stars()) {
             double diameter = transformedDiameter(star.magnitude(), projection, planeToCanvas);
-            fillDisk(transformedPos[index], transformedPos[index + 1], diameter,
-                    BlackBodyColor.colorForTemperature(star.colorTemperature()));
-            if (star.magnitude() < 1.5 && drawBiggestStarsName)
-                ctx.strokeText(star.info(), transformedPos[index], transformedPos[index + 1]);
+            double x = transformedPos[index];
+            double y = transformedPos[index + 1];
+            Color c = BlackBodyColor.colorForTemperature(star.colorTemperature());
+            fillDisk(x, y, diameter, c);
+            if (star.magnitude() < 1.5 && drawNames) {
+                ctx.setStroke(c);
+                ctx.strokeText(star.info(), x, y);
+            }
             index += 2;
         }
     }
@@ -141,8 +146,12 @@ public class SkyCanvasPainter {
      * @param sky           to represent
      * @param projection    used
      * @param planeToCanvas transformation
+     * @param drawNames     boolean indicating whether to draw the names
      */
-    public void drawPlanets(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
+    public void drawPlanets(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas, boolean drawNames) {
+        ctx.setStroke(Color.FORESTGREEN);
+        ctx.setLineWidth(1);
+        ctx.setTextBaseline(VPos.BOTTOM);
         // transform all positions of the planets
         double[] planetPositions = sky.planetPositions();
         double[] transformedPlanetPositions = new double[planetPositions.length];
@@ -151,7 +160,10 @@ public class SkyCanvasPainter {
         int index = 0;
         for (Planet planet : sky.planets()) {
             double diameter = transformedDiameter(planet.magnitude(), projection, planeToCanvas);
-            fillDisk(transformedPlanetPositions[index], transformedPlanetPositions[index + 1], diameter, Color.LIGHTGRAY);
+            double x = transformedPlanetPositions[index];
+            double y = transformedPlanetPositions[index + 1];
+            fillDisk(x, y, diameter, Color.LIGHTGRAY);
+            if (drawNames) ctx.strokeText(planet.name(), x, y);
             index += 2;
         }
     }
@@ -162,8 +174,12 @@ public class SkyCanvasPainter {
      * @param sky           to represent
      * @param projection    used
      * @param planeToCanvas transformation
+     * @param drawNames     boolean indicating whether to draw the name of the sun
      */
-    public void drawSun(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
+    public void drawSun(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas, boolean drawNames) {
+        ctx.setStroke(Color.YELLOW);
+        ctx.setLineWidth(1);
+        ctx.setTextBaseline(VPos.BOTTOM);
         Point2D pos = planeToCanvas.transform(sky.sunPosition().x(), sky.sunPosition().y());
         double tempDiam = projection.applyToAngle(sky.sun().angularSize());
         double diameter = planeToCanvas.deltaTransform(tempDiam, 0).getX();
@@ -171,7 +187,7 @@ public class SkyCanvasPainter {
         Image sunImage = new Image(getClass().getResourceAsStream("/sun.png"),
                 haloDiameter, haloDiameter, true, true);
         ctx.drawImage(sunImage, pos.getX() - haloDiameter / 2, pos.getY() - haloDiameter / 2);
-
+        if (drawNames) ctx.strokeText(sky.sun().name(), pos.getX(), pos.getY());
     }
 
     /**
@@ -180,11 +196,18 @@ public class SkyCanvasPainter {
      * @param sky           to represent
      * @param projection    used
      * @param planeToCanvas transformation
+     * @param drawNames     boolean indicating whether to draw the names
      */
-    public void drawMoon(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas) {
+    public void drawMoon(ObservedSky sky, StereographicProjection projection, Transform planeToCanvas, boolean drawNames) {
         Point2D pos = planeToCanvas.transform(sky.moonPosition().x(), sky.moonPosition().y());
         double diameter = transformedDiameter(sky.moon().magnitude(), projection, planeToCanvas);
         fillDisk(pos.getX(), pos.getY(), diameter, Color.WHITE);
+        if (drawNames) {
+            ctx.setStroke(Color.WHITE);
+            ctx.setLineWidth(1);
+            ctx.setTextBaseline(VPos.BOTTOM);
+            ctx.strokeText(sky.moon().name(), pos.getX(), pos.getY());
+        }
     }
 
     /**
@@ -198,37 +221,10 @@ public class SkyCanvasPainter {
         double radius = projection.circleRadiusForParallel(HorizontalCoordinates.of(0, 0));
         double transformedRadius = planeToCanvas.deltaTransform(radius, 0).getX();
 
-        // TODO draw the earth, everything on screen but the horizon disk
-        // TODO use shapes, substract
-        /*ctx.setFill(Color.FORESTGREEN);
-        ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        ctx.setFill(Color.TRANSPARENT);
-        ctx.fillOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,
-                transformedRadius * 2, transformedRadius * 2);
-        ctx.fillArc(pos.getX() - transformedRadius, pos.getY() - transformedRadius, 100, 100,
-                100, 100, ArcType.ROUND);
-         */
         ctx.setStroke(Color.RED);
         ctx.setLineWidth(2);
         ctx.strokeOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,
                 transformedRadius * 2, transformedRadius * 2);
-    }
-
-    public void drawHorizontalGrid(StereographicProjection projection, Transform planeToCanvas) {
-        ctx.setStroke(Color.INDIANRED);
-        ctx.setLineWidth(1);
-        // TODO implement
-        // TODO meridian
-        CartesianCoordinates center = projection.circleCenterForParallel(HorizontalCoordinates.of(0, 0));
-        Point2D pos = planeToCanvas.transform(center.x(), center.y());
-
-        for (int alt = -90; alt < 91; alt += 10) {
-            double radius = projection.circleRadiusForParallel(HorizontalCoordinates.ofDeg(0, alt));
-            double transformedRadius = planeToCanvas.deltaTransform(radius, 0).magnitude();
-
-            ctx.strokeOval(pos.getX() - transformedRadius, pos.getY() - transformedRadius,
-                    transformedRadius * 2, transformedRadius * 2);
-        }
     }
 
     /**

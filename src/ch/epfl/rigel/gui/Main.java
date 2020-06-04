@@ -1,6 +1,7 @@
 package ch.epfl.rigel.gui;
 
 import ch.epfl.rigel.astronomy.AsterismLoader;
+import ch.epfl.rigel.astronomy.CelestialObject;
 import ch.epfl.rigel.astronomy.HygDatabaseLoader;
 import ch.epfl.rigel.astronomy.StarCatalogue;
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
@@ -14,8 +15,13 @@ import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -43,15 +49,8 @@ import static javafx.beans.binding.Bindings.when;
 public class Main extends Application {
 
     // Strings used for button icons
-    private static final String RESET_ICON = "\uf0e2";
-    private static final String PLAY_ICON = "\uf04b";
-    private static final String PAUSE_ICON = "\uf04c";
-    private static final String FORWARD_ICON = "\uf04e";
-    private static final String SKIP_ICON = "\uf051";
-    private static final String RIGHT_ARROW_ICON = "\uf0a9";
-    private static final String LEFT_ARROW_ICON = "\uf0a8";
-    private static final String INCREASE_ICON = "\uF065";
-    private static final String DECREASE_ICON = "\uF066";
+    private static final String FAST_FWD_ICON = "\uf04e";
+    private static final String SKIP_FWD_ICON = "\uf051";
 
     private final ObserverLocationBean observerLocationBean = new ObserverLocationBean();
     private final DateTimeBean dateTimeBean = new DateTimeBean();
@@ -59,10 +58,21 @@ public class Main extends Application {
     private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
     private SkyCanvasManager skyCanvasManager;
 
+    private Button resetButton;
+    private static final String RESET_ICON = "\uf0e2";
+
+    private Button startStopButton;
+    private static final String START_ICON = "\uf04b";
+    private static final String STOP_ICON = "\uf04c";
+
     private final Button settingsButton = new Button();
+    private static final String RIGHT_ARROW_ICON = "\uf0a9";
+    private static final String LEFT_ARROW_ICON = "\uf0a8";
     private final BooleanProperty showSettings = new SimpleBooleanProperty(false);
 
     private final Button fullScreenButton = new Button();
+    private static final String INCREASE_ICON = "\uF065";
+    private static final String DECREASE_ICON = "\uF066";
     private final BooleanProperty fullScreen = new SimpleBooleanProperty(false);
 
     private TextField lonTextField;
@@ -80,8 +90,120 @@ public class Main extends Application {
         skyCanvasManager = createManager();
         Canvas canvas = skyCanvasManager.canvas();
 
+        // Mouse Controls
+        canvas.setOnMouseClicked(m -> {
+            if (!canvas.isFocused()) canvas.requestFocus();
+            skyCanvasManager.updateSky();
+            switch (m.getButton()) {
+                case PRIMARY:
+                    if(skyCanvasManager.getObjUnderMouse() != null) {
+                        switch (skyCanvasManager.getObjUnderMouse().name()) {
+                            case "Rigel":
+                            case "Sun":
+                            case "Moon":
+                            case "Neptune":
+                            case "Mars":
+                            case "Jupiter":
+                            case "Saturn":
+                            case "Venus":
+                            case "Uranus":
+                                this.getHostServices().showDocument("https://en.wikipedia.org/wiki/" +
+                                        skyCanvasManager.getObjUnderMouse().name());
+                                break;
+                            case "Mercury":
+                                this.getHostServices().showDocument("https://en.wikipedia.org/wiki/Mercury_(planet)");
+                                break;
+                        }
+                    }
+                    break;
+                case MIDDLE:
+                    viewingParametersBean.setFieldOfViewDeg(100);
+                    break;
+                case SECONDARY:
+                    // display information of the object under mouse
+                    CelestialObject objUnderMouse = skyCanvasManager.getObjUnderMouse();
+                    if (objUnderMouse != null) {
+                        GraphicsContext ctx = canvas.getGraphicsContext2D();
+                        ctx.setFill(Color.valueOf("#373e43"));
+                        ctx.fillRect(m.getX(), m.getY(), 230, 65);
+                        ctx.setStroke(Color.WHITE);
+                        ctx.setLineWidth(1);
+                        ctx.strokeText(" Name : " + objUnderMouse.info() + "\n" +
+                                        " Position : " + objUnderMouse.equatorialPos() + "\n" +
+                                        " Angular Size : " + objUnderMouse.angularSize() + "\n" +
+                                        " Magnitude : " + objUnderMouse.magnitude(),
+                                m.getX(), m.getY());
+                    }
+                    break;
+            }
+        });
+
+        // Keyboard shortcuts
+        canvas.setOnKeyPressed(
+                e -> {
+                    HorizontalCoordinates center = viewingParametersBean.getCenter();
+                    switch (e.getCode()) {
+                        case LEFT:
+                            viewingParametersBean.setCenter(skyCanvasManager.centerWithAzDiff(center, -10));
+                            break;
+                        case RIGHT:
+                            viewingParametersBean.setCenter(skyCanvasManager.centerWithAzDiff(center, 10));
+                            break;
+                        case UP:
+                            viewingParametersBean.setCenter(skyCanvasManager.centerWithAltDiff(center, 5));
+                            break;
+                        case DOWN:
+                            viewingParametersBean.setCenter(skyCanvasManager.centerWithAltDiff(center, -5));
+                            break;
+                        case SPACE:
+                        case ENTER:
+                            startStopButton.fire();
+                            break;
+                        case F:
+                            fullScreenButton.fire();
+                            break;
+                        case R:
+                            resetButton.fire();
+                            break;
+                        case TAB:
+                            settingsButton.fire();
+                            break;
+                        case DIGIT1:
+                            skyCanvasManager.drawStarsProperty().set(!skyCanvasManager.drawStarsProperty().get());
+                            break;
+                        case DIGIT2:
+                            skyCanvasManager.drawAsterismsProperty().set(!skyCanvasManager.drawAsterismsProperty().get());
+                            break;
+                        case DIGIT3:
+                            skyCanvasManager.drawPlanetsProperty().set(!skyCanvasManager.drawPlanetsProperty().get());
+                            break;
+                        case DIGIT4:
+                            skyCanvasManager.drawSunProperty().set(!skyCanvasManager.drawSunProperty().get());
+                            break;
+                        case DIGIT5:
+                            skyCanvasManager.drawMoonProperty().set(!skyCanvasManager.drawMoonProperty().get());
+                            break;
+                        case DIGIT6:
+                            skyCanvasManager.drawHorizonProperty().set(!skyCanvasManager.drawHorizonProperty().get());
+                            break;
+                        case DIGIT7:
+                            skyCanvasManager.drawCardinalPointsProperty().set(!skyCanvasManager.drawCardinalPointsProperty().get());
+                            break;
+                        case DIGIT8:
+                            skyCanvasManager.drawAtmosphereProperty().set(!skyCanvasManager.drawAtmosphereProperty().get());
+                            break;
+                        case DIGIT9:
+                            skyCanvasManager.drawNamesProperty().set(!skyCanvasManager.drawNamesProperty().get());
+                            break;
+                    }
+                    skyCanvasManager.updateSky();
+                    e.consume();
+                }
+        );
+
         fullScreenButton.textProperty().bind(when(fullScreen).then(DECREASE_ICON).otherwise(INCREASE_ICON));
         fullScreenButton.setOnAction(e -> fullScreen.set(!fullScreen.get()));
+        fullScreenButton.setTooltip(new Tooltip("Full screen - F"));
         fullScreen.addListener((p, o, n) -> {
             if (n) showSettings.set(false);
         });
@@ -89,6 +211,7 @@ public class Main extends Application {
         Pane sky = new Pane(canvas, settingsButton, fullScreenButton);
         settingsButton.toFront();
         settingsButton.textProperty().bind(when(showSettings).then(LEFT_ARROW_ICON).otherwise(RIGHT_ARROW_ICON));
+        settingsButton.setTooltip(new Tooltip("Settings - TAB"));
         settingsButton.setOnAction(e -> showSettings.set(!showSettings.get()));
         settingsButton.disableProperty().bind(fullScreen);
 
@@ -128,7 +251,7 @@ public class Main extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Rigel");
-        primaryStage.setMinWidth(1200);
+        primaryStage.setMinWidth(1025);
         primaryStage.setMinHeight(700);
         primaryStage.show();
     }
@@ -208,25 +331,25 @@ public class Main extends Application {
         settingsButton.setFont(fontAwesome);
         fullScreenButton.setFont(fontAwesome);
 
-        Button resetButton = new Button(RESET_ICON);
+        resetButton = new Button(RESET_ICON);
         resetButton.setFont(fontAwesome);
         resetButton.setOnAction(e -> {
             datePicker.setValue(LocalDate.now());
             timeFormatter.setValue(LocalTime.now());
             zoneIdComboBox.setValue(ZoneId.systemDefault());
         });
-        resetButton.setTooltip(new Tooltip("Reset"));
+        resetButton.setTooltip(new Tooltip("Reset - R"));
         resetButton.disableProperty().bind(timeAnimator.runningProperty());
 
         // Time play/pause
-        Button playPauseButton = new Button(PLAY_ICON);
-        playPauseButton.setFont(fontAwesome);
-        playPauseButton.textProperty().bind(when(timeAnimator.runningProperty()).then(PAUSE_ICON).otherwise(PLAY_ICON));
-        playPauseButton.setOnAction(e -> timeAnimator.startStop());
-        playPauseButton.setTooltip(new Tooltip("Start/Stop"));
+        startStopButton = new Button(START_ICON);
+        startStopButton.setFont(fontAwesome);
+        startStopButton.textProperty().bind(when(timeAnimator.runningProperty()).then(STOP_ICON).otherwise(START_ICON));
+        startStopButton.setOnAction(e -> timeAnimator.startStop());
+        startStopButton.setTooltip(new Tooltip("Start/Stop - SPACE or ENTER"));
 
         // Select the next accelerator
-        Button forwardButton = new Button(FORWARD_ICON);
+        Button forwardButton = new Button(FAST_FWD_ICON);
         forwardButton.setFont(fontAwesome);
         forwardButton.setOnAction(e -> {
                     timeAnimator.startStop();
@@ -239,13 +362,13 @@ public class Main extends Application {
         forwardButton.setTooltip(new Tooltip("Fast forward"));
 
         // Add one year to the current date
-        Button skipButton = new Button(SKIP_ICON);
+        Button skipButton = new Button(SKIP_FWD_ICON);
         skipButton.setFont(fontAwesome);
         skipButton.setOnAction(e -> dateTimeBean.setDate(dateTimeBean.getDate().plusYears(1)));
         skipButton.disableProperty().bind(timeAnimator.runningProperty());
         skipButton.setTooltip(new Tooltip("Skip forward"));
 
-        HBox timeFlowControl = new HBox(acceleratorChoiceBox, resetButton, playPauseButton, forwardButton, skipButton);
+        HBox timeFlowControl = new HBox(acceleratorChoiceBox, resetButton, startStopButton, forwardButton, skipButton);
         timeFlowControl.setId("timeFlowControl");
 
         //-----------------------------------------------------------------------------
@@ -316,6 +439,9 @@ public class Main extends Application {
         CheckBox atmosphereCheckBox = new CheckBox("Atmosphere");
         atmosphereCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAtmosphereProperty());
         atmosphereCheckBox.setTooltip(new Tooltip("Show atmosphere - 8"));
+        CheckBox namesCheckBox = new CheckBox("Names");
+        namesCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawNamesProperty());
+        namesCheckBox.setTooltip(new Tooltip("Show names - 9"));
 
         // slider for the field of view
         Text fovSliderText = new Text("Field of view (°):");
@@ -358,8 +484,8 @@ public class Main extends Application {
             }
         });
 
-        VBox vBox = new VBox(displaySettingText, starsCheckBox, asterismsCheckBox, planetsCheckBox,
-                sunCheckBox, moonCheckBox, horizonCheckBox, cardinalPointsCheckBox, atmosphereCheckBox, new Separator(),
+        VBox vBox = new VBox(displaySettingText, starsCheckBox, asterismsCheckBox, planetsCheckBox, sunCheckBox,
+                moonCheckBox, horizonCheckBox, cardinalPointsCheckBox, atmosphereCheckBox, namesCheckBox, new Separator(),
                 fovSliderText, fovSlider, new Separator(), citySelectionText, searchBar, cityTableView);
         vBox.setId("settingsBar");
         return vBox;
@@ -453,4 +579,5 @@ public class Main extends Application {
             return Font.loadFont(fs, 15);
         }
     }
+
 }

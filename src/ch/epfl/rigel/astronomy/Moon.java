@@ -29,7 +29,7 @@ public final class Moon extends CelestialObject {
      * @throws IllegalArgumentException if phase isn't contained in [0, 1]
      */
     public Moon(EquatorialCoordinates equatorialPos, float angularSize, float magnitude, float phase) {
-        super("Lune", equatorialPos, angularSize, magnitude);
+        super("Moon", equatorialPos, angularSize, magnitude);
 
         this.phase = (float) Preconditions.checkInInterval(closedIntervalZeroToOne, phase);
     }

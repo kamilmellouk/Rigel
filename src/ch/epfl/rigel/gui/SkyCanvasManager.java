@@ -58,7 +58,7 @@ public class SkyCanvasManager {
     private final BooleanProperty drawHorizon = new SimpleBooleanProperty(true);
     private final BooleanProperty drawCardinalPoints = new SimpleBooleanProperty(true);
     private final BooleanProperty drawAtmosphere = new SimpleBooleanProperty(false);
-    private final BooleanProperty drawBiggestStarsName = new SimpleBooleanProperty(true);
+    private final BooleanProperty drawNames = new SimpleBooleanProperty(true);
     private Color skyColor;
 
     /**
@@ -97,81 +97,6 @@ public class SkyCanvasManager {
                                 (Math.abs(e.getDeltaX()) > Math.abs(e.getDeltaY()) ? e.getDeltaX() : e.getDeltaY())
                 )
         );
-
-        canvas.setOnKeyPressed(
-                e -> {
-                    HorizontalCoordinates center = viewingParametersBean.getCenter();
-                    switch (e.getCode()) {
-                        case LEFT:
-                            viewingParametersBean.setCenter(centerWithAzDiff(center, -10));
-                            break;
-                        case RIGHT:
-                            viewingParametersBean.setCenter(centerWithAzDiff(center, 10));
-                            break;
-                        case UP:
-                            viewingParametersBean.setCenter(centerWithAltDiff(center, 5));
-                            break;
-                        case DOWN:
-                            viewingParametersBean.setCenter(centerWithAltDiff(center, -5));
-                            break;
-                        case DIGIT1:
-                            drawStars.set(!drawStars.get());
-                            break;
-                        case DIGIT2:
-                            drawAsterisms.set(!drawAsterisms.get());
-                            break;
-                        case DIGIT3:
-                            drawPlanets.set(!drawPlanets.get());
-                            break;
-                        case DIGIT4:
-                            drawSun.set(!drawSun.get());
-                            break;
-                        case DIGIT5:
-                            drawMoon.set(!drawMoon.get());
-                            break;
-                        case DIGIT6:
-                            drawHorizon.set(!drawHorizon.get());
-                            break;
-                        case DIGIT7:
-                            drawCardinalPoints.set(!drawCardinalPoints.get());
-                            break;
-                        case DIGIT8:
-                            drawAtmosphere.set(!drawAtmosphere.get());
-                            break;
-                        case DIGIT9:
-                            drawBiggestStarsName.set(!drawBiggestStarsName.get());
-                            break;
-                    }
-                    updateSky();
-                    e.consume();
-                }
-        );
-
-        canvas.setOnMouseClicked(e -> {
-            if (!canvas.isFocused()) canvas.requestFocus();
-            updateSky();
-            switch (e.getButton()) {
-                case MIDDLE:
-                    viewingParametersBean.setFieldOfViewDeg(100);
-                    break;
-                case SECONDARY:
-                    // display information of the object under mouse
-                    CelestialObject objUnderMouse = getObjUnderMouse();
-                    if (objUnderMouse != null) {
-                        GraphicsContext ctx = canvas.getGraphicsContext2D();
-                        ctx.setFill(Color.valueOf("#373e43"));
-                        ctx.fillRect(e.getX(), e.getY(), 230, 65);
-                        ctx.setStroke(Color.WHITE);
-                        ctx.setLineWidth(1);
-                        ctx.strokeText(" Name : " + objUnderMouse.info() + "\n" +
-                                        " Position : " + objUnderMouse.equatorialPos() + "\n" +
-                                        " Angular Size : " + objUnderMouse.angularSize() + "\n" +
-                                        " Magnitude : " + objUnderMouse.magnitude(),
-                                e.getX(), e.getY());
-                    }
-                    break;
-            }
-        });
 
         //-----------------------------------------------------------------------------
         // Bindings and properties
@@ -343,7 +268,7 @@ public class SkyCanvasManager {
     /**
      * Updating all drawable elements of the sky
      */
-    private void updateSky() {
+    public void updateSky() {
         ObservedSky observedSky = this.observedSky.getValue();
         StereographicProjection projection = this.projection.getValue();
         Transform planeToCanvas = this.planeToCanvas.getValue();
@@ -351,11 +276,11 @@ public class SkyCanvasManager {
         if (drawAtmosphere.get()) painter.clear(skyColor);
         else painter.clear(Color.BLACK);
         painter.drawStarsAsterisms(observedSky, projection, planeToCanvas,
-                drawStars.get(), drawAsterisms.get(), drawBiggestStarsName.get());
+                drawStars.get(), drawAsterisms.get(), drawNames.get());
         //painter.drawHorizontalGrid(projection, planeToCanvas);
-        if (drawPlanets.get()) painter.drawPlanets(observedSky, projection, planeToCanvas);
-        if (drawSun.get()) painter.drawSun(observedSky, projection, planeToCanvas);
-        if (drawMoon.get()) painter.drawMoon(observedSky, projection, planeToCanvas);
+        if (drawPlanets.get()) painter.drawPlanets(observedSky, projection, planeToCanvas, drawNames.get());
+        if (drawSun.get()) painter.drawSun(observedSky, projection, planeToCanvas, drawNames.get());
+        if (drawMoon.get()) painter.drawMoon(observedSky, projection, planeToCanvas, drawNames.get());
         if (drawHorizon.get()) painter.drawHorizon(projection, planeToCanvas);
         if (drawCardinalPoints.get()) painter.drawCardinalPoints(projection, planeToCanvas);
     }
@@ -367,7 +292,7 @@ public class SkyCanvasManager {
      * @param azDiff the azimuth difference to apply
      * @return the new coordinates with the difference if possible
      */
-    private HorizontalCoordinates centerWithAzDiff(HorizontalCoordinates center, double azDiff) {
+    public HorizontalCoordinates centerWithAzDiff(HorizontalCoordinates center, double azDiff) {
         return HorizontalCoordinates.ofDeg(
                 RIGHT_OPEN_INTERVAL_0_TO_360.reduce(center.azDeg() + azDiff),
                 center.altDeg()
@@ -381,7 +306,7 @@ public class SkyCanvasManager {
      * @param altDiff the altitude difference to apply
      * @return the new coordinates with the difference if possible
      */
-    private HorizontalCoordinates centerWithAltDiff(HorizontalCoordinates center, double altDiff) {
+    public HorizontalCoordinates centerWithAltDiff(HorizontalCoordinates center, double altDiff) {
         return HorizontalCoordinates.ofDeg(
                 center.azDeg(),
                 CLOSED_INTERVAL_5_TO_90.clip(center.altDeg() + altDiff)
@@ -473,5 +398,12 @@ public class SkyCanvasManager {
         return drawAtmosphere;
     }
 
-    public BooleanProperty drawBiggestStarsNameProperty() { return drawBiggestStarsName; }
+    /**
+     * Getter for the drawNamesProperty
+     *
+     * @return the drawNamesProperty
+     */
+    public BooleanProperty drawNamesProperty() {
+        return drawNames;
+    }
 }
