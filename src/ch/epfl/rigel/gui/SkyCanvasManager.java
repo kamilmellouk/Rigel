@@ -51,7 +51,7 @@ public class SkyCanvasManager {
     private final ObservableDoubleValue mouseAltDeg;
 
     private final BooleanProperty drawStars = new SimpleBooleanProperty(true);
-    private final BooleanProperty drawAsterisms = new SimpleBooleanProperty(false);
+    private final BooleanProperty drawAsterisms = new SimpleBooleanProperty(true);
     private final BooleanProperty drawPlanets = new SimpleBooleanProperty(true);
     private final BooleanProperty drawSun = new SimpleBooleanProperty(true);
     private final BooleanProperty drawMoon = new SimpleBooleanProperty(true);
