@@ -41,11 +41,10 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static javafx.beans.binding.Bindings.when;
 
@@ -64,6 +63,8 @@ public class Main extends Application {
     private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
     private SkyCanvasManager skyCanvasManager;
     private Canvas canvas;
+
+    private final Map<String, BooleanProperty> checkBoxesData = new TreeMap<>();
 
     private Button resetButton;
     private static final String RESET_ICON = "\uf0e2";
@@ -96,6 +97,17 @@ public class Main extends Application {
 
         skyCanvasManager = createManager();
         canvas = skyCanvasManager.canvas();
+
+        // put the data for check boxes
+        checkBoxesData.put("Stars", skyCanvasManager.drawStarsProperty());
+        checkBoxesData.put("Asterisms", skyCanvasManager.drawAsterismsProperty());
+        checkBoxesData.put("Planets", skyCanvasManager.drawPlanetsProperty());
+        checkBoxesData.put("Sun", skyCanvasManager.drawSunProperty());
+        checkBoxesData.put("Moon", skyCanvasManager.drawMoonProperty());
+        checkBoxesData.put("Horizon", skyCanvasManager.drawHorizonProperty());
+        checkBoxesData.put("Cardinal points", skyCanvasManager.drawCardinalPointsProperty());
+        checkBoxesData.put("Atmosphere", skyCanvasManager.drawAtmosphereProperty());
+        checkBoxesData.put("Names", skyCanvasManager.drawNamesProperty());
 
         initialiseMouseControls();
         initialiseKeyboardControls();
@@ -446,33 +458,15 @@ public class Main extends Application {
         Text displaySettingText = new Text("Display settings:");
         displaySettingText.setId("settingsText");
         // checkboxes for each elements of the canvas
-        CheckBox starsCheckBox = new CheckBox("Stars");
-        starsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawStarsProperty());
-        starsCheckBox.setTooltip(new Tooltip("Show stars - 1"));
-        CheckBox asterismsCheckBox = new CheckBox("Asterisms");
-        asterismsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAsterismsProperty());
-        asterismsCheckBox.setTooltip(new Tooltip("Show asterisms - 2"));
-        CheckBox planetsCheckBox = new CheckBox("Planets");
-        planetsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawPlanetsProperty());
-        planetsCheckBox.setTooltip(new Tooltip("Show planets - 3"));
-        CheckBox sunCheckBox = new CheckBox("Sun");
-        sunCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawSunProperty());
-        sunCheckBox.setTooltip(new Tooltip("Show sun - 4"));
-        CheckBox moonCheckBox = new CheckBox("Moon");
-        moonCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawMoonProperty());
-        moonCheckBox.setTooltip(new Tooltip("Show moon - 5"));
-        CheckBox horizonCheckBox = new CheckBox("Horizon");
-        horizonCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawHorizonProperty());
-        horizonCheckBox.setTooltip(new Tooltip("Show horizon - 6"));
-        CheckBox cardinalPointsCheckBox = new CheckBox("Cardinal points");
-        cardinalPointsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawCardinalPointsProperty());
-        cardinalPointsCheckBox.setTooltip(new Tooltip("Show cardinal points - 7"));
-        CheckBox atmosphereCheckBox = new CheckBox("Atmosphere");
-        atmosphereCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAtmosphereProperty());
-        atmosphereCheckBox.setTooltip(new Tooltip("Show atmosphere - 8"));
-        CheckBox namesCheckBox = new CheckBox("Names");
-        namesCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawNamesProperty());
-        namesCheckBox.setTooltip(new Tooltip("Show names - 9"));
+        VBox checkBoxes = new VBox();
+        int numberKey = 1;
+        for (String element : checkBoxesData.keySet()) {
+            CheckBox checkBox = new CheckBox(element);
+            checkBox.selectedProperty().bindBidirectional(checkBoxesData.get(element));
+            checkBox.setTooltip(new Tooltip("Show " + element.toLowerCase() + " - " + numberKey));
+            numberKey++;
+            checkBoxes.getChildren().add(checkBox);
+        }
 
         // slider for the field of view
         Text fovSliderText = new Text("Field of view (°):");
@@ -512,8 +506,7 @@ public class Main extends Application {
             }
         });
 
-        VBox vBox = new VBox(displaySettingText, starsCheckBox, asterismsCheckBox, planetsCheckBox, sunCheckBox,
-                moonCheckBox, horizonCheckBox, cardinalPointsCheckBox, atmosphereCheckBox, namesCheckBox, new Separator(),
+        VBox vBox = new VBox(displaySettingText, checkBoxes, new Separator(),
                 fovSliderText, fovSlider, new Separator(), citySelectionText, searchBar, cityTableView);
         vBox.setId("settingsBar");
         return vBox;
