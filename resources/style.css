@@ -56,8 +56,14 @@
     -fx-fill: black;
 }
 
-#shortcutsList {
-    -fx-font-size: 15pt;
+#shortcutsList1 {
+    -fx-font-size: 20pt;
+    -fx-fill: black;
+    -fx-background-color: black;
+}
+
+#shortcutsList2 {
+    -fx-font-size: 20pt;
     -fx-fill: black;
     -fx-background-color: black;
 }

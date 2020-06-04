@@ -2,6 +2,7 @@ package ch.epfl.rigel.gui;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -69,26 +70,35 @@ public class HomePage {
      * @return the shortcuts list
      */
     private GridPane shortcutsList() {
-        Text shortcuts = new Text(
-                "TAB         : show/hide settings bar" + "\n" +
-                "F           : enable/disable fullscreen mode" + "\n" +
-                "SPACE/ENTER : start/stop animation" + "\n" +
-                "R           : reset animation" + "\n" +
-                "S           : take a screenshot of the sky" + "\n" +
-                "1           : show stars" + "\n" +
-                "2           : show asterisms" + "\n" +
+        // column 1
+        Text shortcuts1 = new Text(
+                "TAB       : show/hide settings bar" + "\n" +
+                        "F           : enable/disable fullscreen mode" + "\n" +
+                        "SPACE/ENTER : start/stop animation" + "\n" +
+                        "R           : reset animation" + "\n" +
+                        "S           : take a screenshot of the sky" + "\n" +
+                        "1           : show stars" + "\n" +
+                        "2           : show asterisms"
+        );
+        shortcuts1.setId("shortcutsList1");
+        shortcuts1.setTextAlignment(TextAlignment.LEFT);
+        // column 2
+        Text shortcuts2 = new Text(
                 "3           : show planets" + "\n" +
-                "4           : show the sun" + "\n" +
-                "5           : show the moon" + "\n" +
-                "6           : show the horizon" + "\n" +
-                "7           : show cardinal points" + "\n" +
-                "8           : show the atmosphere" + "\n" +
-                "9           : show names"
-                );
-        shortcuts.setId("shortcutsList");
-        shortcuts.setTextAlignment(TextAlignment.LEFT);
+                        "4           : show the sun" + "\n" +
+                        "5           : show the moon" + "\n" +
+                        "6           : show the horizon" + "\n" +
+                        "7           : show cardinal points" + "\n" +
+                        "8           : show the atmosphere" + "\n" +
+                        "9           : show names"
+        );
+        shortcuts2.setId("shortcutsList2");
+        shortcuts2.setTextAlignment(TextAlignment.LEFT);
+
+        HBox shortcuts = new HBox(shortcuts1, shortcuts2);
+        shortcuts.setSpacing(50);
         GridPane pane = new GridPane();
-        pane.getChildren().add(shortcuts);
+        pane.getChildren().addAll(shortcuts);
         pane.setAlignment(Pos.CENTER);
         pane.setStyle("-fx-padding: 10pt;");
         return pane;
