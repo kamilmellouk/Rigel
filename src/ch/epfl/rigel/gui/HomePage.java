@@ -79,8 +79,9 @@ public class HomePage {
                 "4           : show the sun" + "\n" +
                 "5           : show the moon" + "\n" +
                 "6           : show the horizon" + "\n" +
-                "7           : show the atmosphere" + "\n" +
-                "8           : show names"
+                "7           : show cardinal points" + "\n" +
+                "8           : show the atmosphere" + "\n" +
+                "9           : show names"
                 );
         shortcuts.setId("shortcutsList");
         shortcuts.setTextAlignment(TextAlignment.LEFT);
