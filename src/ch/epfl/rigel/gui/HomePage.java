@@ -1,8 +1,8 @@
 package ch.epfl.rigel.gui;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.Separator;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -71,18 +71,19 @@ public class HomePage {
     private GridPane shortcutsList() {
         Text shortcuts = new Text(
                 "TAB         : show/hide settings bar" + "\n" +
-                        "F           : enable/disable fullscreen mode" + "\n" +
-                        "SPACE/ENTER : start/stop animation" + "\n" +
-                        "R           : reset animation" + "\n" +
-                        "1           : show stars" + "\n" +
-                        "2           : show asterisms" + "\n" +
-                        "3           : show planets" + "\n" +
-                        "4           : show the sun" + "\n" +
-                        "5           : show the moon" + "\n" +
-                        "6           : show the horizon" + "\n" +
-                        "7           : show the atmosphere" + "\n" +
-                        "8           : show names"
-        );
+                "F           : enable/disable fullscreen mode" + "\n" +
+                "SPACE/ENTER : start/stop animation" + "\n" +
+                "R           : reset animation" + "\n" +
+                "1           : show stars" + "\n" +
+                "2           : show asterisms" + "\n" +
+                "3           : show planets" + "\n" +
+                "4           : show the sun" + "\n" +
+                "5           : show the moon" + "\n" +
+                "6           : show the horizon" + "\n" +
+                "7           : show cardinal points" + "\n" +
+                "8           : show the atmosphere" + "\n" +
+                "9           : show names"
+                );
         shortcuts.setId("shortcutsList");
         shortcuts.setTextAlignment(TextAlignment.LEFT);
         GridPane pane = new GridPane();
