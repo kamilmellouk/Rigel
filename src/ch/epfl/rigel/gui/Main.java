@@ -41,11 +41,10 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static javafx.beans.binding.Bindings.when;
 
@@ -63,6 +62,9 @@ public class Main extends Application {
     private final ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
     private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
     private SkyCanvasManager skyCanvasManager;
+    private Canvas canvas;
+
+    private final Map<String, BooleanProperty> checkBoxesData = new TreeMap<>();
 
     private Button resetButton;
     private static final String RESET_ICON = "\uf0e2";
@@ -94,9 +96,68 @@ public class Main extends Application {
         viewingParametersBean.setFieldOfViewDeg(100);
 
         skyCanvasManager = createManager();
-        Canvas canvas = skyCanvasManager.canvas();
+        canvas = skyCanvasManager.canvas();
 
-        // Mouse Controls
+        // put the data for check boxes
+        checkBoxesData.put("Stars", skyCanvasManager.drawStarsProperty());
+        checkBoxesData.put("Asterisms", skyCanvasManager.drawAsterismsProperty());
+        checkBoxesData.put("Planets", skyCanvasManager.drawPlanetsProperty());
+        checkBoxesData.put("Sun", skyCanvasManager.drawSunProperty());
+        checkBoxesData.put("Moon", skyCanvasManager.drawMoonProperty());
+        checkBoxesData.put("Horizon", skyCanvasManager.drawHorizonProperty());
+        checkBoxesData.put("Cardinal points", skyCanvasManager.drawCardinalPointsProperty());
+        checkBoxesData.put("Atmosphere", skyCanvasManager.drawAtmosphereProperty());
+        checkBoxesData.put("Names", skyCanvasManager.drawNamesProperty());
+
+        initialiseMouseControls();
+        initialiseKeyboardControls();
+        initialiseButtons();
+
+        Pane sky = new Pane(canvas, settingsButton, fullScreenButton);
+
+        BorderPane mainPane = new BorderPane(
+                sky,
+                controlBar(),
+                null,
+                infoBar(),
+                null
+        );
+
+        // display depending on state
+        mainPane.leftProperty().bind(when(showSettings).then(settingsBar()).otherwise(new VBox()));
+        mainPane.topProperty().bind(when(fullScreen).then(new HBox()).otherwise(controlBar()));
+        mainPane.bottomProperty().bind(when(fullScreen).then(new BorderPane()).otherwise(infoBar()));
+
+        skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
+        skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
+
+        HomePage homePage = new HomePage();
+        VBox homePane = homePage.getPane();
+
+        Scene scene = new Scene(homePane);
+        // add the reference for the style
+        scene.getStylesheets().add("/style.css");
+
+        // launch the program by clicking any key
+        homePane.setOnKeyPressed(
+                e -> {
+                    scene.setRoot(mainPane);
+                    canvas.requestFocus();
+                }
+        );
+        homePane.requestFocus();
+
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Rigel");
+        primaryStage.setMinWidth(1025);
+        primaryStage.setMinHeight(700);
+        primaryStage.show();
+    }
+
+    /**
+     * initialise mouse controls
+     */
+    private void initialiseMouseControls() {
         canvas.setOnMouseClicked(m -> {
             if (!canvas.isFocused()) canvas.requestFocus();
             skyCanvasManager.updateSky();
@@ -145,8 +206,12 @@ public class Main extends Application {
                     break;
             }
         });
+    }
 
-        // Keyboard shortcuts
+    /**
+     * initialise keyboard controls
+     */
+    private void initialiseKeyboardControls() {
         canvas.setOnKeyPressed(
                 e -> {
                     HorizontalCoordinates center = viewingParametersBean.getCenter();
@@ -211,7 +276,12 @@ public class Main extends Application {
                     e.consume();
                 }
         );
+    }
 
+    /**
+     * initialise buttons
+     */
+    private void initialiseButtons() {
         fullScreenButton.textProperty().bind(when(fullScreen).then(DECREASE_ICON).otherwise(INCREASE_ICON));
         fullScreenButton.setOnAction(e -> fullScreen.set(!fullScreen.get()));
         fullScreenButton.setTooltip(new Tooltip("Full screen - F"));
@@ -219,55 +289,14 @@ public class Main extends Application {
         fullScreen.addListener((p, o, n) -> {
             if (n) showSettings.set(false);
         });
+        // place the full screen button just next to the settings button
+        fullScreenButton.layoutXProperty().bind(settingsButton.widthProperty());
 
-        Pane sky = new Pane(canvas, settingsButton, fullScreenButton);
-        settingsButton.toFront();
         settingsButton.textProperty().bind(when(showSettings).then(LEFT_ARROW_ICON).otherwise(RIGHT_ARROW_ICON));
         settingsButton.setTooltip(new Tooltip("Settings - TAB"));
         settingsButton.setOnAction(e -> showSettings.set(!showSettings.get()));
         // the settings pane is disabled in full screen
         settingsButton.disableProperty().bind(fullScreen);
-
-        BorderPane mainPane = new BorderPane(
-                sky,
-                controlBar(),
-                null,
-                infoBar(),
-                null
-        );
-
-        // display depending on state
-        mainPane.leftProperty().bind(when(showSettings).then(settingsBar()).otherwise(new VBox()));
-        mainPane.topProperty().bind(when(fullScreen).then(new HBox()).otherwise(controlBar()));
-        mainPane.bottomProperty().bind(when(fullScreen).then(new BorderPane()).otherwise(infoBar()));
-
-        skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
-        skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
-
-        // place the full screen button just next to the settings button
-        fullScreenButton.layoutXProperty().bind(settingsButton.widthProperty());
-
-        HomePage homePage = new HomePage();
-        VBox homePane = homePage.getPane();
-
-        Scene scene = new Scene(homePane);
-        // add the reference for the style
-        scene.getStylesheets().add("/style.css");
-
-        // launch the program by clicking any key
-        homePane.setOnKeyPressed(
-                e -> {
-                    scene.setRoot(mainPane);
-                    canvas.requestFocus();
-                }
-        );
-        homePane.requestFocus();
-
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Rigel");
-        primaryStage.setMinWidth(1025);
-        primaryStage.setMinHeight(700);
-        primaryStage.show();
     }
 
     /**
@@ -429,33 +458,15 @@ public class Main extends Application {
         Text displaySettingText = new Text("Display settings:");
         displaySettingText.setId("settingsText");
         // checkboxes for each elements of the canvas
-        CheckBox starsCheckBox = new CheckBox("Stars");
-        starsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawStarsProperty());
-        starsCheckBox.setTooltip(new Tooltip("Show stars - 1"));
-        CheckBox asterismsCheckBox = new CheckBox("Asterisms");
-        asterismsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAsterismsProperty());
-        asterismsCheckBox.setTooltip(new Tooltip("Show asterisms - 2"));
-        CheckBox planetsCheckBox = new CheckBox("Planets");
-        planetsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawPlanetsProperty());
-        planetsCheckBox.setTooltip(new Tooltip("Show planets - 3"));
-        CheckBox sunCheckBox = new CheckBox("Sun");
-        sunCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawSunProperty());
-        sunCheckBox.setTooltip(new Tooltip("Show sun - 4"));
-        CheckBox moonCheckBox = new CheckBox("Moon");
-        moonCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawMoonProperty());
-        moonCheckBox.setTooltip(new Tooltip("Show moon - 5"));
-        CheckBox horizonCheckBox = new CheckBox("Horizon");
-        horizonCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawHorizonProperty());
-        horizonCheckBox.setTooltip(new Tooltip("Show horizon - 6"));
-        CheckBox cardinalPointsCheckBox = new CheckBox("Cardinal points");
-        cardinalPointsCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawCardinalPointsProperty());
-        cardinalPointsCheckBox.setTooltip(new Tooltip("Show cardinal points - 7"));
-        CheckBox atmosphereCheckBox = new CheckBox("Atmosphere");
-        atmosphereCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawAtmosphereProperty());
-        atmosphereCheckBox.setTooltip(new Tooltip("Show atmosphere - 8"));
-        CheckBox namesCheckBox = new CheckBox("Names");
-        namesCheckBox.selectedProperty().bindBidirectional(skyCanvasManager.drawNamesProperty());
-        namesCheckBox.setTooltip(new Tooltip("Show names - 9"));
+        VBox checkBoxes = new VBox();
+        int numberKey = 1;
+        for (String element : checkBoxesData.keySet()) {
+            CheckBox checkBox = new CheckBox(element);
+            checkBox.selectedProperty().bindBidirectional(checkBoxesData.get(element));
+            checkBox.setTooltip(new Tooltip("Show " + element.toLowerCase() + " - " + numberKey));
+            numberKey++;
+            checkBoxes.getChildren().add(checkBox);
+        }
 
         // slider for the field of view
         Text fovSliderText = new Text("Field of view (°):");
@@ -495,8 +506,7 @@ public class Main extends Application {
             }
         });
 
-        VBox vBox = new VBox(displaySettingText, starsCheckBox, asterismsCheckBox, planetsCheckBox, sunCheckBox,
-                moonCheckBox, horizonCheckBox, cardinalPointsCheckBox, atmosphereCheckBox, namesCheckBox, new Separator(),
+        VBox vBox = new VBox(displaySettingText, checkBoxes, new Separator(),
                 fovSliderText, fovSlider, new Separator(), citySelectionText, searchBar, cityTableView);
         vBox.setId("settingsBar");
         return vBox;

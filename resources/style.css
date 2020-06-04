@@ -48,17 +48,23 @@
 
 #title {
     -fx-font-size: 100pt;
-    -fx-fill: white;
+    -fx-fill: black;
 }
 
 #welcomeMessage {
     -fx-font-size: 20pt;
-    -fx-fill: white;
+    -fx-fill: black;
 }
 
-#shortcutsList {
-    -fx-font-size: 15pt;
-    -fx-fill: white;
+#shortcutsList1 {
+    -fx-font-size: 20pt;
+    -fx-fill: black;
+    -fx-background-color: black;
+}
+
+#shortcutsList2 {
+    -fx-font-size: 20pt;
+    -fx-fill: black;
     -fx-background-color: black;
 }
 
