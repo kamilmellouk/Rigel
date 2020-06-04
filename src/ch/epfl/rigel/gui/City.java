@@ -11,9 +11,9 @@ import javafx.beans.property.StringProperty;
 
 public final class City {
 
-    private StringProperty name;
-    private StringProperty country;
-    private GeographicCoordinates coordinates;
+    private final StringProperty name;
+    private final StringProperty country;
+    private final GeographicCoordinates coordinates;
 
     /**
      * Constructor of a city

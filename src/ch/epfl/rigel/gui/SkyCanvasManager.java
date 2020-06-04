@@ -106,10 +106,6 @@ public class SkyCanvasManager {
                 viewingParametersBean.centerProperty()
         );
 
-        projection.addListener(
-                (p, o, n) -> updateSky()
-        );
-
         observedSky = Bindings.createObjectBinding(
                 () -> new ObservedSky(
                         dateTimeBean.getZonedDateTime(),
@@ -276,7 +272,6 @@ public class SkyCanvasManager {
         else painter.clear(Color.BLACK);
         painter.drawStarsAsterisms(observedSky, projection, planeToCanvas,
                 drawStars.get(), drawAsterisms.get(), drawNames.get());
-        //painter.drawHorizontalGrid(projection, planeToCanvas);
         if (drawPlanets.get()) painter.drawPlanets(observedSky, projection, planeToCanvas, drawNames.get());
         if (drawSun.get()) painter.drawSun(observedSky, projection, planeToCanvas, drawNames.get());
         if (drawMoon.get()) painter.drawMoon(observedSky, projection, planeToCanvas, drawNames.get());

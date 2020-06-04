@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -61,11 +60,9 @@ public final class CityCatalogue {
          * Add the city to the list
          *
          * @param c the city to add
-         * @return the builder
          */
-        public Builder addCity(City c) {
+        public void addCity(City c) {
             cities.add(c);
-            return this;
         }
 
         /**

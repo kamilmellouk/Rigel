@@ -13,7 +13,7 @@ import javafx.scene.text.TextAlignment;
 
 public class HomePage {
 
-    // the pane containing the title and the welcome message
+    // the pane containing the title, the welcome message and the shortcuts list
     private final VBox pane = new VBox(title(), welcomeMessage(), shortcutsList());
 
     /**
@@ -59,6 +59,7 @@ public class HomePage {
         GridPane pane = new GridPane();
         pane.getChildren().add(welcomeMessage);
         pane.setAlignment(Pos.CENTER);
+        pane.setStyle("-fx-padding: 10pt;");
         return pane;
     }
 
@@ -87,6 +88,7 @@ public class HomePage {
         GridPane pane = new GridPane();
         pane.getChildren().add(shortcuts);
         pane.setAlignment(Pos.CENTER);
+        pane.setStyle("-fx-padding: 10pt;");
         return pane;
     }
 

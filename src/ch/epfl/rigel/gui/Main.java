@@ -48,7 +48,6 @@ import static javafx.beans.binding.Bindings.when;
  */
 public class Main extends Application {
 
-    // Strings used for button icons
     private static final String FAST_FWD_ICON = "\uf04e";
     private static final String SKIP_FWD_ICON = "\uf051";
 
@@ -96,7 +95,8 @@ public class Main extends Application {
             skyCanvasManager.updateSky();
             switch (m.getButton()) {
                 case PRIMARY:
-                    if(skyCanvasManager.getObjUnderMouse() != null) {
+                    // Open the specific Wikipedia webpage depending on the object
+                    if (skyCanvasManager.getObjUnderMouse() != null) {
                         switch (skyCanvasManager.getObjUnderMouse().name()) {
                             case "Rigel":
                             case "Sun":
@@ -117,6 +117,7 @@ public class Main extends Application {
                     }
                     break;
                 case MIDDLE:
+                    // reset the field of view
                     viewingParametersBean.setFieldOfViewDeg(100);
                     break;
                 case SECONDARY:
@@ -204,6 +205,7 @@ public class Main extends Application {
         fullScreenButton.textProperty().bind(when(fullScreen).then(DECREASE_ICON).otherwise(INCREASE_ICON));
         fullScreenButton.setOnAction(e -> fullScreen.set(!fullScreen.get()));
         fullScreenButton.setTooltip(new Tooltip("Full screen - F"));
+        // the full screen closes the settings pane
         fullScreen.addListener((p, o, n) -> {
             if (n) showSettings.set(false);
         });
@@ -213,6 +215,7 @@ public class Main extends Application {
         settingsButton.textProperty().bind(when(showSettings).then(LEFT_ARROW_ICON).otherwise(RIGHT_ARROW_ICON));
         settingsButton.setTooltip(new Tooltip("Settings - TAB"));
         settingsButton.setOnAction(e -> showSettings.set(!showSettings.get()));
+        // the settings pane is disabled in full screen
         settingsButton.disableProperty().bind(fullScreen);
 
         BorderPane mainPane = new BorderPane(
@@ -231,6 +234,7 @@ public class Main extends Application {
         skyCanvasManager.canvas().widthProperty().bind(mainPane.widthProperty());
         skyCanvasManager.canvas().heightProperty().bind(mainPane.heightProperty());
 
+        // place the full screen button just next to the settings button
         fullScreenButton.layoutXProperty().bind(settingsButton.widthProperty());
 
         HomePage homePage = new HomePage();
@@ -461,11 +465,8 @@ public class Main extends Application {
         TextField searchBar = new TextField();
         // modify the list of the cities depending on the research
         searchBar.textProperty().addListener((p, o, n) -> filteredCities.setPredicate(city -> {
-            if (n == null || n.isEmpty()) {
-                return true;
-            }
             String searchText = n.toLowerCase();
-            return city.getName().toLowerCase().contains(searchText) || city.getCountry().toLowerCase().contains(searchText);
+            return n.isEmpty() || city.getName().toLowerCase().contains(searchText) || city.getCountry().toLowerCase().contains(searchText);
         }));
 
         // list of the cities matching the research
