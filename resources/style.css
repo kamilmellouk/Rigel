@@ -55,6 +55,14 @@
     -fx-font-size: 20pt;
     -fx-fill: white;
     -fx-background-color: black;
+    -fx-padding: 20pt;
+}
+
+#shortcutsList {
+    -fx-font-size: 20pt;
+    -fx-fill: white;
+    -fx-background-color: black;
+    -fx-padding: 20pt;
 }
 
 #infoBar {

@@ -579,5 +579,4 @@ public class Main extends Application {
             return Font.loadFont(fs, 15);
         }
     }
-
 }
