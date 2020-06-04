@@ -599,14 +599,14 @@ public class Main extends Application {
 
         File file = new File("sky_" +
                 observerLocationBean.getCoordinates() + "_" +
-                dateTimeBean.getDate()+ "_" +
+                dateTimeBean.getDate() + "_" +
                 dateTimeBean.getTime().truncatedTo(ChronoUnit.SECONDS) +
                 ".png");
 
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
         } catch (IOException e) {
-           throw new UncheckedIOException(e);
+            throw new UncheckedIOException(e);
         }
     }
 }
