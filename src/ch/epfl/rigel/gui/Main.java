@@ -65,6 +65,7 @@ public class Main extends Application {
     private Canvas canvas;
 
     private final Map<String, BooleanProperty> checkBoxesData = new TreeMap<>();
+    CityCatalogue cityCatalogue;
 
     private Button resetButton;
     private static final String RESET_ICON = "\uf0e2";
@@ -109,6 +110,8 @@ public class Main extends Application {
         checkBoxesData.put("Atmosphere", skyCanvasManager.drawAtmosphereProperty());
         checkBoxesData.put("Names", skyCanvasManager.drawNamesProperty());
 
+        cityCatalogue = createCityCatalogue();
+
         initialiseMouseControls();
         initialiseKeyboardControls();
         initialiseButtons();
@@ -139,7 +142,7 @@ public class Main extends Application {
         scene.getStylesheets().add("/style.css");
 
         // launch the program by clicking any key
-        homePane.setOnKeyPressed(k -> {
+        homePane.setOnKeyPressed(e -> {
                     scene.setRoot(mainPane);
                     canvas.requestFocus();
                 }
@@ -157,10 +160,10 @@ public class Main extends Application {
      * Initialising mouse controls
      */
     private void initialiseMouseControls() {
-        canvas.setOnMouseClicked(m -> {
+        canvas.setOnMouseClicked(e -> {
             if (!canvas.isFocused()) canvas.requestFocus();
             skyCanvasManager.updateSky();
-            switch (m.getButton()) {
+            switch (e.getButton()) {
                 case PRIMARY:
                     // Open the specific Wikipedia webpage depending on the object
                     if (skyCanvasManager.getObjUnderMouse() != null) {
@@ -193,14 +196,14 @@ public class Main extends Application {
                     if (objUnderMouse != null) {
                         GraphicsContext ctx = canvas.getGraphicsContext2D();
                         ctx.setFill(Color.valueOf("#373e43"));
-                        ctx.fillRect(m.getX(), m.getY(), 230, 65);
+                        ctx.fillRect(e.getX(), e.getY(), 230, 65);
                         ctx.setStroke(Color.WHITE);
                         ctx.setLineWidth(1);
                         ctx.strokeText(" Name : " + objUnderMouse.info() + "\n" +
                                         " Position : " + objUnderMouse.equatorialPos() + "\n" +
                                         " Angular Size : " + objUnderMouse.angularSize() + "\n" +
                                         " Magnitude : " + objUnderMouse.magnitude(),
-                                m.getX(), m.getY());
+                                e.getX(), e.getY());
                     }
                     break;
             }
@@ -211,9 +214,9 @@ public class Main extends Application {
      * Initialising keyboard controls
      */
     private void initialiseKeyboardControls() {
-        canvas.setOnKeyPressed(k -> {
+        canvas.setOnKeyPressed(e -> {
                     HorizontalCoordinates center = viewingParametersBean.getCenter();
-                    switch (k.getCode()) {
+                    switch (e.getCode()) {
                         case LEFT:
                             viewingParametersBean.setCenter(skyCanvasManager.centerWithAzDiff(center, -10));
                             break;
@@ -271,7 +274,7 @@ public class Main extends Application {
                             break;
                     }
                     skyCanvasManager.updateSky();
-                    k.consume();
+                    e.consume();
                 }
         );
     }
@@ -342,7 +345,7 @@ public class Main extends Application {
         List<String> availableZoneIds = new ArrayList<>(ZoneId.getAvailableZoneIds());
         Collections.sort(availableZoneIds);
         List<ZoneId> zoneIdList = new ArrayList<>();
-        availableZoneIds.forEach(e -> zoneIdList.add(ZoneId.of(e)));
+        availableZoneIds.forEach(zone -> zoneIdList.add(ZoneId.of(zone)));
         zoneIdComboBox.setItems(FXCollections.observableList(zoneIdList));
         zoneIdComboBox.setValue(ZoneId.systemDefault());
         zoneIdComboBox.setTooltip(new Tooltip("Time zone"));
@@ -456,10 +459,9 @@ public class Main extends Application {
      * Creating the settings bar
      *
      * @return VBox of the settings bar
-     * @throws IOException if CityCatalogue loading exception
      */
     @SuppressWarnings("unchecked")
-    private VBox settingsBar() throws IOException {
+    private VBox settingsBar() {
         Text displaySettingText = new Text("Display settings:");
         displaySettingText.setId("settingsText");
         // checkboxes for each elements of the canvas
@@ -485,7 +487,6 @@ public class Main extends Application {
         Text citySelectionText = new Text("Search or select a city:");
         citySelectionText.setId("citySelectionText");
 
-        CityCatalogue cityCatalogue = createCityCatalogue();
         FilteredList<City> filteredCities = new FilteredList<>(FXCollections.observableList(cityCatalogue.cities()), c -> true);
 
         TextField searchBar = new TextField();
