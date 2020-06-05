@@ -409,9 +409,9 @@ public class Main extends Application {
         // Add one year to the current date
         Button skipButton = new Button(SKIP_FWD_ICON);
         skipButton.setFont(fontAwesome);
-        skipButton.setOnAction(e -> dateTimeBean.setDate(dateTimeBean.getDate().plusYears(1)));
+        skipButton.setOnAction(e -> dateTimeBean.setDate(dateTimeBean.getDate().plusMonths(1)));
         skipButton.disableProperty().bind(timeAnimator.runningProperty());
-        skipButton.setTooltip(new Tooltip("Skip forward"));
+        skipButton.setTooltip(new Tooltip("Skip forward by 1 month"));
 
         HBox timeFlowControl = new HBox(acceleratorChoiceBox, resetButton, startStopButton, forwardButton, skipButton);
         timeFlowControl.setId("timeFlowControl");
