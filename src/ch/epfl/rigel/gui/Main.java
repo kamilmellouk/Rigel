@@ -152,7 +152,7 @@ public class Main extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Rigel");
-        primaryStage.setMinWidth(1025);
+        primaryStage.setMinWidth(1020);
         primaryStage.setMinHeight(700);
         primaryStage.show();
     }
