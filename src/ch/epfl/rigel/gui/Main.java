@@ -63,9 +63,9 @@ public class Main extends Application {
     private final TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
     private SkyCanvasManager skyCanvasManager;
     private Canvas canvas;
+    private FilteredList<City> filteredCities;
 
     private final Map<String, BooleanProperty> checkBoxesData = new TreeMap<>();
-    CityCatalogue cityCatalogue;
 
     private Button resetButton;
     private static final String RESET_ICON = "\uf0e2";
@@ -110,7 +110,8 @@ public class Main extends Application {
         checkBoxesData.put("Atmosphere", skyCanvasManager.drawAtmosphereProperty());
         checkBoxesData.put("Names", skyCanvasManager.drawNamesProperty());
 
-        cityCatalogue = createCityCatalogue();
+        CityCatalogue cityCatalogue = createCityCatalogue();
+        filteredCities = new FilteredList<>(FXCollections.observableList(cityCatalogue.cities()), c -> true);
 
         initialiseMouseControls();
         initialiseKeyboardControls();
@@ -486,8 +487,6 @@ public class Main extends Application {
         // city selection
         Text citySelectionText = new Text("Search or select a city:");
         citySelectionText.setId("citySelectionText");
-
-        FilteredList<City> filteredCities = new FilteredList<>(FXCollections.observableList(cityCatalogue.cities()), c -> true);
 
         TextField searchBar = new TextField();
         // modify the list of the cities depending on the research
