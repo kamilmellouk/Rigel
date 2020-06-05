@@ -85,15 +85,15 @@ public class HomePage {
         shortcuts1.setTextAlignment(TextAlignment.LEFT);
         // column 2
         Text shortcuts2 = new Text(
-                "1           : show stars" + "\n" +
-                        "2           : show asterisms" + "\n" +
-                        "3           : show planets" + "\n" +
-                        "4           : show the sun" + "\n" +
+                "1           : show asterisms" + "\n" +
+                        "2           : show the atmosphere" + "\n" +
+                        "3           : show cardinal points" + "\n" +
+                        "4           : show the horizon" + "\n" +
                         "5           : show the moon" + "\n" +
-                        "6           : show the horizon" + "\n" +
-                        "7           : show cardinal points" + "\n" +
-                        "8           : show the atmosphere" + "\n" +
-                        "9           : show names"
+                        "6           : show names" + "\n" +
+                        "7           : show planets" + "\n" +
+                        "8           : show stars" + "\n" +
+                        "9           : show the sun"
         );
         shortcuts2.setId("shortcutsList2");
         shortcuts2.setTextAlignment(TextAlignment.LEFT);

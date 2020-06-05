@@ -244,31 +244,31 @@ public class Main extends Application {
                             settingsButton.fire();
                             break;
                         case DIGIT1:
-                            skyCanvasManager.drawStarsProperty().set(!skyCanvasManager.drawStarsProperty().get());
-                            break;
-                        case DIGIT2:
                             skyCanvasManager.drawAsterismsProperty().set(!skyCanvasManager.drawAsterismsProperty().get());
                             break;
+                        case DIGIT2:
+                            skyCanvasManager.drawAtmosphereProperty().set(!skyCanvasManager.drawAtmosphereProperty().get());
+                            break;
                         case DIGIT3:
-                            skyCanvasManager.drawPlanetsProperty().set(!skyCanvasManager.drawPlanetsProperty().get());
+                            skyCanvasManager.drawCardinalPointsProperty().set(!skyCanvasManager.drawCardinalPointsProperty().get());
                             break;
                         case DIGIT4:
-                            skyCanvasManager.drawSunProperty().set(!skyCanvasManager.drawSunProperty().get());
+                            skyCanvasManager.drawHorizonProperty().set(!skyCanvasManager.drawHorizonProperty().get());
                             break;
                         case DIGIT5:
                             skyCanvasManager.drawMoonProperty().set(!skyCanvasManager.drawMoonProperty().get());
                             break;
                         case DIGIT6:
-                            skyCanvasManager.drawHorizonProperty().set(!skyCanvasManager.drawHorizonProperty().get());
+                            skyCanvasManager.drawNamesProperty().set(!skyCanvasManager.drawNamesProperty().get());
                             break;
                         case DIGIT7:
-                            skyCanvasManager.drawCardinalPointsProperty().set(!skyCanvasManager.drawCardinalPointsProperty().get());
+                            skyCanvasManager.drawPlanetsProperty().set(!skyCanvasManager.drawPlanetsProperty().get());
                             break;
                         case DIGIT8:
-                            skyCanvasManager.drawAtmosphereProperty().set(!skyCanvasManager.drawAtmosphereProperty().get());
+                            skyCanvasManager.drawStarsProperty().set(!skyCanvasManager.drawStarsProperty().get());
                             break;
                         case DIGIT9:
-                            skyCanvasManager.drawNamesProperty().set(!skyCanvasManager.drawNamesProperty().get());
+                            skyCanvasManager.drawSunProperty().set(!skyCanvasManager.drawSunProperty().get());
                             break;
                         case S:
                             saveScreenshot();
